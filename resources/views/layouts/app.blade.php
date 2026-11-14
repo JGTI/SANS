@@ -121,13 +121,47 @@
 
     <div class="admin-main">
         <header class="topbar">
-            <button class="icon-btn mobile-menu" id="mobile-menu" type="button" aria-label="{{ $isEn ? 'Open menu' : 'Abrir menú' }}">
-                <i class="fa fa-bars" style="font-size:16px;"></i>
+            <button class="icon-btn mobile-menu" id="mobile-menu" type="button" title="{{ $isEn ? 'Toggle Navigation Drawer' : 'Abrir/Cerrar Menú Lateral' }}" aria-label="{{ $isEn ? 'Open menu' : 'Abrir menú' }}">
+                <i class="fa fa-bars" style="font-size:15px;"></i>
             </button>
-            <div style="font-size:0.82rem;font-weight:700;color:var(--muted-foreground);display:flex;align-items:center;gap:0.5rem;">
-                <i class="fa fa-rocket"></i>
-                <span>{{ $isEn ? 'SPACE VISION · SANS Monitor — Public Evaluation Workstation' : 'SPACE VISION · SANS Monitor — Estación de Evaluación Pública' }}</span>
-            </div>
+
+            <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--foreground);font-weight:800;font-size:0.86rem;padding-right:0.5rem;border-right:1px solid var(--border);">
+                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:20px;height:20px;object-fit:contain;">
+                <span>SPACE VISION</span>
+            </a>
+
+            <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
+                <a class="{{ request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('home') }}">
+                    <i class="fa fa-heartbeat"></i> {{ $isEn ? 'SANS Monitor (3-Step Wizard)' : 'Predictor SANS (Wizard 3 Pasos)' }}
+                </a>
+                <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
+                    <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
+                </a>
+                <a class="{{ request()->routeIs('public.demo-theater*') || request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('public.demo-theater') }}">
+                    <i class="fa fa-play-circle"></i> {{ $isEn ? 'Demo Pitch (3m)' : 'Demo Pitch (3m)' }}
+                </a>
+
+                <details style="position:relative;display:inline-block;">
+                    <summary style="list-style:none;cursor:pointer;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted-foreground);display:inline-flex;align-items:center;gap:5px;">
+                        <i class="fa fa-flask"></i> {{ $isEn ? 'Scientific Tools' : 'Herramientas' }} <i class="fa fa-angle-down"></i>
+                    </summary>
+                    <div style="position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;box-shadow:0 10px 25px rgba(0,0,0,0.15);z-index:50;display:flex;flex-direction:column;gap:2px;">
+                        <a href="{{ route('public.vision-lab') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
+                            <i class="fa fa-calculator" style="width:16px;"></i> {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
+                        </a>
+                        <a href="{{ route('public.nasa-data') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
+                            <i class="fa fa-globe" style="width:16px;"></i> {{ $isEn ? 'NASA Repositories' : 'Repositorios NASA' }}
+                        </a>
+                        <a href="{{ route('public.model-lab') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
+                            <i class="fa fa-flask" style="width:16px;"></i> Benchmark ML (RF / GBM)
+                        </a>
+                        <a href="{{ route('public.explainability') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
+                            <i class="fa fa-pie-chart" style="width:16px;"></i> {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
+                        </a>
+                    </div>
+                </details>
+            </nav>
+
             <span class="topbar-spacer"></span>
 
             {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}
