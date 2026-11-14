@@ -25,6 +25,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
 
+// Rutas Públicas de Demostración Directa (REGLA P0: Acceso inmediato sin requerir login para el jurado)
+Route::get('/demo', [SansMonitorController::class, 'index'])->name('public.demo');
+Route::get('/sans-monitor', [SansMonitorController::class, 'index'])->name('public.sans-monitor');
+Route::get('/admin/sans-monitor', [SansMonitorController::class, 'index'])->name('admin.sans-monitor.index');
+Route::post('/admin/sans-monitor/cases', [SansMonitorController::class, 'storeCase'])->name('admin.sans-monitor.cases.store');
+Route::post('/admin/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('admin.sans-monitor.import');
+Route::post('/admin/sans-monitor/adopt-protocol', [SansMonitorController::class, 'adoptProtocol'])->name('admin.sans-monitor.adopt-protocol');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('login');
     Route::post('/login', [AuthController::class, 'store'])->name('login.store');
@@ -44,11 +52,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Mission Control Dashboard
     Route::get('/', [MissionControlController::class, 'index'])->name('dashboard');
 
-    // SANS Monitor — Workspace Longitudinal Unificado de 5 Pestañas (Especificación Canónica)
-    Route::get('/sans-monitor', [SansMonitorController::class, 'index'])->name('sans-monitor.index');
-    Route::post('/sans-monitor/cases', [SansMonitorController::class, 'storeCase'])->name('sans-monitor.cases.store');
-    Route::post('/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('sans-monitor.import');
-    Route::post('/sans-monitor/adopt-protocol', [SansMonitorController::class, 'adoptProtocol'])->name('sans-monitor.adopt-protocol');
+    // Dictamen clínico firmado (exclusivo especialista médico autorizado P1 - RF-11)
     Route::post('/sans-monitor/clinician-decision', [SansMonitorController::class, 'storeClinicianDecision'])->name('sans-monitor.clinician-decision');
 
     // Vision Lab (Laboratorio oftalmológico espacial)

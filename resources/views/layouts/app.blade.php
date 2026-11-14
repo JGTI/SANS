@@ -133,19 +133,29 @@
         </div>
 
         <div class="sidebar-user">
+            @php
+                $currentUserName = auth()->user()?->name ?? 'Public Demo Judge';
+                $currentUserEmail = auth()->user()?->email ?? 'Public Mode · No Login Required';
+            @endphp
             <button class="user-button" id="user-menu-button" type="button" aria-expanded="false" aria-controls="user-menu">
-                <span class="avatar">{{ strtoupper(mb_substr(auth()->user()->name, 0, 2)) }}</span>
+                <span class="avatar">{{ strtoupper(mb_substr($currentUserName, 0, 2)) }}</span>
                 <span class="user-copy">
-                    <span class="user-name">{{ auth()->user()->name }}</span>
-                    <span class="user-email">{{ auth()->user()->email }}</span>
+                    <span class="user-name">{{ $currentUserName }}</span>
+                    <span class="user-email">{{ $currentUserEmail }}</span>
                 </span>
                 <i class="fa fa-ellipsis-v" style="color:var(--muted-foreground); margin-left:auto;"></i>
             </button>
             <div class="user-menu" id="user-menu">
+                @auth
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"><i class="fa fa-sign-out" style="margin-right:8px;"></i> Cerrar sesión</button>
                 </form>
+                @else
+                <a href="{{ route('login') }}" style="display:block;padding:8px 12px;text-decoration:none;color:inherit;font-size:13px;">
+                    <i class="fa fa-sign-in" style="margin-right:8px;"></i> Acceso Staff / Admin (Opcional)
+                </a>
+                @endauth
             </div>
         </div>
     </aside>
@@ -177,7 +187,9 @@
             @yield('content')
         </main>
 
-        <footer class="admin-footer">{{ config('app.name') }} · Base preparada para NASA Space Apps Challenge</footer>
+        <footer class="admin-footer">
+            {{ config('app.name') }} · Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.
+        </footer>
     </div>
 </div>
 

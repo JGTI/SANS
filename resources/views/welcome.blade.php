@@ -246,14 +246,14 @@
         </p>
 
         <div class="hero-actions">
-            <a class="btn-main" href="{{ auth()->check() ? route('admin.sans-monitor.index') : route('login') }}">
-                {{ auth()->check() ? 'Abrir Predictor SANS (3 Pestañas)' : 'Acceder al Predictor SANS' }} &rarr;
+            <a class="btn-main" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
+                Explore the Demo · Launch SPACE VISION (No Login Required) &rarr;
             </a>
-            <a class="btn-secondary" href="{{ route('admin.demo-theater') }}">
-                <i class="fa fa-play-circle" style="margin-right:6px;"></i> Demo Theater (Pitch en 3 Minutos)
+            <a class="btn-secondary" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
+                <i class="fa fa-calendar-check-o" style="margin-right:6px;"></i> Timeline (+30 / +60 / +90 Days)
             </a>
-            <a class="btn-secondary" href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}">
-                <i class="fa fa-cube" style="margin-right:6px;"></i> Visor 3D + Consola OCT
+            <a class="btn-secondary" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
+                <i class="fa fa-cubes" style="margin-right:6px;"></i> 3 Scenario Models (Stable / Worsens / Unscanned)
             </a>
         </div>
 
@@ -273,16 +273,19 @@
             </div>
         </div>
 
-        {{-- Credenciales Rápidas para Evaluación de Jueces --}}
+        {{-- Acceso Público Inmediato sin Login + Credenciales Opcionales de Staff --}}
         <div class="demo-credentials-banner">
             <div>
-                <strong style="color:#f8fafc;">Credenciales de Acceso Rápido para Demostración:</strong>
+                <strong style="color:#f8fafc;">Public Interactive Demo — Zero Login Required:</strong>
                 <div style="color:var(--text-muted); font-size:12px; margin-top:2px;">
-                    Médico de Vuelo (Flight Surgeon): <span class="cred-badge">surgeon@spacevision.nasa</span> &bull; Password: <span class="cred-badge">SpaceVision2026!</span>
+                    Cualquier juez o visitante puede ejecutar la demostración completa sin iniciar sesión en <span class="cred-badge">/demo</span> o <span class="cred-badge">/sans-monitor</span>. (Acceso administrativo opcional: <span class="cred-badge">surgeon@spacevision.nasa</span> / <span class="cred-badge">SpaceVision2026!</span>)
+                </div>
+                <div style="color:var(--text-muted); font-size:11px; margin-top:6px;">
+                    Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.
                 </div>
             </div>
             <div>
-                <a href="{{ route('login') }}" style="color:#38bdf8; font-weight:700; text-decoration:none;">Iniciar Sesión &rarr;</a>
+                <a href="{{ route('admin.sans-monitor.index') }}" style="color:#38bdf8; font-weight:700; text-decoration:none;">Launch Public Demo &rarr;</a>
             </div>
         </div>
     </main>

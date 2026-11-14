@@ -265,4 +265,27 @@ class SansMonitorAcceptanceTest extends TestCase
         $resOpen->assertSee('Contexto del Caso');
         $resOpen->assertSee('Priorizar revisión');
     }
+
+    /**
+     * Regla P0 del Concurso: Un juez o visitante sin login (guest) puede abrir y probar la demostración principal sin autenticarse
+     */
+    public function test_public_judge_can_access_and_run_demo_without_login(): void
+    {
+        $this->assertGuest();
+
+        $resDemo = $this->get('/demo');
+        $resDemo->assertOk();
+        $resDemo->assertSee('Predictor SANS por Biomarcadores');
+        $resDemo->assertSee('Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.');
+
+        $resTab2 = $this->get('/sans-monitor?tab=seguimiento&case_id=CASE-PROG-02');
+        $resTab2->assertOk();
+        $resTab2->assertSee('Corte +30 Días');
+        $resTab2->assertSee('Sin medición');
+
+        $resTab3 = $this->get('/admin/sans-monitor?tab=escenarios&case_id=CASE-NOSCAN-03A');
+        $resTab3->assertOk();
+        $resTab3->assertSee('Escenario No se Escanea');
+        $resTab3->assertSee('Faltan datos');
+    }
 }

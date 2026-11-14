@@ -89,6 +89,11 @@ flowchart TB
 | Documento | Propósito |
 |---|---|
 | **[`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md)** | **Especificación canónica de software (`RF-01`–`RF-37`, `RNF-01`–`RNF-06`, contrato de datos y pruebas `AT-01`–`AT-19`).** |
+| **[`docs/METHODOLOGY_MASTER_PROMPT.md`](docs/METHODOLOGY_MASTER_PROMPT.md)** | **Corazón metodológico del concurso (Acceso público sin login, criterios NASA, accesibilidad WCAG 2.2 AA y transparencia científica).** |
+| **[`JUDGING.md`](JUDGING.md)** | **Matriz oficial de evaluación para el jurado (Impact, Creativity, Validity, Relevance, Presentation).** |
+| **[`SUBMISSION.md`](SUBMISSION.md)** | **Documento oficial de entrega internacional (English & Español).** |
+| **[`SOURCES.md`](SOURCES.md)** | **Registro transparente de fuentes científicas, datasets NASA, librerías y herramientas de IA.** |
+| **[`DEPLOYMENT.md`](DEPLOYMENT.md)** | **Guía de despliegue y checklist de verificación en modo incógnito sin login (`/demo`).** |
 | **[`docs/IMPLEMENTATION_PHASES.md`](docs/IMPLEMENTATION_PHASES.md)** | **Esquema maestro de las 6 fases de implementación (P0 $\to$ P1 $\to$ P2), arquitectura modular y casos de prueba.** |
 | [`docs/PROJECT_VISION.md`](docs/PROJECT_VISION.md) | Visión científica, fases P0/P1/P2, indicadores oculares, los 5 dominios de contexto y referencias bibliográficas. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Arquitectura híbrida de 5 capas (Frontend Blade/Three.js, Laravel 11, Enlace Bearer, Python FastAPI `:8001` y conectores NASA). |
