@@ -48,8 +48,10 @@ Route::get('/oct-analysis', [DigitalTwinController::class, 'octWorkstation'])->n
 Route::get('/demo-theater', [DemoTheaterController::class, 'index'])->name('public.demo-theater');
 Route::get('/demo-theater/report/{code}', [DemoTheaterController::class, 'report'])->name('public.demo-theater.report');
 Route::get('/vision-lab', [VisionLabController::class, 'index'])->name('public.vision-lab');
+Route::get('/vision-lab/export', [VisionLabController::class, 'exportCsv'])->name('public.vision-lab.export');
 Route::get('/nasa-data', [NasaObservatoryController::class, 'index'])->name('public.nasa-data');
 Route::get('/model-lab', [ModelLabController::class, 'index'])->name('public.model-lab');
+Route::get('/model-lab/export', [ModelLabController::class, 'exportBenchmark'])->name('public.model-lab.export');
 Route::get('/explainability', [ExplainabilityCenterController::class, 'index'])->name('public.explainability');
 
 Route::middleware('guest')->group(function () {

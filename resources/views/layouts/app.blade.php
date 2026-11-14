@@ -250,12 +250,32 @@
 
         if (root.lang === 'en') {
             const globalPhrases = {
+                'Gemelo Digital Neurooftalmológico': 'Neuro-Ophthalmic 3D Digital Twin',
                 'Gemelo Digital 3D': '3D Digital Twin',
+                'Corte Sagital Anatómico': 'Anatomical Sagittal Cross-Section',
                 'Consola Clínica ZEISS Cirrus': 'ZEISS Cirrus Clinical Console',
+                'Recorrido Guiado de Demostración (3 Minutos)': 'Guided Demonstration Pitch (3 Minutes)',
+                'Recorrido Guiado de Demostración': 'Guided Demonstration Pitch',
+                'Abrir Predictor SANS (3 Pestañas)': 'Open SANS Predictor (3 Tabs)',
+                'Ver Reporte Oficial Imprimible': 'View Official Printable Report',
+                'Abrir Expediente Oficial para Impresión / PDF': 'Open Official Printable / PDF Dossier',
+                'Reporte Médico Aeroespacial Oficial Listo': 'Official Aerospace Medical Dossier Ready',
                 'Simulador de Misión': 'Mission Simulator',
                 'Observatorio de Datos NASA': 'NASA Data Observatory',
+                'Estudios de Tejidos Oculares en Microgravedad': 'Ocular Tissue Studies in Microgravity',
+                'Diagnóstico de APIs & Redundancia': 'API Diagnostics & Redundancy',
+                'Laboratorio Oftalmológico': 'Ophthalmology Laboratory',
+                'Filtrar por Astronauta:': 'Filter by Astronaut:',
+                '-- Todos los tripulantes --': '-- All Crew Members --',
+                'Limpiar filtro': 'Clear filter',
                 'Laboratorio de Modelos': 'Model Laboratory',
+                'Exportar Benchmark (JSON)': 'Export Benchmark (JSON)',
+                'Cohorte de Astronautas:': 'Astronaut Cohort:',
+                'Folds de Validación (K):': 'Validation Folds (K):',
+                'Semilla (Seed):': 'Random Seed:',
                 'Centro de Explicabilidad': 'Explainability Center',
+                'Ajuste Interactivo de Parámetros Clínicos del Astronauta': 'Interactive Astronaut Clinical Parameter Tuning',
+                'Desplazamiento Hipermetrópico (D):': 'Hyperopic Shift (D):',
                 'Calidad de Datos': 'Data Quality Observatory',
                 'Registro de Modelos': 'Model Registry',
                 'Ojo Derecho': 'Right Eye',
@@ -264,7 +284,10 @@
                 'En Vuelo': 'In-Flight',
                 'Posvuelo': 'Post-Flight',
                 'Exportar CSV': 'Export CSV',
-                'Imprimir Expediente': 'Print Dossier'
+                'Imprimir Expediente': 'Print Dossier',
+                'Siguiente': 'Next',
+                'Anterior': 'Previous',
+                'Buscar': 'Search'
             };
             const walker = document.createTreeWalker(document.getElementById('main-content'), NodeFilter.SHOW_TEXT);
             let node;

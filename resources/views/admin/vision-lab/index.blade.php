@@ -22,13 +22,15 @@
         <p>Registro refractivo por ojo, conversión científica Snellen &rarr; LogMAR y análisis longitudinal de SANS.</p>
     </div>
     <div style="display:flex; gap:10px; align-items:center;">
-        <a class="btn btn-outline" href="{{ route('admin.vision-lab.export', request()->query()) }}" style="font-size:13px;">
+        <a class="btn btn-outline" href="{{ route('public.vision-lab.export', request()->query()) }}" style="font-size:13px;">
             <i class="fa fa-download"></i> Exportar CSV
         </a>
+        @auth
         <a class="btn btn-primary" href="{{ route('admin.vision-lab.create') }}">
             <i class="fa fa-plus" style="margin-right:6px;"></i>
             Registrar Evaluación
         </a>
+        @endauth
     </div>
 </div>
 
@@ -40,7 +42,7 @@
 
 {{-- Filtro por astronauta --}}
 <div class="card" style="margin-bottom: 20px; padding: 16px;">
-    <form method="GET" action="{{ route('admin.vision-lab.index') }}" style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+    <form method="GET" action="{{ url()->current() }}" style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
         <label for="astronaut-filter" style="font-weight:600; font-size:13px;">Filtrar por Astronauta:</label>
         <select name="astronaut_id" id="astronaut-filter" class="form-control" style="max-width:320px; padding:8px 12px; border-radius:6px; background:var(--muted); color:var(--foreground); border:1px solid var(--border);" onchange="this.form.submit()">
             <option value="">-- Todos los tripulantes --</option>
@@ -51,7 +53,7 @@
             @endforeach
         </select>
         @if (request('astronaut_id'))
-            <a href="{{ route('admin.vision-lab.index') }}" class="btn btn-outline" style="font-size:12px;">Limpiar filtro</a>
+            <a href="{{ url()->current() }}" class="btn btn-outline" style="font-size:12px;">Limpiar filtro</a>
         @endif
     </form>
 </div>
@@ -109,7 +111,7 @@
                             <div style="font-size:11px; color:var(--muted-foreground);">FD{{ $eval->mission_day }} ({{ $eval->flight_phase }})</div>
                         </td>
                         <td>
-                            <a href="{{ route('admin.vision-lab.index', ['astronaut_id' => $eval->astronaut_id]) }}" style="color:#58a6ff; font-weight:600;">
+                            <a href="{{ url()->current() }}?astronaut_id={{ $eval->astronaut_id }}" style="color:#58a6ff; font-weight:600;">
                                 {{ $eval->astronaut->name }}
                             </a>
                             <div style="font-size:11px; color:var(--muted-foreground);">{{ $eval->astronaut->agency }}</div>

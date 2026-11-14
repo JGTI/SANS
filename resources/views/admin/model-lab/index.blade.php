@@ -18,10 +18,10 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px;">
-            <a href="{{ route('admin.model-lab.export', ['n_astronauts' => $nAstronauts, 'n_splits' => $nSplits, 'seed' => $seed]) }}" class="btn btn-outline" style="padding:7px 14px; font-size:12px;" title="Descargar informe de métricas en JSON reproducible">
+            <a href="{{ route('public.model-lab.export', ['n_astronauts' => $nAstronauts, 'n_splits' => $nSplits, 'seed' => $seed]) }}" class="btn btn-outline" style="padding:7px 14px; font-size:12px;" title="Descargar informe de métricas en JSON reproducible">
                 <i class="fa fa-download" style="margin-right:4px;"></i> Exportar Benchmark (JSON)
             </a>
-            <a href="{{ route('admin.explainability') }}" class="btn btn-secondary" style="padding:7px 14px; font-size:12px;">
+            <a href="{{ route('public.explainability') }}" class="btn btn-secondary" style="padding:7px 14px; font-size:12px;">
                 Explainability Center &rarr;
             </a>
         </div>
@@ -30,7 +30,7 @@
 
 {{-- Barra de Parámetros del Experimento --}}
 <div class="card" style="padding:16px 20px; margin-bottom:24px;">
-    <form method="GET" action="{{ route('admin.model-lab') }}" style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+    <form method="GET" action="{{ url()->current() }}" style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
         <div style="display:flex; align-items:center; gap:8px;">
             <label style="font-size:12px; font-weight:600; color:var(--foreground); margin:0;">Cohorte de Astronautas:</label>
             <input type="number" name="n_astronauts" value="{{ $nAstronauts }}" min="20" max="200" step="10" class="form-control" style="width:80px; height:32px; font-size:12px; font-family:ui-monospace, monospace;">

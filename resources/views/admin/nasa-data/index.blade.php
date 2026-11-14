@@ -145,19 +145,19 @@
 
 {{-- Barra de Navegación por Pestañas --}}
 <div class="tabs-nav">
-    <a href="{{ route('admin.nasa-data', ['tab' => 'osdr']) }}" class="tab-btn {{ $activeTab === 'osdr' ? 'active' : '' }}">
+    <a href="{{ url()->current() }}?tab=osdr" class="tab-btn {{ $activeTab === 'osdr' ? 'active' : '' }}">
         <i class="fa fa-flask"></i> NASA OSDR (Genómica & Tejidos Oculares)
         <span style="font-size:11px; background:var(--muted); border:1px solid var(--border); padding:2px 6px; border-radius:10px;">{{ count($osdrStudies) }}</span>
     </a>
-    <a href="{{ route('admin.nasa-data', ['tab' => 'ntrs']) }}" class="tab-btn {{ $activeTab === 'ntrs' ? 'active' : '' }}">
+    <a href="{{ url()->current() }}?tab=ntrs" class="tab-btn {{ $activeTab === 'ntrs' ? 'active' : '' }}">
         <i class="fa fa-book"></i> NASA NTRS (Evidencia Científica SANS)
         <span style="font-size:11px; background:var(--muted); border:1px solid var(--border); padding:2px 6px; border-radius:10px;">{{ count($ntrsPubs) }}</span>
     </a>
-    <a href="{{ route('admin.nasa-data', ['tab' => 'donki']) }}" class="tab-btn {{ $activeTab === 'donki' ? 'active' : '' }}">
+    <a href="{{ url()->current() }}?tab=donki" class="tab-btn {{ $activeTab === 'donki' ? 'active' : '' }}">
         <i class="fa fa-sun-o"></i> NASA DONKI (Clima Espacial de Misión)
         <span style="font-size:11px; background:var(--muted); border:1px solid var(--border); padding:2px 6px; border-radius:10px;">{{ count($donkiAlerts) }}</span>
     </a>
-    <a href="{{ route('admin.nasa-data', ['tab' => 'health']) }}" class="tab-btn {{ $activeTab === 'health' ? 'active' : '' }}">
+    <a href="{{ url()->current() }}?tab=health" class="tab-btn {{ $activeTab === 'health' ? 'active' : '' }}">
         <i class="fa fa-server"></i> Diagnóstico de APIs & Redundancia
     </a>
 </div>
@@ -169,7 +169,7 @@
             <h2 style="font-size:16px; font-weight:700; margin:0 0 4px; color:var(--foreground);">Estudios de Tejidos Oculares en Microgravedad</h2>
             <p style="font-size:12px; color:var(--muted-foreground); margin:0;">Datos de transcriptómica, retina y nervio óptico de misiones orbitales (ISS / Transbordador Espacial).</p>
         </div>
-        <form method="GET" action="{{ route('admin.nasa-data') }}" style="display:flex; gap:8px;">
+        <form method="GET" action="{{ url()->current() }}" style="display:flex; gap:8px;">
             <input type="hidden" name="tab" value="osdr">
             <input type="text" name="q" value="{{ $query }}" placeholder="Filtrar por gen, tejido o estudio..." class="form-control" style="width:260px; height:34px; font-size:12px;">
             <button type="submit" class="btn btn-primary" style="padding:6px 14px; font-size:12px; min-height:34px;">Buscar</button>
@@ -228,7 +228,7 @@
             <h2 style="font-size:16px; font-weight:700; margin:0 0 4px; color:var(--foreground);">NASA Technical Reports Server (NTRS)</h2>
             <p style="font-size:12px; color:var(--muted-foreground); margin:0;">Publicaciones revisadas por pares y reportes de evidencia del NASA Human Research Program.</p>
         </div>
-        <form method="GET" action="{{ route('admin.nasa-data') }}" style="display:flex; gap:8px;">
+        <form method="GET" action="{{ url()->current() }}" style="display:flex; gap:8px;">
             <input type="hidden" name="tab" value="ntrs">
             <input type="text" name="q" value="{{ $query }}" placeholder="Filtrar por autor o tema..." class="form-control" style="width:260px; height:34px; font-size:12px;">
             <button type="submit" class="btn btn-primary" style="padding:6px 14px; font-size:12px; min-height:34px;">Buscar</button>

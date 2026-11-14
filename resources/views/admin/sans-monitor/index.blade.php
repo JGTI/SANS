@@ -544,6 +544,36 @@
             <canvas id="timelineCutChart"></canvas>
         </div>
     </div>
+
+    {{-- Reproductor interactivo de Hitos (AT-03 y AT-04: Histórico con available_day vs Simulación Sintética) --}}
+    <div style="margin-top:1rem;padding:0.9rem 1rem;border:1px solid var(--border);border-radius:6px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+            <div style="font-size:0.78rem;font-weight:800;">
+                <i class="fa fa-step-forward"></i>
+                {{ $isEn
+                    ? "Interactive Playback (AT-03 / AT-04) — Active Day: Day {$selectedDay} ({$timelineMode})"
+                    : "Reproductor de Hitos (AT-03 / AT-04) — Día Activo: Día {$selectedDay} ({$timelineMode})" }}
+            </div>
+            <div style="font-size:0.76rem;color:var(--muted-foreground);margin-top:0.15rem;">
+                {{ $timelineState['status_banner'] ?? '' }}
+            </div>
+        </div>
+        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;align-items:center;">
+            @foreach([0, 10, 15, 20, 30, 180] as $dBtn)
+                <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento', 'day' => $dBtn])) }}"
+                   class="btn {{ (int)$selectedDay === $dBtn ? 'btn-primary' : 'btn-outline' }}" style="padding:0.3rem 0.6rem;font-size:0.74rem;">
+                    {{ $isEn ? "Day {$dBtn}" : "Día {$dBtn}" }}
+                </a>
+            @endforeach
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento', 'mode' => $timelineMode === 'HISTORICO' ? 'SIMULACION' : 'HISTORICO'])) }}"
+               class="btn btn-outline" style="padding:0.3rem 0.65rem;font-size:0.74rem;">
+                <i class="fa fa-exchange"></i>
+                {{ $timelineMode === 'HISTORICO'
+                    ? ($isEn ? 'Switch to Synthetic Simulation' : 'Cambiar a Simulación Sintética')
+                    : ($isEn ? 'Switch to Historical Record' : 'Cambiar a Registro Histórico') }}
+            </a>
+        </div>
+    </div>
 </div>
 @endif
 

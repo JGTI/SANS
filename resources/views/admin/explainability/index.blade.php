@@ -18,11 +18,8 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:10px;">
-            <a href="{{ route('admin.model-lab') }}" class="btn btn-secondary" style="padding:7px 14px; font-size:12px;">
+            <a href="{{ route('public.model-lab') }}" class="btn btn-secondary" style="padding:7px 14px; font-size:12px;">
                 &larr; Laboratorio de Modelos
-            </a>
-            <a href="{{ route('admin.model-registry') }}" class="btn btn-primary" style="padding:7px 14px; font-size:12px;">
-                Registro de Modelos &rarr;
             </a>
         </div>
     </div>
@@ -34,7 +31,7 @@
         Ajuste Interactivo de Parámetros Clínicos del Astronauta
     </div>
 
-    <form method="GET" action="{{ route('admin.explainability') }}" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; align-items:flex-end;">
+    <form method="GET" action="{{ url()->current() }}" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; align-items:flex-end;">
         <div>
             <label style="font-size:11px; font-weight:600; color:var(--muted-foreground); display:block; margin-bottom:4px;">
                 Desplazamiento Hipermetrópico (D):
