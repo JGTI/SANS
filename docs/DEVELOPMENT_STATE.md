@@ -7,7 +7,7 @@
 **Repositorio Oficial:** `https://github.com/JGTI/SANS`  
 
 **Estado de la suite de pruebas (Baseline 100% Verde):**
-- **Laravel (PHPUnit):** **75 tests aprobados (353 aserciones)**
+- **Laravel (PHPUnit):** **77 tests aprobados (373 aserciones)**
 - **Python Scientific Engine (Pytest):** **22 tests aprobados**
 - **Microservicio Python FastAPI:** **ONLINE (`http://127.0.0.1:8001`)**
 
@@ -17,7 +17,7 @@
 
 | Módulo | Estado | Rutas / Componentes | Pruebas |
 |---|---|---|---|
-| **SANS Monitor (Workspace de 5 Pestañas)** | ✅ Completo | `/admin/sans-monitor` (`SansMonitorController` & `SansMonitorEngine`): 1. Ficha y protocolos, 2. Seguimiento del ojo (+30/+60/+90), 3. Simulador, 4. Estudios y tendencias, 5. Inclinación y seguimiento | `SansMonitorAcceptanceTest` (8 tests / 66 aserciones cubriendo `AT-01` a `AT-19`) |
+| **SANS Monitor (3 Pestañas + Multilenguaje ES/EN en Raíz `/`)** | ✅ Completo | `/`, `/demo`, `/sans-monitor`, `/admin/sans-monitor` (`SansMonitorController`, `SansMonitorEngine`, `SetLocale`): 1. Predictor de 6 Biomarcadores, 2. Tiempo Antes · Durante · Después (+30/+60/+90), 3. 3 Escenarios Modelos (Estable, Empeora, No se escanea) + Cajones NASA y Matriz del Jurado | `SansMonitorAcceptanceTest` (10 tests / 86 aserciones cubriendo `AT-01` a `AT-19`, acceso sin login y selector bilingüe `ES/EN`) |
 | **Consola ZEISS Cirrus™ HD-OCT (Macular Cube 512x128)** | ✅ Completo | `/admin/oct-analysis` y `/admin/digital-twin?mode=dual` (`DigitalTwinController`): Matriz de 9 paneles, mapas ILM-RPE, fondo LSO, B-Scans H/V, rejilla ETDRS y tabla bilateral OD/OS | `DigitalTwinTest` (4 tests) & `test_cirrus_oct_workstation_endpoint` |
 | **Astronaut Digital Twin (Gemelo 3D WebGL)** | ✅ Completo | `/admin/digital-twin` (`DigitalTwinController` & Three.js con corte sagital, retícula HUD y vista dual 3D + OCT) | `DigitalTwinTest` (4 tests) |
 | **Vision Lab Oftalmológico** | ✅ Completo | `/admin/vision-lab` (`VisionLabController`): Equivalente Esférico ($SE$), Snellen $\to$ LogMAR, vectores de Thibos ($M, J_0, J_{45}, B$) y exportador CSV | `VisionLabTest` (4 tests) |

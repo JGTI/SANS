@@ -78,7 +78,10 @@
                 <div style="font-size:0.68rem;text-transform:uppercase;color:var(--muted-foreground);">
                     {{ $isEn ? 'Operational State' : 'Estado Operativo' }} ({{ $activeCase->case_id }})
                 </div>
-                <div style="font-size:0.95rem;font-weight:800;">{{ $t($caseEvaluation['case_operational_text']) }}</div>
+                <div style="font-size:0.95rem;font-weight:800;">
+                    <i class="fa {{ $caseEvaluation['case_operational_code'] === 'LISTO_PARA_REVISION' ? 'fa-check-circle' : ($caseEvaluation['case_operational_code'] === 'PRIORIZAR_REVISION' ? 'fa-exclamation-triangle' : 'fa-question-circle') }}"></i>
+                    {{ $t($caseEvaluation['case_operational_text']) }}
+                </div>
             </div>
             <div style="padding:0.5rem 0.9rem;border:1px solid var(--border);border-radius:6px;text-align:right;">
                 <div style="font-size:0.68rem;text-transform:uppercase;color:var(--muted-foreground);">
@@ -86,10 +89,26 @@
                 </div>
                 <div style="font-size:0.95rem;font-weight:700;">{{ $t($caseEvaluation['fitness_display']) }}</div>
             </div>
+            <a href="{{ route('home', ['lang' => app()->getLocale()]) }}" class="btn btn-outline" style="padding:0.6rem 0.85rem;" title="{{ $isEn ? 'Reset Demo to default scenario' : 'Reiniciar demostración al estado inicial' }}">
+                <i class="fa fa-refresh"></i> {{ $isEn ? 'Reset Demo' : 'Reiniciar Demo' }}
+            </a>
             <a href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.6rem 1rem;">
                 <i class="fa fa-cube"></i> {{ $isEn ? 'Open 3D Viewer + OCT' : 'Abrir Visor 3D + OCT' }}
             </a>
         </div>
+    </div>
+    <div style="margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;font-size:0.76rem;color:var(--muted-foreground);">
+        <span>
+            <i class="fa fa-shield"></i>
+            <strong>{{ $isEn ? 'Scientific Honesty & Provenance:' : 'Honestidad Científica y Procedencia:' }}</strong>
+            {{ $isEn
+                ? 'Source type: ' . $activeCase->source_type . ' (Calibrated synthetic/analog dataset). Prepares medical surveillance without issuing automated fit-for-duty verdicts.'
+                : 'Origen de datos: ' . $activeCase->source_type . ' (Cohorte sintética/análoga calibrada). Prepara la vigilancia médica sin emitir un veredicto automático de aptitud.' }}
+        </span>
+        <span>
+            <i class="fa fa-check-square-o"></i>
+            {{ $isEn ? 'Public Demo Mode · Zero Login Required · WCAG 2.2 AA' : 'Modo Demo Público · Sin Login Requerido · WCAG 2.2 AA' }}
+        </span>
     </div>
 </div>
 
@@ -647,6 +666,108 @@
     </div>
 </div>
 @endif
+
+{{-- CAJONES DESPLEGABLES DE EVIDENCIA CIENTÍFICA NASA Y MATRIZ DEL JURADO (SIN RECARGAR LA VISTA PRINCIPAL) --}}
+<div class="sans-grid-2" style="margin-bottom:1.25rem;">
+    {{-- Cajón 1: Protocolos NASA y 7 Referencias Canónicas (RF-05 a RF-08, AT-02) --}}
+    <details class="card" style="padding:1rem 1.2rem;">
+        <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;">
+            <span>
+                <i class="fa fa-book"></i>
+                {{ $isEn
+                    ? 'NASA Protocols, Previously Applied Version & 7 Scientific References (AT-02)'
+                    : 'Protocolos NASA, Versión Previa Aplicada y 7 Referencias Científicas (AT-02)' }}
+            </span>
+            <i class="fa fa-angle-down"></i>
+        </summary>
+        <div style="margin-top:0.85rem;font-size:0.8rem;">
+            <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
+                <strong>{{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}</strong>
+                @if($catalogSearch['previously_applied'])
+                    <div>
+                        <code>{{ $catalogSearch['previously_applied']->version_id }}</code> —
+                        {{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})
+                    </div>
+                @else
+                    <div>{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
+                @endif
+            </div>
+
+            @if(!empty($catalogSearch['newer_verified_versions']))
+                <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
+                    <strong>{{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}</strong>
+                    @foreach($catalogSearch['newer_verified_versions'] as $nv)
+                        <div>
+                            <code>{{ $nv->version_id }}</code> — {{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
+            <div style="font-weight:700;margin-bottom:0.35rem;">
+                {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
+            </div>
+            <ul style="margin:0;padding-left:1.15rem;">
+                @foreach($catalogSearch['followup_matches'] as $match)
+                    <li style="margin-bottom:0.3rem;">
+                        <strong>[{{ $match['document_type_badge'] }}]</strong>
+                        <code>{{ $match['protocol']->version_id }}</code> — {{ $match['protocol']->title }}
+                        @if($match['protocol']->source_url)
+                            <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener" style="text-decoration:underline;margin-left:4px;">
+                                <i class="fa fa-external-link"></i> NASA/Source
+                            </a>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </details>
+
+    {{-- Cajón 2: Matriz de Evaluación NASA Space Apps (Impact, Creativity, Validity, Relevance, Presentation) --}}
+    <details class="card" style="padding:1rem 1.2rem;">
+        <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;">
+            <span>
+                <i class="fa fa-trophy"></i>
+                {{ $isEn
+                    ? 'NASA Space Apps Judging Guide Matrix (Impact · Creativity · Validity · Relevance · Presentation)'
+                    : 'Matriz para el Jurado NASA Space Apps (Impacto · Creatividad · Validez · Relevancia · Presentación)' }}
+            </span>
+            <i class="fa fa-angle-down"></i>
+        </summary>
+        <div style="margin-top:0.85rem;font-size:0.8rem;display:grid;gap:0.45rem;">
+            <div>
+                <strong><i class="fa fa-bullseye"></i> Impact:</strong>
+                {{ $isEn
+                    ? 'Structures longitudinal ocular surveillance (Before, During, and +30/+60/+90d post-flight) and -6° HDT Earth analogs without replacing medical judgment.'
+                    : 'Estructura la vigilancia ocular longitudinal (Antes, Durante y +30/+60/+90d posvuelo) y análogos terrestres -6° HDT sin sustituir el juicio médico.' }}
+            </div>
+            <div>
+                <strong><i class="fa fa-lightbulb-o"></i> Creativity:</strong>
+                {{ $isEn
+                    ? 'Combines a 6-biomarker explainable predictor, 3 reference scenario models (Stable, Worsens, Unscanned), and a dual 3D WebGL + OCT workstation.'
+                    : 'Combina un predictor explicable de 6 biomarcadores, 3 escenarios modelos (Estable, Empeora, No se escanea) y estación dual 3D WebGL + OCT.' }}
+            </div>
+            <div>
+                <strong><i class="fa fa-flask"></i> Validity:</strong>
+                {{ $isEn
+                    ? 'Deterministic ophthalmology (SE, LogMAR, Thibos vectors), strict separation of historical vs synthetic interpolation, and 99 automated tests (77 PHPUnit + 22 Pytest).'
+                    : 'Oftalmología determinista (SE, LogMAR, vectores de Thibos), separación estricta entre histórico y simulación sintética, y 99 tests automatizados.' }}
+            </div>
+            <div>
+                <strong><i class="fa fa-rocket"></i> Relevance:</strong>
+                {{ $isEn
+                    ? 'Grounded in NASA OCHMO-MTB-001, NASA-STD-3001, SLS-SPEC-159, NASAHRP SANS Evidence Report, OSDR, and NTRS.'
+                    : 'Fundamentado en NASA OCHMO-MTB-001, NASA-STD-3001, SLS-SPEC-159, NASAHRP SANS Evidence Report, OSDR y NTRS.' }}
+            </div>
+            <div>
+                <strong><i class="fa fa-desktop"></i> Presentation:</strong>
+                {{ $isEn
+                    ? 'Zero-login public access at root URL (/), bilingual ES/EN switch, WCAG 2.2 AA high-contrast theme, and NEXUS × Visual Rehab Center attribution.'
+                    : 'Acceso público sin login en la raíz (/), selector bilingüe ES/EN, alto contraste WCAG 2.2 AA y atribución NEXUS × Visual Rehab Center.' }}
+            </div>
+        </div>
+    </details>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

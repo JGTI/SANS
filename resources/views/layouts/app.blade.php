@@ -20,6 +20,7 @@
 @php
     $isEn = app()->getLocale() === 'en';
 @endphp
+<a href="#main-content" class="skip-link">{{ $isEn ? 'Skip to main content' : 'Saltar al contenido principal' }}</a>
 <div class="admin-shell">
     <aside class="sidebar" id="app-sidebar" aria-label="{{ $isEn ? 'Main navigation' : 'Navegación principal' }}">
         <a class="workspace-switcher" href="{{ route('home') }}">
@@ -252,6 +253,38 @@
                 userButton.setAttribute('aria-expanded', 'false');
             }
         });
+
+        if (root.lang === 'en') {
+            const globalPhrases = {
+                'Gemelo Digital 3D': '3D Digital Twin',
+                'Consola Clínica ZEISS Cirrus': 'ZEISS Cirrus Clinical Console',
+                'Simulador de Misión': 'Mission Simulator',
+                'Observatorio de Datos NASA': 'NASA Data Observatory',
+                'Laboratorio de Modelos': 'Model Laboratory',
+                'Centro de Explicabilidad': 'Explainability Center',
+                'Calidad de Datos': 'Data Quality Observatory',
+                'Registro de Modelos': 'Model Registry',
+                'Ojo Derecho': 'Right Eye',
+                'Ojo Izquierdo': 'Left Eye',
+                'Línea Base': 'Baseline',
+                'En Vuelo': 'In-Flight',
+                'Posvuelo': 'Post-Flight',
+                'Exportar CSV': 'Export CSV',
+                'Imprimir Expediente': 'Print Dossier'
+            };
+            const walker = document.createTreeWalker(document.getElementById('main-content'), NodeFilter.SHOW_TEXT);
+            let node;
+            while ((node = walker.nextNode())) {
+                let text = node.nodeValue;
+                if (!text || !text.trim()) continue;
+                for (const [es, en] of Object.entries(globalPhrases)) {
+                    if (text.includes(es)) {
+                        text = text.replaceAll(es, en);
+                    }
+                }
+                node.nodeValue = text;
+            }
+        }
     })();
 </script>
 @stack('scripts')

@@ -37,16 +37,18 @@ Integra criterios de:
 Cualquier juez, investigador, mentor o visitante puede abrir la URL pública y ejecutar la demostración principal de **SPACE VISION — SANS Monitor** **sin iniciar sesión, sin registrarse, sin OAuth y sin configurar claves API**:
 
 - **Recorrido directo sin bloqueos:**
-  1. Portada pública (`/`) con botón principal **"Explore the Demo · Launch SPACE VISION (No Login Required)"**.
+  1. Ruta raíz (`/`) carga directamente el proyecto interactivo **SPACE VISION — SANS Monitor** (sin landing intermedia y sin requerir login), con selector bilingüe **Español (`ES`) / Inglés (`EN`)** y botón de **Reset Demo**.
   2. Rutas públicas directas de demostración interactiva:
+     - `/`
      - `/demo`
      - `/sans-monitor`
      - `/admin/sans-monitor`
   3. Dentro de la demostración pública, el visitante puede:
+     - Alternar en tiempo real entre **Español (`?lang=es`)** e **Inglés (`?lang=en`)** desde la barra superior.
      - Nutrir y ejecutar el **Predictor de los 6 Biomarcadores Oculares** (*1. Espesor medio OCT, 2. Longitud axial, 3. Hipermetropía simulada, 4. Edema papilar Frisén, 5. Presión intraocular PIO, 6. Exposición previa a inclinación cefálica de $-6^\circ$ en la Tierra*).
      - Explorar la **Línea de Tiempo Longitudinal: Antes · Durante (Días 10, 15, 30) · Después (+30, +60 y +90 días)**.
      - Alternar entre los **3 Escenarios Modelos** (*1. Estable, 2. Empeora, 3. No se escanea*).
-     - Registrar nuevas fichas ficticias y consultar el catálogo curado de referencias científicas de NASA.
+     - Registrar nuevas fichas ficticias y consultar los cajones desplegables de **Protocolos NASA y 7 Referencias Canónicas (`AT-02`)** y la **Matriz Oficial del Jurado NASA Space Apps (*Impact · Creativity · Validity · Relevance · Presentation*)**.
 - Los módulos administrativos internos (`/admin/users`, `/admin/maintenance`, `/admin/api-keys` y firma de dictamen médico autorizado `RF-11`) conservan su protección de seguridad RBAC sin interferir jamás con el recorrido público del jurado.
 
 ---
