@@ -132,8 +132,8 @@
 
         <div class="sidebar-user">
             @php
-                $currentUserName = auth()->user()?->name ?? 'Public Demo Judge';
-                $currentUserEmail = auth()->user()?->email ?? ($isEn ? 'Public Mode · No Login Required' : 'Modo Público · Sin Login');
+                $currentUserName = auth()->user()?->name ?? ($isEn ? 'NASA Space Apps Judge' : 'Jurado NASA Space Apps');
+                $currentUserEmail = auth()->user()?->email ?? ($isEn ? 'Public Access · Zero Login Required' : 'Acceso Público · Sin Login');
             @endphp
             <button class="user-button" id="user-menu-button" type="button" aria-expanded="false" aria-controls="user-menu">
                 <span class="avatar">{{ strtoupper(mb_substr($currentUserName, 0, 2)) }}</span>
@@ -144,16 +144,9 @@
                 <i class="fa fa-ellipsis-v" style="color:var(--muted-foreground); margin-left:auto;"></i>
             </button>
             <div class="user-menu" id="user-menu">
-                @auth
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit"><i class="fa fa-sign-out" style="margin-right:8px;"></i> {{ $isEn ? 'Sign out' : 'Cerrar sesión' }}</button>
-                </form>
-                @else
-                <a href="{{ route('login') }}" style="display:block;padding:8px 12px;text-decoration:none;color:inherit;font-size:13px;">
-                    <i class="fa fa-sign-in" style="margin-right:8px;"></i> {{ $isEn ? 'Staff / Admin Login (Optional)' : 'Acceso Staff / Admin (Opcional)' }}
+                <a href="{{ route('home', ['lang' => app()->getLocale()]) }}" style="display:block;padding:8px 12px;text-decoration:none;color:inherit;font-size:13px;">
+                    <i class="fa fa-refresh" style="margin-right:8px;"></i> {{ $isEn ? 'Reset Public Demo' : 'Reiniciar Demo Pública' }}
                 </a>
-                @endauth
             </div>
         </div>
     </aside>

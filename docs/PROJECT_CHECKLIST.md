@@ -1,84 +1,67 @@
-# ✅ SPACE VISION — SANS MONITOR: CHECKLIST INTEGRAL DE PROYECTO Y CONCURSO
+# ✅ SPACE VISION — SANS MONITOR: COMPLETE PROJECT & JUDGING CHECKLIST
 ## NASA International Space Apps Challenge 2026 · NEXUS × Visual Rehab Center
 
-**Fecha de corte:** 14 de noviembre de 2026  
-**Rama:** `main` (`https://github.com/JGTI/SANS`)  
-**URL Pública en Vivo:** `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`  
-**Suite de Pruebas:** `77 passed` (PHPUnit) + `22 passed` (Pytest FastAPI `:8001`) = **99 pruebas automatizadas al 100% en verde**.
+**Date:** November 14, 2026  
+**Branch:** `main` (`https://github.com/JGTI/SANS`)  
+**Live Public URL:** `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`  
+**Automated Verification:** `77 passed` (PHPUnit) + `22 passed` (Pytest FastAPI `:8001`) = **99/99 passing tests (100% green)**.
 
 ---
 
-## 1. Reglas Críticas del Concurso (P0 — Bloqueantes)
+## 1. Core Competition Requirements (P0 — 100% Complete)
 
-- [x] **Acceso público directo en la raíz (`/`) sin login:** La URL principal abre directamente el Predictor SANS de 3 pestañas sin pedir usuario, contraseña, registro, OAuth ni claves API.
-- [x] **Sin landing intermedia:** Eliminada como portada para que el jurado interactúe desde el primer segundo con la herramienta funcional.
-- [x] **Inglés (`EN`) como idioma principal por defecto + Selector Bilingüe (`EN | ES`):** Al abrir la app en cualquier navegador o ventana de incógnito, carga en **Inglés (`en`)** y permite cambiar en 1 clic a **Español (`es`)**.
-- [x] **Navegación pública sin bloqueos en módulos de apoyo:** Los botones y enlaces del flujo principal (`/`, `/demo`, `/sans-monitor`, `/digital-twin?mode=dual`, `/oct-analysis`, `/demo-theater`, `/vision-lab`, `/nasa-data`, `/model-lab`, `/explainability`) son accesibles sin sesión activa.
-- [x] **Botón de Reinicio de Demostración (`Reset Demo`):** Disponible en la cabecera principal para restaurar el escenario por defecto en 1 clic.
-- [x] **Cumplimiento de Brand Guidelines de NASA:** Leyenda oficial *"Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026."* integrada en el pie de página y documentos sin afirmar respaldo ni validación clínica oficial de NASA.
-
----
-
-## 2. Flujo Central Simplificado de Alto Impacto (Las 3 Pestañas Principales)
-
-### Pestaña 1 — Formulario Inicial de la Persona + Predictor de los 6 Biomarcadores Oculares
-- [x] **1. Espesor medio por OCT (`TRT` en $\mu\text{m}$):** Comparación de línea base vs control actual con disparador determinista ($\Delta\text{TRT} \ge +20\ \mu\text{m}$).
-- [x] **2. Longitud axial del ojo ($\text{mm}$):** Detección de acortamiento axial ($\Delta \le -0.15\ \text{mm}$) compatible con aplanamiento del polo posterior en microgravedad.
-- [x] **3. Hipermetropía simulada ($\Delta SE$ en Dioptrías $\text{D}$):** Evaluación de desplazamiento refractivo hipermetrópico ($+0.50\ \text{D}$ a $+1.50\ \text{D}$) separada de las observaciones medidas (`RF-35`).
-- [x] **4. Edema papilar (Escala clínica de Frisén $0\text{–}5$):** Objetivo principal de pronóstico neuro-ocular (`RF-36`).
-- [x] **5. Presión intraocular (`PIO` / `IOP` en $\text{mmHg}$):** Tonometría ocular visible incluso cuando falta escaneo OCT (`AT-17`).
-- [x] **6. Exposición previa a inclinación cefálica de $-6^\circ$ en la Tierra (`-6° HDT`):** Registro y ponderación del análogo terrestre de 14 días ($280 \to 304 \to 284\ \mu\text{m}$) con su propia línea base separada (`AT-19`).
-- [x] **Índice de Señal Predictiva ($0\text{–}100$) + Gráfico de Pesos por Biomarcador (Chart.js) + Formulario de Alta Rápida de Sujeto (`RF-01`).**
-
-### Pestaña 2 — Medición del Tiempo: Antes · Durante · Después (Corte a +30, +60 y +90 Días)
-- [x] **Bloque 1 — Antes del vuelo (Línea Base Día 0):** Referencia basal por ojo (`OD` / `OS`).
-- [x] **Bloque 2 — Durante el vuelo (Días 10 $\to$ 15 $\to$ 30):** Evolución en órbita respetando disponibilidad de resultados (`available_day`, `AT-03`).
-- [x] **Bloque 3 — Análogo previo $-6^\circ$ en Tierra:** Comparación de cambio inmediato ($+24\ \mu\text{m}$) y recuperación a $+30$ días ($+4\ \mu\text{m}$, `AT-10`, `AT-11`).
-- [x] **Corte Posvuelo a +30, +60 y +90 días (`RF-31` a `RF-34`, `AT-15`, `AT-16`):** Muestra explícitamente cada hito y conserva el corte de **+60 días como «Unmeasured / Sin medición» sin interpolarlo jamás**.
-- [x] **Curva Longitudinal Chart.js con hueco real en el corte +60 sin medición (`spanGaps: false`).**
-
-### Pestaña 3 — Los 3 Escenarios Modelos (1 Clic)
-- [x] **1. Escenario Estable (`CASE-STABLE-01`):** OCT basal $278 \to 284\ \mu\text{m}$ ($\Delta +6\ \mu\text{m}$), Frisén 0/5 $\to$ Salida operativa: **«Ready for review / Listo para revisión»**.
-- [x] **2. Escenario que Empeora (`CASE-PROG-02`):** OCT basal $280 \to 306\ \mu\text{m}$ ($\Delta +26\ \mu\text{m}$ al día 30), hipermetropía $+0.75\ \text{D}$, Frisén 2/5 $\to$ Salida operativa: **«Prioritize review / Priorizar revisión»**.
-- [x] **3. Escenario que No se Escanea (`CASE-NOSCAN-03A`):** Sin escaneo OCT registrado (con PIO de $16\ \text{mmHg}$) $\to$ Salida operativa: **«Missing data / Faltan datos»** (nunca se dibuja ni clasifica como normal o estable, `AT-07`, `AT-17`).
-- [x] **3 Vistas Esquemáticas Anatómicas SVG sincronizadas:** (1) Longitud axial / corte sagital, (2) Edema papilar / fondo de disco óptico, (3) Capas retinianas OCT.
+- [x] **Public zero-login access at the root URL (`/`):** Opens directly into the functional 3-Tab SANS Biomarker Predictor without requesting usernames, passwords, registration, OAuth, or API keys.
+- [x] **No intermediate landing wall:** Visitors interact immediately with the live scientific workstation from the first second.
+- [x] **English (`EN`) as the primary default language + Bilingual Toggle (`EN | ES`):** Loads in **English (`en`)** by default across all browsers and incognito sessions, with a 1-click toggle to **Spanish (`es`)**.
+- [x] **Zero-login public navigation across all supporting modules:** `/`, `/demo`, `/sans-monitor`, `/digital-twin?mode=dual`, `/oct-analysis`, `/demo-theater`, `/demo-theater/report/{code}`, `/vision-lab`, `/nasa-data`, `/model-lab`, and `/explainability` work without authentication.
+- [x] **1-Click `Reset Demo` Action:** Restores the default demonstration state immediately from the top header.
+- [x] **Official NASA Brand Guidelines Compliance:** Displays *"Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026."* without claiming official NASA endorsement or clinical certification.
 
 ---
 
-## 3. Especificación Canónica (`SANS_MONITOR_SPEC.md`) y 19 Pruebas de Aceptación (`AT-01` a `AT-19`)
+## 2. Streamlined 3-Tab High-Impact Architecture (100% Complete)
 
-- [x] **`AT-01`:** Crear ficha sin OCT ni protocolo previo $\to$ Estado operativo «Missing data / Faltan datos» y «Fitness not evaluated / Aptitud no evaluada».
-- [x] **`AT-02`:** Distinguir protocolo aplicado previamente (`OCHMO-MTB-001-V2022`), versión posterior verificada (`OCHMO-MTB-001-V2024`) y artículo de investigación sin sobrescribir la selección previa.
-- [x] **`AT-03` y `AT-04`:** Reproducción histórica oculta el resultado del día 15 hasta el día 20 (`available_day = 20`); el modo simulación marca los fotogramas interpolados como sintéticos y el día 180 como «Fuera del rango».
-- [x] **`AT-05`:** Coexistencia en la misma ficha de ojo derecho (`OD`) en progresión y ojo izquierdo (`OS`) sin línea base.
-- [x] **`AT-06` y `AT-07`:** Filtros combinados de 4 ejes y separación entre «Sin escaneos previos» y «Sin controles recientes» sin etiquetarlos nunca como estables.
-- [x] **`AT-08` y `AT-09`:** Pronóstico futuro experimental marcado como «No evaluado» a falta de modelo P2 validado; validador de importación CSV detecta duplicados y mediciones no comparables sin borrar el original.
-- [x] **`AT-10` a `AT-14` y `AT-19`:** Comparador de exposición inclinada $-6^\circ$ HDT por tramos, eje desde fin de exposición deshabilitado cuando el fin es desconocido y línea base orbital independiente de la terrestre.
-- [x] **`AT-15` a `AT-18`:** Cortes posvuelo $+30, +60, +90$ días sin interpolar $+60$, visualización de PIO sin OCT y panel de contexto que no altera la salida operativa.
+### Tab 1 — Initial Subject Form & 6-Biomarker Predictor
+- [x] **1. Mean OCT Thickness (`TRT` in $\mu\text{m}$):** Baseline vs. current thickness with deterministic progression trigger ($\Delta\text{TRT} \ge +20\ \mu\text{m}$).
+- [x] **2. Eye Axial Length ($\text{mm}$):** Axial shortening ($\Delta \le -0.15\ \text{mm}$) consistent with posterior globe flattening in microgravity.
+- [x] **3. Simulated Hyperopia ($\Delta SE$ in Diopters $\text{D}$):** Hyperopic refractive shift ($+0.50\ \text{D}$ to $+1.50\ \text{D}$) kept strictly separate from measured observations (`RF-35`).
+- [x] **4. Papilledema (Frisén Scale $0\text{–}5$):** Primary neuro-ocular prognostic target (`RF-36`).
+- [x] **5. Intraocular Pressure (`IOP` in $\text{mmHg}$):** Ocular tonometry visible even when OCT scans are unavailable (`AT-17`).
+- [x] **6. Prior $-6^\circ$ Head-Down Tilt on Earth (`-6° HDT`):** 14-day terrestrial analog ($280 \to 304 \to 284\ \mu\text{m}$) tracked on its own separate timeline (`AT-19`).
+- [x] **Explainable Signal Index ($0\text{–}100$) + Feature Impact Bar Chart (Chart.js) + Quick New Subject Form (`RF-01`).**
+
+### Tab 2 — Longitudinal Timeline: Before · During · After (+30, +60 & +90 Days)
+- [x] **Block 1 — Before Flight (Baseline Day 0):** Pre-flight reference per eye (`OD` / `OS`).
+- [x] **Block 2 — During Flight (Days 10 $\to$ 15 $\to$ 30):** In-flight progression respecting result availability (`available_day`, `AT-03`).
+- [x] **Block 3 — Prior $-6^\circ$ Tilt Exposure on Earth:** Immediate $+24\ \mu\text{m}$ shift and $+4\ \mu\text{m}$ recovery at $+30$ days post-tilt (`AT-10`, `AT-11`).
+- [x] **Post-Flight Cut at +30, +60 & +90 Days (`RF-31`–`RF-34`, `AT-15`, `AT-16`):** Displays each milestone and keeps the missing **+60 days** visit explicitly marked **Unmeasured** without interpolation.
+- [x] **Interactive Milestone Playback Bar (`Day 0, 10, 15, 20, 30, 180` · Historical vs. Synthetic Simulation, `AT-03` / `AT-04`).**
+
+### Tab 3 — 3 Reference Scenario Models (1-Click Comparison)
+- [x] **1. Stable Scenario (`CASE-STABLE-01`):** Baseline OCT $278 \to 284\ \mu\text{m}$ ($\Delta +6\ \mu\text{m}$), Frisén 0/5 $\to$ **Ready for review**.
+- [x] **2. Worsening Scenario (`CASE-PROG-02`):** Baseline OCT $280 \to 306\ \mu\text{m}$ ($\Delta +26\ \mu\text{m}$), hyperopia $+0.75\ \text{D}$, Frisén 2/5 $\to$ **Prioritize review**.
+- [x] **3. Unscanned Scenario (`CASE-NOSCAN-03A`):** No OCT scan recorded (has IOP of $16\ \text{mmHg}$) $\to$ **Missing data** (never drawn or classified as stable, `AT-07`, `AT-17`).
+- [x] **3 Synchronized Anatomical SVG Schematics:** (1) Sagittal axial length, (2) Optic disc fundus / Frisén grade, (3) OCT retinal layers.
 
 ---
 
-## 4. Accesibilidad (WCAG 2.2 AA), UX y Documentación Oficial para Entrega NASA
+## 3. Canonical Acceptance Tests (`AT-01` to `AT-19`), Accessibility & Submission Package (100% Complete)
 
-- [x] **Accesibilidad WCAG 2.2 AA:** Enlace `Skip to main content`, foco de teclado `:focus-visible`, soporte `@media (prefers-reduced-motion: reduce)`, iconos no dependientes únicamente del color y modo claro/oscuro de alto contraste (`#09090b` / `#ffffff`).
-- [x] **Documentación de Entrega Lista en el Repositorio:**
+- [x] **All 19 Acceptance Tests (`AT-01` to `AT-19`)** implemented and verified in [`tests/Feature/SansMonitorAcceptanceTest.php`](../tests/Feature/SansMonitorAcceptanceTest.php).
+- [x] **WCAG 2.2 AA Accessibility:** `Skip to main content` link, `:focus-visible` keyboard outlines, `@media (prefers-reduced-motion: reduce)` support, non-color-only status icons, and high-contrast light/dark mode.
+- [x] **Official Submission Documentation (English Primary):**
   - [x] [`README.md`](../README.md)
-  - [x] [`JUDGING.md`](../JUDGING.md) (Matriz Impact, Creativity, Validity, Relevance, Presentation)
-  - [x] [`SUBMISSION.md`](../SUBMISSION.md) (Borrador oficial en inglés para el portal de NASA Space Apps)
-  - [x] [`SOURCES.md`](../SOURCES.md) (Trazabilidad de las 7 referencias científicas, datasets NASA y declaración de IA)
-  - [x] [`DEPLOYMENT.md`](../DEPLOYMENT.md) (Guía de despliegue y verificación de rutas públicas)
-  - [x] [`docs/DEMO_SCRIPT.md`](DEMO_SCRIPT.md) (Guion de 3 minutos + Storyboard de 30s / 7 diapositivas)
-  - [x] [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md) y [`docs/METHODOLOGY_MASTER_PROMPT.md`](METHODOLOGY_MASTER_PROMPT.md)
+  - [x] [`JUDGING.md`](../JUDGING.md)
+  - [x] [`SUBMISSION.md`](../SUBMISSION.md)
+  - [x] [`SOURCES.md`](../SOURCES.md)
+  - [x] [`DEPLOYMENT.md`](../DEPLOYMENT.md)
+  - [x] [`docs/DEMO_SCRIPT.md`](DEMO_SCRIPT.md)
+  - [x] [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md)
+  - [x] [`docs/SCIENTIFIC_METHODOLOGY.md`](SCIENTIFIC_METHODOLOGY.md)
 
 ---
 
-## 5. ¿Qué falta o qué sigue? (Únicamente Entregables Externos del Equipo Humano / Fase P2 Post-Hackathon)
-
-### A. Acciones de Entrega del Equipo en el Portal de NASA Space Apps (Fuera del código)
-- [ ] **Grabar el video pitch de 30 segundos o preparar las 7 diapositivas** siguiendo el guion ya redactado en [`docs/DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
-- [ ] **Copiar y pegar los campos de [`SUBMISSION.md`](../SUBMISSION.md)** en la página oficial del equipo en `spaceappschallenge.org` antes del cierre (15 de noviembre, 11:59 p. m.).
-- [ ] **Ejecutar `git pull origin main && php artisan migrate --force && php artisan db:seed --class=SansMonitorSeeder --force && php artisan optimize:clear`** en el servidor de producción (`sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`) si aún no tiene el último commit (`dcf1be6`).
-
-### B. Evolución Científica Futura (Fase P1/P2 Post-Hackathon — Declarada con Honestidad Científica)
-- [ ] **Fase P1 (Datos clínicos reales con convenio IRB/OSDR):** Importación de cohortes clínicas autorizadas reales para calibración multi-centro.
-- [ ] **Fase P2 (Validación prospectiva externa del pronóstico de edema papilar):** Entrenamiento y validación cruzada externa con curvas de calibración reales antes de habilitar pronósticos clínicos validados.
+## 4. Final Human Team Actions Before Portal Deadline
+- [ ] **1. Pull latest `main` on the production server** (`git pull origin main && php artisan migrate --force && php artisan db:seed --class=SansMonitorSeeder --force && php artisan optimize:clear`).
+- [ ] **2. Record the 30-second video or export the 7-slide presentation** using [`docs/DEMO_SCRIPT.md`](DEMO_SCRIPT.md).
+- [ ] **3. Paste the English submission fields from [`SUBMISSION.md`](../SUBMISSION.md)** into the official `spaceappschallenge.org` project page.

@@ -1,45 +1,35 @@
-# 🎬 SPACE VISION / SANS MONITOR — GUION DE DEMOSTRACIÓN PARA EL JURADO (3 MINUTOS)
+# 🎬 SPACE VISION (SANS MONITOR) — OFFICIAL PITCH & DEMO SCRIPT
+## NASA International Space Apps Challenge 2026 · NEXUS × Visual Rehab Center
 
-> **Objetivo del Pitch:** Mostrar un sistema limpio, enfocado y de alto impacto visual sin saturar al jurado.  
-> **Flujo de 3 Pestañas:** `/admin/sans-monitor`  
-> **Credencial de 1 clic en `/login`:** `surgeon@spacevision.nasa` (o `admin@spacevision.nasa`) · Contraseña: `SpaceVision2026!`
-
----
-
-## Minuto 0:00 – 0:45 · El Problema y la Pestaña 1 (Formulario Inicial + Los 6 Biomarcadores)
-- **Ruta:** `/admin/sans-monitor?tab=biomarcadores`
-- **Qué decir:**
-  > *"En vuelos prolongados hacia la Luna y Marte, la redistribución cefálica de fluidos altera la estructura del ojo (Síndrome SANS). Nuestro objetivo es nutrir un predictor basado en biomarcadores para preparar la vigilancia de cada persona sin emitir dictámenes automáticos de aptitud."*
-- **Qué mostrar en pantalla:**
-  1. Abrir el **Formulario Inicial** para registrar a la persona (`ID pseudónimo`, fase y duración de misión).
-  2. Señalar los **6 Biomarcadores Clave** que alimentan el predictor:
-     - **1. Espesor medio por OCT** ($\mu\text{m}$ — basal vs actual).
-     - **2. Longitud axial del ojo** ($\text{mm}$).
-     - **3. Hipermetropía simulada** ($\Delta SE$ en Dioptrías $\text{D}$).
-     - **4. Edema papilar** (Escala de Frisén $0\text{–}5$).
-     - **5. Presión intraocular — PIO** ($\text{mmHg}$).
-     - **6. Exposición previa a inclinación cefálica de $-6^\circ$ en la Tierra** (Análogo terrestre $-6^\circ$ HDT).
-  3. Hacer clic en **"Ejecutar Predictor con estos 6 Biomarcadores"** y mostrar la gráfica de atribución de impacto en vivo y la salida operativa (**«Priorizar revisión»**, **«Listo para revisión»** o **«Faltan datos»**).
+> **Public Demo URL (Zero Login Required · Primary Language: English `EN` with `EN | ES` Toggle):**  
+> `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`
 
 ---
 
-## Minuto 0:45 – 1:45 · Pestaña 2: Medir el Tiempo — Antes · Durante · Después (+30, +60 y +90 Días)
-- **Ruta:** `/admin/sans-monitor?tab=seguimiento`
-- **Qué decir:**
-  > *"En la segunda pestaña medimos el ojo en una sola línea de tiempo: cómo estaba Antes del vuelo, cómo evoluciona Durante la misión (días 10, 15 y 30) y hacemos un corte exacto Después del vuelo a los +30, +60 y +90 días."*
-- **Qué mostrar en pantalla:**
-  1. Los 3 bloques comparativos superiores: **Antes del vuelo (Línea base 280 $\mu\text{m}$)** $\to$ **Durante el vuelo ($\Delta\text{TRT} +8 \to +14 \to +26\ \mu\text{m}$)** $\to$ **Exposición previa a $-6^\circ$ en Tierra ($280 \to 304\ [+24\ \mu\text{m}] \to 284\ [+4\ \mu\text{m}]$)**.
-  2. Las 3 tarjetas de **Corte Después del Vuelo (+30, +60 y +90 días)** y la gráfica longitudinal Chart.js, destacando el rigor científico: si falta el control de **+60 días**, se marca como **«Sin medición»** y **no se interpola**.
+## PART A — 30-SECOND VIDEO / 7-SLIDE STORYBOARD (INTERNATIONAL JUDGING)
+
+| Slide / Time | Section | Visual on Screen | Spoken Script (English) |
+|---|---|---|---|
+| **Slide 1 (0:00–0:04)** | **1. The Problem** | Root URL (`/`) showing the SANS Biomarker Predictor header and `CASE-PROG-02` | *"During prolonged spaceflight, up to 70% of astronauts develop Spaceflight Associated Neuro-ocular Syndrome (SANS)—optic disc edema, axial shortening, and hyperopic shifts—while clinical records remain fragmented across mission phases."* |
+| **Slide 2 (0:04–0:09)** | **2. SPACE VISION** | Subject selector (`CASE-STABLE-01`, `CASE-PROG-02`, `CASE-NOSCAN-03A`) and `EN | ES` toggle | *"We built SPACE VISION — SANS Monitor: an open, zero-login clinical decision-support workstation that unifies ocular records per eye across Before, During, and Post-Flight controls (+30, +60, and +90 days)."* |
+| **Slide 3 (0:09–0:15)** | **3. Live Demo (Tab 1: 6 Biomarkers)** | Tab 1: Modifying the 6 biomarkers and clicking **Run Predictor** | *"In Tab 1, anyone can enter a subject's data and evaluate six key biomarkers: Mean OCT thickness, Axial length, Simulated hyperopia, Papilledema Frisén grade, Intraocular pressure, and prior -6° head-down tilt exposure on Earth."* |
+| **Slide 4 (0:15–0:20)** | **4. Innovation (Tab 2: +30/+60/+90d)** | Tab 2: Timeline chart showing the missing +60d visit un-interpolated and the AT-03/AT-04 playback bar | *"In Tab 2, we track Before, During (Days 10, 15, 30), and Post-Flight cuts (+30, +60, +90 days)—preserving missing visits like +60d without false interpolation and separating -6° Earth analogs from orbital baselines."* |
+| **Slide 5 (0:20–0:24)** | **5. 3 Scenario Models & 3D+OCT** | Tab 3: Clicking **1. Stable**, **2. Worsening**, and **3. Unscanned**, plus dual 3D WebGL + OCT view | *"In Tab 3, judges compare three reference scenarios in one click: Stable, Worsening, and Unscanned—where missing OCT scans are never assumed normal."* |
+| **Slide 6 (0:24–0:27)** | **6. NASA Relevance** | Opening the **NASA Protocols & 7 Scientific References (`AT-02`)** drawer | *"Every rule is grounded in NASA OCHMO-MTB-001, NASA-STD-3001, SLS-SPEC-159, OSDR, and NTRS literature, distinguishing verified protocol versions from research articles."* |
+| **Slide 7 (0:27–0:30)** | **7. Results & Ethical Impact** | Header badges: **Prioritize review** & **Fitness not evaluated** | *"Backed by 99 automated tests in Laravel and Python, SPACE VISION prepares longitudinal medical surveillance without issuing automated fit-for-duty verdicts."* |
 
 ---
 
-## Minuto 1:45 – 3:00 · Pestaña 3: Los 3 Escenarios Modelos + Visor 3D y Consola OCT
-- **Ruta:** `/admin/sans-monitor?tab=escenarios` y luego clic en **"Abrir Visor 3D + OCT"** (`/admin/digital-twin?mode=dual`)
-- **Qué decir:**
-  > *"Finalmente, en la tercera pestaña contrastamos con un solo clic nuestros tres escenarios modelos: uno Estable, uno que Empeora y uno que No se escanea, conectados directamente con nuestro Gemelo Digital 3D y la Consola Tomográfica ZEISS Cirrus HD-OCT."*
-- **Qué mostrar en pantalla:**
-  1. Hacer clic sucesivamente en las 3 tarjetas:
-     - **1. Escenario Estable (`CASE-STABLE-01`)** $\to$ Salida: *Listo para revisión*.
-     - **2. Escenario que Empeora (`CASE-PROG-02`)** $\to$ Salida: *Priorizar revisión*.
-     - **3. Escenario No se Escanea (`CASE-NOSCAN-03A`)** $\to$ Salida: *Faltan datos* (nunca se asume como estable por falta de OCT).
-  2. Cerrar haciendo clic en el botón superior **"Abrir Visor 3D + OCT"** para mostrar en pantalla dividida el globo ocular 3D en WebGL junto a la estación clínica ZEISS Cirrus HD-OCT de 9 paneles.
+## PART B — 3-MINUTE LIVE WALKTHROUGH FOR JUDGES (NO LOGIN REQUIRED)
+
+1. **Open the Root URL (`/`) — Zero Login & Bilingual `EN | ES` (0:00 – 0:30):**
+   - Open `/` in any browser or incognito window. It loads directly in **English (`EN`)** with no login required, featuring a 1-click **`EN | ES`** toggle and a **Reset Demo** button.
+2. **Tab 1 — Feed the 6 Ocular Biomarkers (0:30 – 1:15):**
+   - Inspect **1. Mean OCT Thickness** ($280 \to 306\ \mu\text{m}$, $\Delta +26\ \mu\text{m}$), **2. Eye Axial Length** ($23.82\ \text{mm}$), **3. Simulated Hyperopia** ($+0.75\ \text{D}$), **4. Papilledema Frisén Scale** (Grade 2/5), **5. IOP** ($18.5\ \text{mmHg}$), and **6. Prior $-6^\circ$ Head-Down Tilt on Earth**.
+   - Click **Run Predictor with these 6 Biomarkers** to compute the explainable Signal Index and feature weight chart.
+3. **Tab 2 — Longitudinal Timeline: Before · During · After (+30, +60, +90 Days) (1:15 – 2:00):**
+   - Switch to **Tab 2** to compare Before Flight ($280\ \mu\text{m}$), During Flight ($+8 \to +14 \to +26\ \mu\text{m}$), and Prior $-6^\circ$ Tilt on Earth ($280 \to 304 \to 284\ \mu\text{m}$).
+   - Verify the **+30, +60, and +90 days post-flight cards**, noting that the missing **+60 days** cut is explicitly marked **Unmeasured** and never interpolated.
+4. **Tab 3 — 3 Reference Scenario Models & Dual 3D + OCT Workstation (2:00 – 3:00):**
+   - Switch to **Tab 3** and click **1. Stable Scenario (`CASE-STABLE-01`)**, **2. Worsening Scenario (`CASE-PROG-02`)**, and **3. Unscanned Scenario (`CASE-NOSCAN-03A`)**.
+   - Click **Open 3D Viewer + OCT** (`/digital-twin?mode=dual`) to explore the interactive 3D WebGL anatomical globe alongside the 9-panel ZEISS Cirrus™ HD-OCT console.
