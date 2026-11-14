@@ -253,8 +253,8 @@ class SansMonitorAcceptanceTest extends TestCase
             'context' => '0',
         ]));
         $resClosed->assertOk();
-        $resClosed->assertSee('Priorizar revisión');
-        $resClosed->assertSee('Sin medición');
+        $resClosed->assertSee('Prioritize review');
+        $resClosed->assertSee('Unmeasured');
 
         $resOpen = $this->actingAs($this->surgeon)->get(route('admin.sans-monitor.index', [
             'case_id' => 'CASE-PROG-02',
@@ -262,12 +262,12 @@ class SansMonitorAcceptanceTest extends TestCase
             'context' => '1',
         ]));
         $resOpen->assertOk();
-        $resOpen->assertSee('Contexto del Caso');
-        $resOpen->assertSee('Priorizar revisión');
+        $resOpen->assertSee('Case Context:');
+        $resOpen->assertSee('Prioritize review');
     }
 
     /**
-     * Regla P0 del Concurso: Un juez o visitante sin login (guest) puede abrir y probar la demostración principal sin autenticarse
+     * Regla P0 del Concurso: Un juez o visitante sin login (guest) puede abrir y probar la demostración principal en Inglés (idioma principal) sin autenticarse
      */
     public function test_public_judge_can_access_and_run_demo_without_login(): void
     {
@@ -275,39 +275,38 @@ class SansMonitorAcceptanceTest extends TestCase
 
         $resDemo = $this->get('/demo');
         $resDemo->assertOk();
-        $resDemo->assertSee('Predictor SANS por Biomarcadores');
+        $resDemo->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
         $resDemo->assertSee('Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.');
 
         $resTab2 = $this->get('/sans-monitor?tab=seguimiento&case_id=CASE-PROG-02');
         $resTab2->assertOk();
-        $resTab2->assertSee('Corte +30 Días');
-        $resTab2->assertSee('Sin medición');
+        $resTab2->assertSee('Cut +30 Days');
+        $resTab2->assertSee('Unmeasured');
 
         $resTab3 = $this->get('/admin/sans-monitor?tab=escenarios&case_id=CASE-NOSCAN-03A');
         $resTab3->assertOk();
-        $resTab3->assertSee('Escenario No se Escanea');
-        $resTab3->assertSee('Faltan datos');
+        $resTab3->assertSee('3. Unscanned Scenario');
+        $resTab3->assertSee('Missing data');
     }
 
     /**
-     * Soporte Multilenguaje (Español / Inglés) para jurados locales e internacionales
+     * Soporte Multilenguaje (Inglés como idioma principal y Español opcional) para jurados internacionales y locales
      */
     public function test_bilingual_switch_between_spanish_and_english(): void
     {
-        $resEn = $this->get('/?lang=en');
-        $resEn->assertOk();
-        $resEn->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
-        $resEn->assertSee('Prioritize review');
-        $resEn->assertSee('Mean OCT Thickness (TRT)');
-
-        $resEnTab2 = $this->get('/?tab=seguimiento&lang=en');
-        $resEnTab2->assertOk();
-        $resEnTab2->assertSee('Cut +30 Days');
-        $resEnTab2->assertSee('Unmeasured');
+        $resDefaultEn = $this->get('/');
+        $resDefaultEn->assertOk();
+        $resDefaultEn->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
+        $resDefaultEn->assertSee('Prioritize review');
+        $resDefaultEn->assertSee('Mean OCT Thickness (TRT)');
 
         $resEs = $this->get('/?lang=es');
         $resEs->assertOk();
         $resEs->assertSee('Predictor SANS por Biomarcadores');
         $resEs->assertSee('Priorizar revisión');
+
+        $resEnAgain = $this->get('/?lang=en');
+        $resEnAgain->assertOk();
+        $resEnAgain->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
     }
 }

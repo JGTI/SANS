@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    private const SUPPORTED_LOCALES = ['es', 'en'];
+    private const SUPPORTED_LOCALES = ['en', 'es'];
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,7 +27,7 @@ class SetLocale
         } elseif (in_array($request->cookie('spacevision_locale'), self::SUPPORTED_LOCALES, true)) {
             $locale = $request->cookie('spacevision_locale');
         } else {
-            $locale = 'es';
+            $locale = 'en';
         }
 
         App::setLocale($locale);

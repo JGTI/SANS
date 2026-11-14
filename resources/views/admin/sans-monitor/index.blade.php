@@ -341,7 +341,9 @@
                 </div>
                 <div style="font-size:1rem;font-weight:800;margin-top:0.15rem;">{{ $bp['predicted_trajectory'] }}</div>
                 <div style="font-size:0.76rem;color:var(--muted-foreground);margin-top:0.2rem;">
-                    {{ $caseEvaluation['future_outlook_banner']['experimental_prognosis_status'] }}
+                    {{ $isEn
+                        ? 'Experimental prognosis status: Not evaluated (Requires validated prognostic model P2 — deterministic rule engine active)'
+                        : $caseEvaluation['future_outlook_banner']['experimental_prognosis_status'] }}
                 </div>
             </div>
 

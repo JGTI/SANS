@@ -178,15 +178,15 @@
             </nav>
             <span class="topbar-spacer"></span>
 
-            {{-- SELECTOR MULTILENGUAJE (ESPAÑOL / INGLÉS) --}}
+            {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}
             <div style="display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:0.76rem;font-weight:700;" role="group" aria-label="Language Selector">
-                <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? 'var(--foreground)' : 'transparent' }};color:{{ !$isEn ? 'var(--background)' : 'var(--foreground)' }};">
-                    <i class="fa fa-globe"></i> ES
-                </a>
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? 'var(--foreground)' : 'transparent' }};color:{{ $isEn ? 'var(--background)' : 'var(--foreground)' }};border-left:1px solid var(--border);">
-                    EN
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? 'var(--foreground)' : 'transparent' }};color:{{ $isEn ? 'var(--background)' : 'var(--foreground)' }};">
+                    <i class="fa fa-globe"></i> EN
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}"
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? 'var(--foreground)' : 'transparent' }};color:{{ !$isEn ? 'var(--background)' : 'var(--foreground)' }};border-left:1px solid var(--border);">
+                    ES
                 </a>
             </div>
 

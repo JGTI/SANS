@@ -26,9 +26,9 @@ use Illuminate\Support\Facades\Route;
 // Ruta Raíz: Abre directamente el proyecto (Predictor SANS de 3 Pestañas sin login ni landing intermedia)
 Route::get('/', [SansMonitorController::class, 'index'])->name('home');
 
-// Selector Multilenguaje (Español / Inglés)
+// Selector Multilenguaje (Inglés idioma principal / Español)
 Route::get('/locale/{locale}', function (string $locale) {
-    $norm = strtolower($locale) === 'en' ? 'en' : 'es';
+    $norm = strtolower($locale) === 'es' ? 'es' : 'en';
     session(['locale' => $norm]);
     return redirect()->back()->withCookie(cookie('spacevision_locale', $norm, 60 * 24 * 365));
 })->name('locale.switch');
