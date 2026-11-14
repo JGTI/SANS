@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AstronautProfile;
-use App\Models\SansObservation;
-use App\Models\VisionEvaluation;
 use App\Services\NasaDataService;
 use App\Services\OphthalmologyCalculator;
+use App\Services\SansMonitor\SansMonitorEngine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DemoTheaterController extends Controller
 {
     public function __construct(
         protected OphthalmologyCalculator $calculator,
-        protected NasaDataService $nasaService
+        protected NasaDataService $nasaService,
+        protected SansMonitorEngine $sansEngine
     ) {}
 
     public function index(Request $request): View
@@ -23,6 +24,10 @@ class DemoTheaterController extends Controller
         if (AstronautProfile::count() === 0) {
             app(\Database\Seeders\OphthalmologySeeder::class)->run();
         }
+        if (DB::table('sans_cases')->count() === 0) {
+            app(\Database\Seeders\SansMonitorSeeder::class)->run();
+        }
+
         $astronauts = AstronautProfile::with(['evaluations' => fn($q) => $q->orderBy('mission_day'), 'sansObservations'])->get();
         $selectedCode = $request->query('astro', 'ASTRO-01');
 
@@ -33,6 +38,18 @@ class DemoTheaterController extends Controller
         $evals = $astronaut ? $astronaut->evaluations : collect();
         $sans = $astronaut ? $astronaut->sansObservations : collect();
 
+        // Sincronización directa con los 3 escenarios canónicos del SANS Monitor
+        $sansCases = DB::table('sans_cases')->orderBy('id')->get();
+        $linkedCaseId = match ($astronaut?->code) {
+            'ASTRO-02' => 'CASE-STABLE-01',
+            'ASTRO-03' => 'CASE-NOSCAN-03A',
+            default => 'CASE-PROG-02',
+        };
+        $linkedSansCase = $sansCases->firstWhere('case_id', $linkedCaseId) ?? $sansCases->first();
+        $linkedFollowups = $linkedSansCase
+            ? DB::table('sans_followup_visits')->where('case_id', $linkedSansCase->case_id)->orderBy('target_milestone_day')->get()
+            : collect();
+
         // Evidencia cruzada de NASA para el Demo
         $osdrTopStudies = array_slice($this->nasaService->getOsdrStudies('retina SANS'), 0, 3);
         $ntrsTopPubs = array_slice($this->nasaService->getNtrsPublications('SANS evidence'), 0, 3);
@@ -42,16 +59,26 @@ class DemoTheaterController extends Controller
             'astronaut',
             'evals',
             'sans',
+            'sansCases',
+            'linkedSansCase',
+            'linkedFollowups',
             'osdrTopStudies',
             'ntrsTopPubs'
         ));
     }
 
     /**
-     * Reporte clínico oficial imprimible/exportable de vuelo espacial
+     * Reporte técnico-científico imprimible/exportable (Sin firmas médicas falsas ni dictamen automático de aptitud)
      */
     public function report(string $code): View
     {
+        if (AstronautProfile::count() === 0) {
+            app(\Database\Seeders\OphthalmologySeeder::class)->run();
+        }
+        if (DB::table('sans_cases')->count() === 0) {
+            app(\Database\Seeders\SansMonitorSeeder::class)->run();
+        }
+
         $astronaut = AstronautProfile::where('code', $code)
             ->with(['evaluations' => fn($q) => $q->orderBy('mission_day'), 'sansObservations' => fn($q) => $q->orderBy('mission_day')])
             ->firstOrFail();
@@ -75,6 +102,17 @@ class DemoTheaterController extends Controller
             'rnfl_thickness' => $latestSans ? $latestSans->rnfl_thickness_microns : null,
         ]);
 
+        $linkedCaseId = match ($astronaut->code) {
+            'ASTRO-02' => 'CASE-STABLE-01',
+            'ASTRO-03' => 'CASE-NOSCAN-03A',
+            default => 'CASE-PROG-02',
+        };
+        $linkedSansCase = DB::table('sans_cases')->where('case_id', $linkedCaseId)->first();
+        $linkedFollowups = DB::table('sans_followup_visits')
+            ->where('case_id', $linkedCaseId)
+            ->orderBy('target_milestone_day')
+            ->get();
+
         $relevantStudies = array_slice($this->nasaService->getOsdrStudies(), 0, 2);
         $relevantPubs = array_slice($this->nasaService->getNtrsPublications(), 0, 2);
 
@@ -87,6 +125,8 @@ class DemoTheaterController extends Controller
             'latestSans',
             'shiftOD',
             'riskAssessment',
+            'linkedSansCase',
+            'linkedFollowups',
             'relevantStudies',
             'relevantPubs'
         ));
