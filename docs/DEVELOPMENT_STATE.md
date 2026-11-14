@@ -1,9 +1,11 @@
 # 📊 SPACE VISION — DEVELOPMENT STATE
 
-**Fecha:** 10 de noviembre de 2026  
+**Fecha:** 14 de noviembre de 2026  
 **Rama activa:** `main`  
+**URL de Producción:** `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`  
+**Repositorio Oficial:** `https://github.com/JGTI/SANS`  
 **Estado de la suite de pruebas:**
-- **Laravel (PHPUnit):** 66 tests passing (100% verde / 283 aserciones)
+- **Laravel (PHPUnit):** 67 tests passing (100% verde / 287 aserciones)
 - **Python Scientific Engine (Pytest):** 21 tests passing (100% verde)
 - **Microservicio Python FastAPI:** ONLINE (`http://127.0.0.1:8001`)
 

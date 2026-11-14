@@ -28,7 +28,7 @@ php artisan test
 ---
 
 ## 3. Acceso a las Interfaces de SPACE VISION
-- **Inicio de Sesión:** `http://localhost/login` o `https://spaceappschallenge.nexusdigitaldb.com/login`
+- **Inicio de Sesión:** `http://localhost/login` o `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/login`
   - Usuario: `surgeon@spacevision.nasa`
   - Contraseña: `SpaceVision2026!`
 - **Mission Control Dashboard:** `/admin`

@@ -8,8 +8,8 @@
 - **Título del Proyecto:** SPACE VISION
 - **Subtítulo / Tagline:** Plataforma de Telemetría Neurooftalmológica, Gemelo Digital y Simulación de Salud Visual en Microgravedad para el Síndrome SANS.
 - **Sede Local:** Querétaro, México.
-- **Repositorio de Código Abierto (GitHub):** https://github.com/JGTI/nexus-spaceappschallenge
-- **Demostración en Vivo (Producción):** https://spaceappschallenge.nexusdigitaldb.com
+- **Repositorio de Código Abierto (GitHub):** https://github.com/JGTI/SANS
+- **Demostración en Vivo (Producción):** https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com
 
 ---
 

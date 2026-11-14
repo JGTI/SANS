@@ -2,10 +2,22 @@
 ### NASA Space Apps Challenge 2026 · Querétaro, México
 **Plataforma de Investigación Médica Espacial, Telemetría Visual y Simulación Biomecánica del Síndrome SANS**
 
+[![Producción en Vivo](https://img.shields.io/badge/Demo%20en%20Vivo-ONLINE-22c55e?style=for-the-badge&logo=googlechrome&logoColor=white)](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com)
+[![Repositorio GitHub](https://img.shields.io/badge/GitHub-JGTI%2FSANS-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JGTI/SANS)
+
 [![PHP Version](https://img.shields.io/badge/PHP-8.3-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
-[![Tests](https://img.shields.io/badge/Tests-45%20Passed%20(194%20assertions)-34D399?style=flat&logo=githubactions&logoColor=white)]()
+[![PHPUnit Tests](https://img.shields.io/badge/PHPUnit-67%20Passed%20(287%20assertions)-22c55e?style=flat&logo=php&logoColor=white)]()
+[![FastAPI Pytest](https://img.shields.io/badge/Pytest%20FastAPI-21%20Passed-22c55e?style=flat&logo=pytest&logoColor=white)]()
 [![Event](https://img.shields.io/badge/NASA%20Space%20Apps-2026-38BDF8?style=flat&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
+
+---
+
+> 🌐 **URL de Producción / Demostración en Vivo:**  
+> **[https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com)**
+>
+> 📦 **Repositorio Oficial:**  
+> **[https://github.com/JGTI/SANS](https://github.com/JGTI/SANS)**
 
 ---
 
@@ -81,8 +93,8 @@ $$\Delta SE = SE_{\text{actual}} - SE_{\text{línea base}}$$
 ### Comandos de Arranque
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/JGTI/nexus-spaceappschallenge.git
-cd nexus-spaceappschallenge
+git clone https://github.com/JGTI/SANS.git
+cd SANS
 
 # 2. Instalar dependencias
 composer install

@@ -8,6 +8,8 @@
 ## 1. Misión del Proyecto
 - **Proyecto:** SPACE VISION
 - **Evento:** NASA Space Apps Challenge 2026 — Querétaro, México
+- **URL Producción:** `https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com`
+- **Repositorio Oficial:** `https://github.com/JGTI/SANS`
 - **Desafío:** Investigación médica espacial, neurooftalmología y telemetría de salud visual en microgravedad con enfoque en el síndrome **SANS** (*Spaceflight Associated Neuro-ocular Syndrome*).
 - **Parámetros clave:** Refracción ocular (esfera, cilindro, eje, equivalente esférico) y Agudeza Visual (Snellen, LogMAR), correlacionados con tiempo en órbita y telemetría ambiental espacial de NASA.
 
