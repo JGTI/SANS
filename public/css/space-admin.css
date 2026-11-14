@@ -10,6 +10,18 @@
     --shadow: 0 1px 2px rgba(0, 0, 0, .04);
     --radius: 10px;
     --sidebar-width: 275px;
+
+    /* SPACE VISION Interactive & Semantic Hierarchy Palette */
+    --space-deep: #07173F;
+    --space-blue: #0042A6;
+    --space-electric: #2E96F5;
+    --space-neon: #EAFE07;
+    --interactive: #0042A6;
+    --interactive-hover: #1d4ed8;
+    --interactive-border: #93c5fd;
+    --interactive-bg: #eff6ff;
+    --interactive-bg-strong: #dbeafe;
+    --interactive-text: #0042A6;
 }
 
 [data-theme="dark"] {
@@ -22,6 +34,13 @@
     --sidebar: #0c0c0e;
     --accent: #1f1f22;
     --shadow: none;
+
+    --interactive: #2E96F5;
+    --interactive-hover: #60a5fa;
+    --interactive-border: #1d4ed8;
+    --interactive-bg: rgba(46, 150, 245, 0.14);
+    --interactive-bg-strong: rgba(46, 150, 245, 0.24);
+    --interactive-text: #60a5fa;
 }
 
 * { box-sizing: border-box; }
@@ -69,10 +88,30 @@ a { color: inherit; text-decoration: none; }
 }
 
 .btn:active { transform: translateY(1px); }
-.btn-primary { color: var(--background); background: var(--foreground); }
-.btn-primary:hover { opacity: .86; }
-.btn-outline { color: var(--foreground); background: var(--background); border-color: var(--border); }
-.btn-outline:hover, .icon-btn:hover { background: var(--accent); }
+.btn-primary {
+    color: #ffffff;
+    background: linear-gradient(135deg, #0042A6 0%, #1d4ed8 100%);
+    border-color: #0042A6;
+    box-shadow: 0 2px 8px rgba(0, 66, 166, 0.28);
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, #07173F 0%, #0042A6 100%);
+    box-shadow: 0 4px 12px rgba(46, 150, 245, 0.35);
+    transform: translateY(-1px);
+}
+.btn-outline {
+    color: var(--interactive-text);
+    background: var(--background);
+    border-color: var(--interactive-border);
+    font-weight: 700;
+}
+.btn-outline:hover {
+    background: var(--interactive-bg);
+    border-color: var(--space-electric);
+    color: var(--interactive-hover);
+    transform: translateY(-1px);
+}
+.icon-btn:hover { background: var(--accent); }
 .btn-block { width: 100%; }
 
 .icon-btn {
@@ -250,9 +289,32 @@ a { color: inherit; text-decoration: none; }
 .topbar { position: sticky; top: 0; z-index: 20; min-height: 58px; display: flex; align-items: center; gap: 10px; padding: 9px 24px; background: color-mix(in srgb, var(--background) 92%, transparent); border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); flex-wrap: wrap; }
 .mobile-menu { display: inline-grid; border: 1px solid var(--border); }
 .topnav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.topnav a { padding: 6px 11px; border-radius: 6px; color: var(--muted-foreground); font-size: 12.5px; font-weight: 600; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
-.topnav a:hover { color: var(--foreground); background: var(--accent); border-color: var(--border); }
-.topnav a.active { color: var(--background); background: var(--foreground); border-color: var(--foreground); font-weight: 700; }
+.topnav a {
+    padding: 6px 12px;
+    border-radius: 7px;
+    color: var(--foreground);
+    font-size: 12.5px;
+    font-weight: 650;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+.topnav a:hover {
+    color: var(--interactive-text);
+    background: var(--interactive-bg);
+    border-color: var(--space-electric);
+    transform: translateY(-1px);
+}
+.topnav a.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #07173F 0%, #0042A6 100%);
+    border-color: #2E96F5;
+    box-shadow: 0 2px 8px rgba(0, 66, 166, 0.26);
+    font-weight: 700;
+}
 .topbar-spacer { flex: 1; }
 .search-box { position: relative; width: min(280px, 28vw); }
 .search-box .icon { position: absolute; left: 11px; top: 10px; width: 16px; height: 16px; color: var(--muted-foreground); }
@@ -705,6 +767,191 @@ summary:focus-visible {
     .sans-grid-3 {
         grid-template-columns: 1fr !important;
     }
+}
+
+/* ==========================================================================
+   SPACE VISION Interactive Affordances & Semantic Status Hierarchy
+   ========================================================================== */
+
+/* Interactive Clickable Cards (Astronaut Crew Strip, 3 Reference Scenarios) */
+.clickable-card {
+    position: relative;
+    cursor: pointer;
+    border: 1.5px solid var(--interactive-border) !important;
+    background: var(--card);
+    transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+.clickable-card:hover {
+    border-color: var(--space-electric) !important;
+    background: var(--interactive-bg) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 150, 245, 0.18);
+}
+.clickable-card.is-active {
+    border: 2px solid var(--space-blue) !important;
+    background: var(--interactive-bg) !important;
+    box-shadow: 0 0 0 3px rgba(46, 150, 245, 0.22), 0 4px 12px rgba(0, 66, 166, 0.14);
+}
+[data-theme="dark"] .clickable-card.is-active {
+    border-color: var(--space-electric) !important;
+}
+
+/* 3-Step Wizard Navigation Cards */
+.wizard-step-card {
+    text-decoration: none;
+    padding: 0.95rem 1.1rem;
+    border-radius: 9px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    cursor: pointer;
+    border: 1.5px solid var(--interactive-border);
+    background: var(--interactive-bg);
+    color: var(--foreground);
+    transition: all 0.16s ease;
+    box-shadow: 0 2px 6px rgba(0, 66, 166, 0.06);
+}
+.wizard-step-card:hover {
+    border-color: var(--space-electric);
+    background: var(--interactive-bg-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 150, 245, 0.2);
+}
+.wizard-step-card.is-active {
+    background: linear-gradient(135deg, #07173F 0%, #0042A6 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #2E96F5 !important;
+    box-shadow: 0 6px 18px rgba(0, 66, 166, 0.32);
+}
+.wizard-step-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: #0042A6;
+    color: #ffffff;
+    white-space: nowrap;
+}
+.wizard-step-card.is-active .wizard-step-pill {
+    background: #EAFE07;
+    color: #07173F;
+}
+
+/* Interactive Action Pill (Click here / Select indicators) */
+.interactive-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    background: var(--interactive-bg-strong);
+    color: var(--interactive-text);
+    border: 1px solid var(--interactive-border);
+    white-space: nowrap;
+}
+.clickable-card.is-active .interactive-pill {
+    background: #0042A6;
+    color: #ffffff;
+    border-color: #0042A6;
+}
+
+/* Semantic Operational State Badges (Ready / Prioritize / Missing) */
+.status-badge-ready {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    border: 1px solid #86efac !important;
+    font-weight: 800 !important;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.status-badge-prioritize {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    border: 1px solid #fbbf24 !important;
+    font-weight: 800 !important;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.status-badge-missing {
+    background: #e0e7ff !important;
+    color: #3730a3 !important;
+    border: 1px solid #a5b4fc !important;
+    font-weight: 800 !important;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+[data-theme="dark"] .status-badge-ready {
+    background: rgba(22, 163, 74, 0.22) !important;
+    color: #86efac !important;
+    border-color: #22c55e !important;
+}
+[data-theme="dark"] .status-badge-prioritize {
+    background: rgba(217, 119, 6, 0.24) !important;
+    color: #fde68a !important;
+    border-color: #f59e0b !important;
+}
+[data-theme="dark"] .status-badge-missing {
+    background: rgba(99, 102, 241, 0.24) !important;
+    color: #c7d2fe !important;
+    border-color: #818cf8 !important;
+}
+
+/* Editable Biomarker Input Cards & Select Highlights */
+.biomarker-input-box {
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-left: 3.5px solid var(--space-electric);
+    border-radius: 6px;
+    background: var(--card);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.biomarker-input-box:focus-within {
+    border-color: var(--space-blue);
+    box-shadow: 0 0 0 3px rgba(46, 150, 245, 0.18);
+}
+select.form-control {
+    cursor: pointer;
+    border-color: var(--interactive-border);
+    font-weight: 600;
+}
+select.form-control:hover {
+    border-color: var(--space-electric);
+    background: var(--interactive-bg);
+}
+
+/* Collapsible Scientific Evidence Drawers (<details>) */
+details.collapsible-card {
+    border: 1.5px solid var(--interactive-border);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+details.collapsible-card:hover {
+    border-color: var(--space-electric);
+    box-shadow: 0 4px 12px rgba(46, 150, 245, 0.12);
+}
+details.collapsible-card > summary {
+    list-style: none;
+}
+details.collapsible-card > summary::-webkit-details-marker {
+    display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -142,10 +142,10 @@
                 </a>
 
                 <details style="position:relative;display:inline-block;">
-                    <summary style="list-style:none;cursor:pointer;padding:6px 10px;border-radius:6px;border:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted-foreground);display:inline-flex;align-items:center;gap:5px;">
+                    <summary style="list-style:none;cursor:pointer;padding:6px 11px;border-radius:7px;border:1px solid var(--interactive-border);background:var(--interactive-bg);font-size:12.5px;font-weight:700;color:var(--interactive-text);display:inline-flex;align-items:center;gap:5px;">
                         <i class="fa fa-flask"></i> {{ $isEn ? 'Scientific Tools' : 'Herramientas' }} <i class="fa fa-angle-down"></i>
                     </summary>
-                    <div style="position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px;box-shadow:0 10px 25px rgba(0,0,0,0.15);z-index:50;display:flex;flex-direction:column;gap:2px;">
+                    <div style="position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--card);border:1px solid var(--interactive-border);border-radius:8px;padding:6px;box-shadow:0 10px 25px rgba(0,66,166,0.18);z-index:50;display:flex;flex-direction:column;gap:2px;">
                         <a href="{{ route('public.vision-lab') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
                             <i class="fa fa-calculator" style="width:16px;"></i> {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
                         </a>
@@ -165,13 +165,13 @@
             <span class="topbar-spacer"></span>
 
             {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}
-            <div style="display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:0.76rem;font-weight:700;" role="group" aria-label="Language Selector">
+            <div style="display:inline-flex;align-items:center;border:1.5px solid var(--interactive-border);border-radius:7px;overflow:hidden;font-size:0.76rem;font-weight:700;" role="group" aria-label="Language Selector">
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? 'var(--foreground)' : 'transparent' }};color:{{ $isEn ? 'var(--background)' : 'var(--foreground)' }};">
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? '#0042A6' : 'var(--interactive-bg)' }};color:{{ $isEn ? '#ffffff' : 'var(--interactive-text)' }};">
                     <i class="fa fa-globe"></i> EN
                 </a>
                 <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? 'var(--foreground)' : 'transparent' }};color:{{ !$isEn ? 'var(--background)' : 'var(--foreground)' }};border-left:1px solid var(--border);">
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? '#0042A6' : 'var(--interactive-bg)' }};color:{{ !$isEn ? '#ffffff' : 'var(--interactive-text)' }};border-left:1px solid var(--interactive-border);">
                     ES
                 </a>
             </div>
