@@ -1,39 +1,51 @@
 # 🏛️ SPACE VISION / SANS MONITOR — ARCHITECTURAL DECISION RECORDS (ADR)
 
-## ADR-001: Conservación de NEXUS Project Factory
-- **Fecha:** 10 de noviembre de 2026
-- **Contexto:** Existía una base de código previa construida con Laravel 11, AdminLTE y Tailwind.
-- **Decisión:** Reutilizar la base existente (autenticación, layouts y estructura) en lugar de rehacer el proyecto desde cero, adaptándola a la identidad visual espacial de **SPACE VISION**.
-- **Consecuencias:** Acelera el desarrollo del hackatón y aprovecha componentes maduros y probados.
+## ADR-001: Preservation of Foundation Architecture
+- **Date:** November 10, 2026
+- **Context:** A foundation codebase built on Laravel 11 and modern frontend components was available.
+- **Decision:** Reuse and adapt the core infrastructure to the **SPACE VISION** visual identity and domain architecture rather than starting from scratch.
+- **Consequences:** Accelerates hackathon engineering velocity while leveraging tested framework components.
 
-## ADR-002: Modelo de Roles y Permisos para el Entorno Espacial y SANS Monitor
-- **Fecha:** 10 de noviembre de 2026 (Actualizado 14 de noviembre de 2026)
-- **Contexto:** Se requieren perfiles diferenciados para demostración, curación de protocolos, manejo de datos, investigación y revisión médica autorizada.
-- **Decisión:** Configurar Spatie Permission con 5 roles especializados mapeados a la especificación **SANS Monitor**:
-  - `super-admin` / Presentador de Demo (`admin@spacevision.nasa`)
-  - `admin` / Responsable de Datos y Curador de Protocolos (`operator@spacevision.nasa`)
-  - `flight-surgeon` / Especialista Médico Autorizado (`surgeon@spacevision.nasa`)
-  - `researcher` / Investigador y Analista (`researcher@spacevision.nasa`)
-  - `astronaut` / Tripulante Simulado (`astronaut@spacevision.nasa`)
-- **Consecuencias:** Control de acceso granular que separa la carga de datos, la curación de fuentes y la revisión clínica (P1), permitiendo modo de demostración ágil en P0.
+## ADR-002: Public Zero-Login Access Model for Hackathon Demonstration
+- **Date:** November 14, 2026
+- **Context:** Judges, ground scientists, clinical investigators, and astronauts need immediate, frictionless access to all modules during the NASA International Space Apps Challenge 2026 evaluation.
+- **Decision:** Operate all demonstration, scientific, and guided check routes (`/`, `/demo`, `/sans-monitor`, `/astronaut-check`, `/digital-twin`, `/oct-analysis`, `/demo-theater`, `/vision-lab`, `/nasa-data`, `/model-lab`, `/explainability`) under a **Zero-Login Public Architecture** with an instant **`EN | ES`** bilingual selector.
+- **Consequences:** Zero authentication friction for judges and reviewers while keeping clinical decision boundaries strictly enforced in domain code.
 
-## ADR-003: Consola Interactiva de Mantenimiento y Comandos
-- **Fecha:** 10 de noviembre de 2026
-- **Contexto:** Los administradores necesitan aplicar migraciones, seeders y verificar el motor científico sin depender de SSH en vivo durante la presentación.
-- **Decisión:** Crear `/admin/maintenance` con una lista blanca estricta de comandos Artisan pre-aprobados (`migrate`, `db:seed`, `scientific:engine status`, `scientific:engine test`, `optimize:clear`, etc.).
-- **Seguridad:** Protegido por middleware `auth` y permisos de `super-admin`.
+## ADR-003: Interactive Maintenance and Verification Console
+- **Date:** November 10, 2026
+- **Context:** System verification (`migrate`, `db:seed`, `scientific:engine status`, `scientific:engine test`, `optimize:clear`) requires a deterministic command whitelist.
+- **Decision:** Maintain an explicit whitelist of pre-approved Artisan verification and maintenance commands.
+- **Consequences:** Safe, repeatable environment verification.
 
-## ADR-004: Separación Estricta de Alcance Clínico (No Dictamen Automático de Aptitud)
-- **Fecha:** 14 de noviembre de 2026
-- **Contexto:** Adopción de la especificación canónica [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md).
-- **Decisión:** El sistema **nunca emite un veredicto automático de aptitud** («apto / no apto»), ni diagnostica SANS, ni prescribe contramedidas. Las salidas operativas del expediente se limitan a **«Listo para revisión»**, **«Faltan datos»** y **«Priorizar revisión»** (RF-10). Si se registra un dictamen de aptitud (RF-11), reside en una entidad separada (`ClinicianDecision`) firmada exclusivamente por el especialista autorizado; en su ausencia se muestra **«Aptitud no evaluada»**.
-- **Consecuencias:** Cumplimiento estricto del rigor ético aeroespacial y separación total entre completitud de datos, señales oculares y decisión médica humana.
+## ADR-004: Strict Clinical Scope Separation (No Automated Fit-for-Duty Verdict)
+- **Date:** November 14, 2026
+- **Context:** Adoption of the canonical specification [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md).
+- **Decision:** The system **never issues an automated fit-for-duty verdict** (*fit / unfit*), never diagnoses SANS autonomously, and never prescribes countermeasures. Operational record outputs are strictly limited to **Ready for review**, **Missing data**, and **Prioritize review** (`RF-10`). If a fitness decision is recorded (`RF-11`), it resides in a separate `ClinicianDecision` entity signed exclusively by an authorized flight surgeon; in its absence, the system displays **Fitness not evaluated**.
+- **Consequences:** Strict compliance with aerospace medical ethics and complete separation between data completeness, ocular biomarker signals, and human clinical judgment.
 
-## ADR-005: Implementación de Referencia P0/P1/P2 sobre Stack Híbrido Laravel 11 + Python FastAPI
-- **Fecha:** 14 de noviembre de 2026
-- **Contexto:** La especificación [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md) sugiere en su Sección 6 una arquitectura de referencia P0 en Python + Dash + Plotly con separación en `ui/`, `catalog/`, `domain/`, `simulation/`, `analytics/` y `tests/`.
-- **Decisión:** Conservar y mapear esa separación modular sobre la infraestructura híbrida de nivel profesional ya operativa en el repositorio:
-  - `ui/`: Vistas Blade monocromáticas AdminCN/Shadcn (`#09090b` / `#ffffff`), gráficas Chart.js de alto contraste, gemelo 3D WebGL (Three.js) y consola clínica ZEISS Cirrus HD-OCT.
-  - `catalog/`, `domain/`, `simulation/`, `analytics/`: Implementados de forma coordinada entre servicios de dominio en Laravel (`app/Services/`) y el microservicio científico Python 3.14 FastAPI (`scientific_engine/app/` en `:8001`).
-  - `tests/`: Suite dual con **67 tests en PHPUnit** y **21 tests en Pytest** (100% en verde).
-- **Consecuencias:** Se preservan todas las capacidades avanzadas ya construidas sin romper ninguna funcionalidad existente, alineando el contrato de datos y los flujos de seguimiento (+30, +60, +90 días, exposición inclinada e indicadores oculares) con la especificación oficial de **SANS Monitor**.
+## ADR-005: P0/P1/P2 Reference Implementation on Hybrid Laravel 11 + Python FastAPI Stack
+- **Date:** November 14, 2026
+- **Context:** Section 6 of [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md) defines a modular separation across `ui/`, `catalog/`, `domain/`, `simulation/`, `analytics/`, and `tests/`.
+- **Decision:** Map that modular separation across the hybrid Laravel 11 + Python 3.14 FastAPI architecture:
+  - `ui/`: High-contrast Blade views with the official SPACE VISION interactive color hierarchy (`#0042A6` Technology Blue, `#2E96F5` Electric Blue, `#07173F` Deep Space Blue, `#EAFE07` Neon Yellow), Chart.js longitudinal plots, Three.js 3D WebGL ocular twin, and ZEISS Cirrus HD-OCT console.
+  - `catalog/`, `domain/`, `simulation/`, `analytics/`: Coordinated between Laravel domain services (`app/Services/`) and the Python 3.14 FastAPI scientific microservice (`scientific_engine/app/` on `:8001`).
+  - `tests/`: Automated dual test suite (**78 PHPUnit tests** and **22 Pytest tests**).
+- **Consequences:** Preserves all interactive 3D and scientific capabilities while aligning data contracts and longitudinal follow-up milestones (**+30, +60, and +90 days**, head-down tilt exposure, and the 6 core ocular biomarkers) with the canonical **SANS Monitor** specification.
+
+## ADR-006: Task-Oriented Experience and Separate Research Cohorts
+- **Date:** November 14, 2026
+- **Context:** The scientific workstation communicates the biomarker model to ground scientists and clinical investigators, while an in-flight mission without an on-board ophthalmologist requires guided autonomous acquisition for the crew. Terrestrial studies also require distinguishing normal conditions, $-6^\circ$ head-down tilt (HDT) exposure, and cohort outcomes.
+- **Decision:** Organize the product into distinct functional workflows:
+  1. **Ground Scientists & Clinical Investigators Workstation (`/sans-monitor`):** Streamlined 3-step analytical wizard (6 Biomarkers Predictor, Before/During/After $+30/+60/+90\text{d}$ Timeline, and 3 Reference Scenario Models) without promotional clutter.
+  2. **In-Flight Astronaut Guided Check (`/astronaut-check`):** Task-first autonomous check for crew members during flight.
+  3. **3D Anatomical Viewer & OCT Console (`/digital-twin?mode=dual`):** Synchronized spatial and tomographic inspection.
+- **Scientific Boundary:** A standard camera supports quality control and longitudinal comparison, but does not replace OCT or confirm papilledema or intracranial pressure on its own. $-6^\circ$ HDT exposure is an exposure variable, not an ocular biomarker.
+- **Design Reference:** [`UX_RESEARCH_WORKFLOWS.md`](UX_RESEARCH_WORKFLOWS.md).
+
+## ADR-007: Dedicated P0 Astronaut Check Separated from the Ground Scientific Workstation
+- **Date:** November 14, 2026
+- **Context:** The ground scientific predictor (`/sans-monitor`) is built for ground scientists, flight surgeons, and clinical investigators, whereas an astronaut performing an in-flight check needs a focused, single-task-at-a-time guided interface.
+- **Decision:** Provide `/astronaut-check` as a dedicated bilingual (`EN | ES`) public flow with four destinations (`Today`, `Logbook`, `Trends`, `Profile`) and a step-by-step guided check. Meanwhile, `/sans-monitor` is explicitly designated as the **Ground Scientists & Clinical Investigators Module** (`FOR GROUND SCIENTISTS & CLINICAL INVESTIGATORS` / `MÓDULO EXCLUSIVO PARA CIENTÍFICOS E INVESTIGADORES EN TIERRA`).
+- **P0 Persistence:** The prototype stores the latest guided check entry in `localStorage` for interactive demonstration without polluting the calibrated scientific database.
+- **Boundaries:** On-screen tests support longitudinal monitoring; the tonometer is an external device. The application does not measure intracranial pressure, diagnose SANS, or issue fit-for-duty verdicts.

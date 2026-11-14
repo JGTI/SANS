@@ -39,9 +39,15 @@
                 <div class="nav-label">{{ $isEn ? 'Main Workspace' : 'Pantallas Principales' }}</div>
                 <ul class="nav-list">
                     <li>
-                        <a class="nav-link {{ request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('home') }}">
-                            <i class="fa fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? 'SANS Monitor (3-Step Wizard)' : 'Predictor SANS (Wizard 3 Pasos)' }}
+                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
+                            <i class="fa fa-flask" style="width:20px; text-align:center; font-size:15px;"></i>
+                            {{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('public.astronaut') || request('tab') === 'astronauta' ? 'active' : '' }}" href="{{ route('public.astronaut') }}">
+                            <i class="fa fa-user-md" style="width:20px; text-align:center; font-size:15px;"></i>
+                            {{ $isEn ? 'Astronaut Check (In-Flight)' : 'Vista Astronauta (Chequeo)' }}
                         </a>
                     </li>
                     <li>
@@ -131,8 +137,11 @@
             </a>
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
-                <a class="{{ request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('home') }}">
-                    <i class="fa fa-heartbeat"></i> {{ $isEn ? 'SANS Monitor (3-Step Wizard)' : 'Predictor SANS (Wizard 3 Pasos)' }}
+                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
+                    <i class="fa fa-flask"></i> {{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}
+                </a>
+                <a class="{{ request()->routeIs('public.astronaut') || request('tab') === 'astronauta' ? 'active' : '' }}" href="{{ route('public.astronaut') }}">
+                    <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut Check' : 'Vista Astronauta' }}
                 </a>
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                     <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}

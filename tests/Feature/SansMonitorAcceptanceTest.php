@@ -289,6 +289,37 @@ class SansMonitorAcceptanceTest extends TestCase
         $resTab3->assertSee('Missing data');
     }
 
+    public function test_public_astronaut_can_open_task_first_eye_check_without_login(): void
+    {
+        $this->assertGuest();
+
+        $response = $this->get('/astronaut-check?lang=es');
+
+        $response->assertOk();
+        $response->assertSee('REVISIÓN DE HOY');
+        $response->assertSee('Comenzar revisión de hoy');
+        $response->assertSee('Bitácora');
+        $response->assertSee('Tendencias');
+        $response->assertSee('Perfil');
+        $response->assertSee('Seleccionar resultado');
+        $response->assertSee('Visión lejana');
+        $response->assertSee('Visión cercana');
+        $response->assertSee('Visión del color');
+        $response->assertSee('Estereopsis');
+        $response->assertSee('Distancia: 40 cm (16 pulgadas)');
+        $response->assertSee('Distancia: 3 m (10 pies)');
+        $response->assertSee('0 de 6 registradas');
+        $response->assertSee('images/sans/mission-medical-devices.png');
+        $response->assertSee('Identifica los dispositivos antes de capturar');
+        $response->assertSee('Modo demostración');
+        $response->assertSee('Este prototipo no está conectado a hardware físico.');
+        $response->assertSee('Simular lectura');
+        $response->assertSee('Sincronizando');
+        $response->assertSee('Procesando');
+        $response->assertSee('Solo lectura en vuelo');
+        $response->assertSee('no es un diagnóstico automatizado');
+    }
+
     /**
      * Soporte Multilenguaje (Inglés como idioma principal y Español opcional) para jurados internacionales y locales
      */

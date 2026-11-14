@@ -36,6 +36,7 @@ Route::get('/locale/{locale}', function (string $locale) {
 // Rutas Públicas de Demostración Directa (REGLA P0: Acceso inmediato sin requerir login para el jurado)
 Route::get('/demo', [SansMonitorController::class, 'index'])->name('public.demo');
 Route::get('/sans-monitor', [SansMonitorController::class, 'index'])->name('public.sans-monitor');
+Route::get('/astronaut-check', [SansMonitorController::class, 'astronaut'])->name('public.astronaut');
 Route::get('/admin/sans-monitor', [SansMonitorController::class, 'index'])->name('admin.sans-monitor.index');
 Route::post('/admin/sans-monitor/cases', [SansMonitorController::class, 'storeCase'])->name('admin.sans-monitor.cases.store');
 Route::post('/admin/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('admin.sans-monitor.import');

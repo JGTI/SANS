@@ -21,5 +21,16 @@
 
 ## Future Research Epics (Post-Hackathon P1 / P2 Roadmap)
 
+- [ ] **UX Research Workflow — Guided Acquisition and Four Workspaces:**
+  - [x] Document the approved functional split: spaceflight, Earth study, study cohort, and results.
+  - [x] Select four-destination astronaut navigation after wireframe review (`Today`, `Logbook`, `Trends`, `Profile`).
+  - [x] Define the P0 autonomous minimum: calibrated screen tests plus external rebound tonometer; OCT/ultrasound remain advanced modules.
+  - [x] Implement the bilingual astronaut P0 shell and four-stage guided check without changing the scientific dataset.
+  - [x] Replace generic completion checks and free-entry clinical fields with OD/OS test results, paired-device imports, stage validation, and a read-only specialist baseline.
+  - [ ] Define validated capture-quality thresholds and device-ingestion contracts.
+  - [ ] Define the terrestrial sampling/allocation protocol and measurement schedule.
+  - [ ] Select the primary outcome and statistical analysis plan.
+  - [ ] Extend the canonical data contract only after the above decisions are approved.
+  - [ ] Implement the remaining terrestrial, cohort, results, and specialist-review screens without mixing synthetic, terrestrial, and orbital evidence.
 - [ ] **Phase P1 — Multi-Center Authorized Clinical Data Ingestion:** IRB-approved clinical cohort imports with row-level audit trails.
 - [ ] **Phase P2 — Prospective External Validation of Prognostic Models:** Multi-mission external calibration before enabling clinical prognostic deployment.

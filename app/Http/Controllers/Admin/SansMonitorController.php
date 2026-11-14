@@ -17,6 +17,17 @@ class SansMonitorController extends Controller
     ) {}
 
     /**
+     * Public, task-first astronaut experience. The scientific workspace remains
+     * available through index(); this entry point only selects the crew view.
+     */
+    public function astronaut(Request $request)
+    {
+        $request->query->set('tab', 'astronauta');
+
+        return $this->index($request);
+    }
+
+    /**
      * Workspace unificado de 3 pestañas principales de SANS Monitor:
      * 1. Predictor de 6 Biomarcadores
      * 2. Antes · Durante · Después (+30, +60, +90)

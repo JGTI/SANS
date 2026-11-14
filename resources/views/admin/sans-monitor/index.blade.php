@@ -51,27 +51,28 @@
 
 @section('content')
 <div id="sans-monitor-workspace">
+@if($activeTab === 'astronauta')
+    @include('admin.sans-monitor.astronaut')
+@else
 
-{{-- CABECERA DE ALTO IMPACTO EJECUTIVO --}}
-<div class="card" style="padding:1.35rem 1.5rem;margin-bottom:1.25rem;border:1px solid var(--foreground);">
+{{-- CABECERA CIENTÍFICA COMPACTA (SIN PAJA PROMOCIONAL) --}}
+<div class="card" style="padding:1.1rem 1.35rem;margin-bottom:1rem;border:1.5px solid var(--space-blue);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
         <div>
-            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted-foreground);">
-                <i class="fa fa-crosshairs"></i>
-                {{ $isEn ? 'SPACE VISION · BIOMARKER-DRIVEN NEURO-OCULAR PREDICTOR' : 'SPACE VISION · PREDICTOR NEURO-OCULAR BASADO EN BIOMARCADORES' }}
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.25rem;">
+                <span class="interactive-pill" style="background:#07173F;color:#EAFE07;border-color:#07173F;font-size:0.68rem;">
+                    <i class="fa fa-flask"></i>
+                    {{ $isEn ? 'FOR GROUND SCIENTISTS & CLINICAL INVESTIGATORS' : 'MÓDULO EXCLUSIVO PARA CIENTÍFICOS E INVESTIGADORES EN TIERRA' }}
+                </span>
+                <span style="font-size:0.74rem;color:var(--muted-foreground);font-weight:600;">
+                    {{ $isEn ? 'Source:' : 'Fuente:' }} <code>{{ $activeCase->source_type }}</code>
+                </span>
             </div>
-            <h1 style="font-size:1.45rem;font-weight:800;margin:0.2rem 0;">
+            <h1 style="font-size:1.3rem;font-weight:800;margin:0;">
                 {{ $isEn
                     ? 'SANS Biomarker Predictor & Longitudinal Follow-up (+30 / +60 / +90 Days)'
                     : 'Predictor SANS por Biomarcadores y Seguimiento Longitudinal (+30 / +60 / +90 Días)' }}
             </h1>
-            <p style="margin:0;color:var(--muted-foreground);font-size:0.86rem;">
-                @if($isEn)
-                    Enter subject data, evaluate the <strong>6 ocular biomarkers</strong>, track changes <strong>Before · During · After (+30, +60, +90 days)</strong>, and compare the <strong>3 reference scenario models</strong>.
-                @else
-                    Nutre los datos de la persona, evalúa los <strong>6 biomarcadores oculares</strong>, mide el cambio <strong>Antes · Durante · Después (+30, +60, +90 días)</strong> y compara los <strong>3 escenarios modelos</strong>.
-                @endif
-            </p>
         </div>
 
         @php
@@ -81,9 +82,9 @@
                 default => 'status-badge-missing',
             };
         @endphp
-        <div style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;">
-            <div style="padding:0.45rem 0.85rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
-                <div style="font-size:0.66rem;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:0.15rem;">
+        <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
+            <div style="padding:0.4rem 0.75rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
+                <div style="font-size:0.64rem;text-transform:uppercase;color:var(--muted-foreground);">
                     {{ $isEn ? 'Operational State' : 'Estado Operativo' }} ({{ $activeCase->case_id }})
                 </div>
                 <span class="{{ $headerBadgeClass }}">
@@ -91,32 +92,19 @@
                     {{ $t($caseEvaluation['case_operational_text']) }}
                 </span>
             </div>
-            <div style="padding:0.45rem 0.85rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
-                <div style="font-size:0.66rem;text-transform:uppercase;color:var(--muted-foreground);">
+            <div style="padding:0.4rem 0.75rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
+                <div style="font-size:0.64rem;text-transform:uppercase;color:var(--muted-foreground);">
                     {{ $isEn ? 'Fitness Verdict' : 'Dictamen de Aptitud' }}
                 </div>
-                <div style="font-size:0.9rem;font-weight:700;">{{ $t($caseEvaluation['fitness_display']) }}</div>
+                <div style="font-size:0.86rem;font-weight:700;">{{ $t($caseEvaluation['fitness_display']) }}</div>
             </div>
-            <a href="{{ route('home', ['lang' => app()->getLocale()]) }}" class="btn btn-outline" style="padding:0.6rem 0.85rem;" title="{{ $isEn ? 'Reset Demo to default scenario' : 'Reiniciar demostración al estado inicial' }}">
-                <i class="fa fa-refresh"></i> {{ $isEn ? 'Reset Demo' : 'Reiniciar Demo' }}
+            <a href="{{ route('public.astronaut') }}" class="btn btn-outline" style="padding:0.5rem 0.8rem;font-size:0.8rem;">
+                <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut View' : 'Vista Astronauta' }}
             </a>
-            <a href="{{ route('public.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.6rem 1rem;">
-                <i class="fa fa-cube"></i> {{ $isEn ? 'Open 3D Viewer + OCT' : 'Abrir Visor 3D + OCT' }} <i class="fa fa-external-link"></i>
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.5rem 0.9rem;font-size:0.8rem;">
+                <i class="fa fa-cube"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
             </a>
         </div>
-    </div>
-    <div style="margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;font-size:0.76rem;color:var(--muted-foreground);">
-        <span>
-            <i class="fa fa-shield"></i>
-            <strong>{{ $isEn ? 'Scientific Honesty & Provenance:' : 'Honestidad Científica y Procedencia:' }}</strong>
-            {{ $isEn
-                ? 'Source type: ' . $activeCase->source_type . ' (Calibrated synthetic/analog dataset). Prepares medical surveillance without issuing automated fit-for-duty verdicts.'
-                : 'Origen de datos: ' . $activeCase->source_type . ' (Cohorte sintética/análoga calibrada). Prepara la vigilancia médica sin emitir un veredicto automático de aptitud.' }}
-        </span>
-        <span>
-            <i class="fa fa-check-square-o"></i>
-            {{ $isEn ? 'Public Demo Mode · Zero Login Required · WCAG 2.2 AA' : 'Modo Demo Público · Sin Login Requerido · WCAG 2.2 AA' }}
-        </span>
     </div>
 </div>
 
@@ -126,46 +114,36 @@
     </div>
 @endif
 
-{{-- BARRA COMPACTA DE SELECCIÓN DE EXPEDIENTE / OJO + GALERÍA IA DE ASTRONAUTAS + WIZARD DE 3 PASOS --}}
+{{-- BARRA COMPACTA DE SUJETO Y OJO (SIN CONTROLES DUPLICADOS NI TEXTO DE RELLENO) --}}
 @php
     $activeCrewMeta = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
 @endphp
-<div class="card" style="padding:0.95rem 1.15rem;margin-bottom:1rem;border:1.5px solid var(--interactive-border);">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding-bottom:0.75rem;border-bottom:1px solid var(--border);margin-bottom:0.75rem;">
-        <div style="display:flex;align-items:center;gap:0.85rem;">
+<div class="card" style="padding:0.8rem 1rem;margin-bottom:0.9rem;border:1.5px solid var(--interactive-border);">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.6rem;">
+        <div style="display:flex;align-items:center;gap:0.65rem;">
             <img src="{{ $activeCrewMeta['avatar'] }}"
                  alt="{{ $activeCrewMeta['name'] }}"
-                 style="width:54px;height:54px;border-radius:8px;object-fit:cover;border:2px solid var(--space-blue);box-shadow:0 2px 8px rgba(0,66,166,0.2);">
+                 style="width:42px;height:42px;border-radius:7px;object-fit:cover;border:2px solid var(--space-blue);">
             <div>
-                <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                    <span style="font-size:1rem;font-weight:800;">{{ $activeCrewMeta['name'] }}</span>
+                <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;">
+                    <span style="font-size:0.94rem;font-weight:800;">{{ $activeCrewMeta['name'] }}</span>
                     <span class="interactive-pill" style="background:#0042A6;color:#ffffff;border-color:#0042A6;">
-                        <i class="fa fa-check-circle"></i> {{ $activeCase->case_id }} · {{ $t($activeCase->scenario_archetype) }}
+                        {{ $activeCase->case_id }} · {{ $t($activeCase->scenario_archetype) }}
                     </span>
                 </div>
-                <div style="font-size:0.76rem;color:var(--muted-foreground);margin-top:0.1rem;">
-                    {{ $activeCrewMeta['role'] }} · {{ $isEn ? 'Click any astronaut card below or use the dropdowns to switch subject' : 'Haz clic en cualquier tarjeta de astronauta abajo o usa el selector para cambiar de sujeto' }}
+                <div style="font-size:0.72rem;color:var(--muted-foreground);">
+                    {{ $activeCrewMeta['role'] }}
                 </div>
             </div>
         </div>
 
-        <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin:0;">
-            <input type="hidden" name="tab" value="{{ $activeTab }}">
-            <label style="font-size:0.75rem;font-weight:700;color:var(--interactive-text);margin:0;">
-                <i class="fa fa-user"></i> {{ $isEn ? 'Select Dossier:' : 'Elegir Expediente:' }}
+        <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.5rem;align-items:center;margin:0;">
+            <input type="hidden" name="tab" value="{{ $normalizedTab }}">
+            <input type="hidden" name="case_id" value="{{ $activeCase->case_id }}">
+            <label style="font-size:0.74rem;font-weight:700;color:var(--interactive-text);margin:0;">
+                <i class="fa fa-eye"></i> {{ $isEn ? 'Evaluated Eye:' : 'Ojo Evaluado:' }}
             </label>
-            <select name="case_id" class="form-control" style="width:auto;min-width:220px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select subject' : 'Seleccionar expediente' }}">
-                @foreach($cases as $c)
-                    @php $cm = \App\Models\AstronautProfile::crewMetaForCase($c->case_id); @endphp
-                    <option value="{{ $c->case_id }}" {{ $c->case_id === $activeCase->case_id ? 'selected' : '' }}>
-                        {{ $cm['name'] }} — {{ $c->case_id }} ({{ $t($c->scenario_archetype) }})
-                    </option>
-                @endforeach
-            </select>
-            <label style="font-size:0.75rem;font-weight:700;color:var(--interactive-text);margin:0;">
-                <i class="fa fa-eye"></i> {{ $isEn ? 'Eye:' : 'Ojo:' }}
-            </label>
-            <select name="eye" class="form-control" style="width:auto;min-width:170px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
+            <select name="eye" class="form-control" style="width:auto;min-width:165px;padding:0.35rem 0.6rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
                 <option value="OD" {{ $selectedEye === 'OD' ? 'selected' : '' }}>{{ $isEn ? 'Right Eye (OD)' : 'Ojo Derecho (OD)' }}</option>
                 <option value="OS" {{ $selectedEye === 'OS' ? 'selected' : '' }}>{{ $isEn ? 'Left Eye (OS)' : 'Ojo Izquierdo (OS)' }}</option>
                 <option value="BILATERAL" {{ $selectedEye === 'BILATERAL' ? 'selected' : '' }}>{{ $isEn ? 'Bilateral (OD + OS)' : 'Bilateral (OD + OS)' }}</option>
@@ -173,34 +151,26 @@
         </form>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.45rem;flex-wrap:wrap;gap:0.4rem;">
-        <span style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--interactive-text);">
-            <i class="fa fa-hand-pointer-o"></i>
-            {{ $isEn ? 'Interactive Crew Cohort — Click an astronaut to load their ocular record:' : 'Cohorte Interactiva de Tripulación — Haz clic en un astronauta para cargar su expediente:' }}
-        </span>
-    </div>
-
-    {{-- TIRA VISUAL DE ASTRONAUTAS CON FOTO IA (1 CLIC PARA CAMBIAR DE SUJETO) --}}
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:0.55rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.5rem;">
         @foreach($cases as $c)
             @php
                 $cm = \App\Models\AstronautProfile::crewMetaForCase($c->case_id);
                 $isActiveCrew = $c->case_id === $activeCase->case_id;
             @endphp
-            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['case_id' => $c->case_id])) }}"
+            <a href="{{ route('admin.sans-monitor.index', ['case_id' => $c->case_id, 'eye' => $selectedEye, 'tab' => $normalizedTab]) }}"
                class="clickable-card {{ $isActiveCrew ? 'is-active' : '' }}"
-               style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.55rem;padding:0.45rem 0.6rem;border-radius:7px;">
+               style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.55rem;border-radius:7px;">
                 <img src="{{ $cm['avatar'] }}"
                      alt="{{ $cm['name'] }}"
-                     style="width:38px;height:38px;border-radius:6px;object-fit:cover;border:1.5px solid {{ $isActiveCrew ? '#0042A6' : 'var(--border)' }};flex-shrink:0;">
+                     style="width:36px;height:36px;border-radius:6px;object-fit:cover;border:1.5px solid {{ $isActiveCrew ? '#0042A6' : 'var(--border)' }};flex-shrink:0;">
                 <div style="min-width:0;overflow:hidden;flex:1;">
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.25rem;">
-                        <span style="font-size:0.75rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $cm['name'] }}</span>
-                        <span class="interactive-pill" style="font-size:0.58rem;padding:0.1rem 0.38rem;">
-                            {{ $isActiveCrew ? ($isEn ? 'ACTIVE' : 'ACTIVO') : ($isEn ? 'Select →' : 'Elegir →') }}
+                        <span style="font-size:0.74rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $cm['name'] }}</span>
+                        <span class="interactive-pill" style="font-size:0.56rem;padding:0.08rem 0.35rem;">
+                            {{ $isActiveCrew ? ($isEn ? 'ACTIVE' : 'ACTIVO') : ($isEn ? 'Load →' : 'Cargar →') }}
                         </span>
                     </div>
-                    <div style="font-size:0.66rem;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $c->case_id }} · {{ $t($c->scenario_archetype) }}</div>
+                    <div style="font-size:0.65rem;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $c->case_id }} · {{ $t($c->scenario_archetype) }}</div>
                 </div>
             </a>
         @endforeach
@@ -208,13 +178,7 @@
 </div>
 
 {{-- NAVEGADOR VISUAL DEL WIZARD / TABS DE 3 PASOS --}}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.45rem;flex-wrap:wrap;gap:0.4rem;">
-    <span style="font-size:0.74rem;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:var(--interactive-text);">
-        <i class="fa fa-compass"></i>
-        {{ $isEn ? '3-Step Evaluation Wizard — Click Step 1, Step 2, or Step 3 to switch views:' : 'Wizard de Evaluación en 3 Pasos — Haz clic en el Paso 1, Paso 2 o Paso 3 para cambiar de vista:' }}
-    </span>
-</div>
-<div class="sans-grid-3" style="margin-bottom:1.25rem;" role="tablist" aria-label="{{ $isEn ? '3 Main Wizard Steps' : '3 Pasos Principales del Wizard' }}">
+<div class="sans-grid-3" style="margin-bottom:1rem;" role="tablist" aria-label="{{ $isEn ? '3 Main Wizard Steps' : '3 Pasos Principales del Wizard' }}">
     {{-- PASO 1 --}}
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}"
        data-wizard-tab="biomarcadores"
@@ -562,17 +526,6 @@
         </details>
     </div>
 </div>
-<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
-    <div style="font-size:0.8rem;color:var(--muted-foreground);">
-        <i class="fa fa-compass"></i>
-        <strong>{{ $isEn ? 'Current Step: 1 / 3 (Initial Form & 6 Biomarkers)' : 'Paso Actual: 1 / 3 (Formulario Inicial y 6 Biomarcadores)' }}</strong>
-    </div>
-    <div>
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" data-wizard-tab="seguimiento" class="btn btn-primary" style="font-weight:700;">
-            {{ $isEn ? 'Next: Step 2 (Timeline +30/+60/+90d)' : 'Siguiente: Paso 2 (Tiempo +30/+60/+90d)' }} <i class="fa fa-arrow-right"></i>
-        </a>
-    </div>
-</div>
 </div>
 
 {{-- =============================================================================================== --}}
@@ -729,20 +682,6 @@
         </div>
     </div>
 </div>
-<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
-    <div style="font-size:0.8rem;color:var(--muted-foreground);">
-        <i class="fa fa-compass"></i>
-        <strong>{{ $isEn ? 'Current Step: 2 / 3 (Before · During · After +30/+60/+90d)' : 'Paso Actual: 2 / 3 (Antes · Durante · Después +30/+60/+90d)' }}</strong>
-    </div>
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}" data-wizard-tab="biomarcadores" class="btn btn-outline" style="font-weight:700;">
-            <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 1 (Biomarkers)' : 'Anterior: Paso 1 (Biomarcadores)' }}
-        </a>
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}" data-wizard-tab="escenarios" class="btn btn-primary" style="font-weight:700;">
-            {{ $isEn ? 'Next: Step 3 (3 Scenario Models)' : 'Siguiente: Paso 3 (3 Escenarios)' }} <i class="fa fa-arrow-right"></i>
-        </a>
-    </div>
-</div>
 </div>
 
 {{-- =============================================================================================== --}}
@@ -888,7 +827,7 @@
             </h3>
             <svg viewBox="0 0 260 140" style="width:100%;height:130px;background:#09090b;border-radius:4px;">
                 <circle cx="130" cy="70" r="52" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-                <circle cx="155" cy="70" r="{{ $activeCase->scenario_archetype === 'EMPEORA' ? 19 : 12 }}" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="{{ $activeCase->scenario_archetype === 'EMPEORA' ? '3 2' : 'none' }}"/>
+                <circle cx="155" cy="70" r="{{ ($bp['inputs']['papilledema_frisen'] ?? 0) >= 2 || $activeCase->scenario_archetype === 'EMPEORA' ? 19 : 12 }}" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="{{ ($bp['inputs']['papilledema_frisen'] ?? 0) >= 2 || $activeCase->scenario_archetype === 'EMPEORA' ? '3 2' : 'none' }}"/>
                 <text x="14" y="22" fill="#ffffff" font-size="10" font-family="monospace">{{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $bp['inputs']['papilledema_frisen'] ?? 'N/E' }})</text>
                 <text x="14" y="128" fill="#a1a1aa" font-size="9" font-family="monospace">{{ $isEn ? 'IOP:' : 'PIO:' }} {{ $bp['inputs']['iop_mmhg'] }} mmHg</text>
             </svg>
@@ -898,7 +837,7 @@
             <h3 style="font-size:0.9rem;font-weight:700;margin:0 0 0.5rem;">
                 <i class="fa fa-align-justify"></i> {{ $isEn ? '3. Mean OCT Thickness (Retinal Layers)' : '3. Espesor Medio por OCT (Capas)' }}
             </h3>
-            @if($caseEvaluation['eyes'][$simEye]['coverage_code'] === 'SIN_ESCANEOS_PREVIOS')
+            @if($bp['inputs']['oct_trt_current_um'] === null)
                 <div style="height:130px;display:flex;align-items:center;justify-content:center;background:#09090b;color:#ffffff;padding:1rem;text-align:center;font-size:0.82rem;border-radius:4px;">
                     {{ $isEn
                         ? 'Scenario "Unscanned": OCT not evaluable (Never drawn as normal nor classified as stable).'
@@ -906,7 +845,7 @@
                 </div>
             @else
                 <svg viewBox="0 0 260 140" style="width:100%;height:130px;background:#09090b;border-radius:4px;">
-                    <path d="M 15 55 Q 130 {{ $activeCase->scenario_archetype === 'EMPEORA' ? 28 : 48 }} 245 55" fill="none" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M 15 55 Q 130 {{ ($bp['delta_trt_um'] ?? 0) >= 20 ? 28 : 48 }} 245 55" fill="none" stroke="#ffffff" stroke-width="2"/>
                     <path d="M 15 80 Q 130 78 245 80" fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-dasharray="4 2"/>
                     <path d="M 15 106 Q 130 106 245 106" fill="none" stroke="#ffffff" stroke-width="2"/>
                     <text x="14" y="22" fill="#ffffff" font-size="10" font-family="monospace">{{ $isEn ? 'OCT THICKNESS:' : 'ESPESOR OCT:' }} {{ $bp['inputs']['oct_trt_current_um'] }} µm</text>
@@ -916,123 +855,61 @@
         </div>
     </div>
 </div>
-<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
-    <div style="font-size:0.8rem;color:var(--muted-foreground);">
-        <i class="fa fa-compass"></i>
-        <strong>{{ $isEn ? 'Current Step: 3 / 3 (3 Reference Scenario Models)' : 'Paso Actual: 3 / 3 (3 Escenarios Modelos de Referencia)' }}</strong>
-    </div>
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" data-wizard-tab="seguimiento" class="btn btn-outline" style="font-weight:700;">
-            <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 2 (Timeline +30/+60/+90d)' : 'Anterior: Paso 2 (Tiempo +30/+60/+90d)' }}
-        </a>
-        <a href="{{ url('/digital-twin?mode=dual') }}" class="btn btn-primary" style="font-weight:700;">
-            <i class="fa fa-eye"></i> {{ $isEn ? 'Continue to 3D Eye + OCT Viewer' : 'Continuar al Visor 3D + OCT' }} <i class="fa fa-arrow-right"></i>
-        </a>
-    </div>
-</div>
 </div>
 
-{{-- CAJONES DESPLEGABLES DE EVIDENCIA CIENTÍFICA NASA Y MATRIZ DEL JURADO (SIN RECARGAR LA VISTA PRINCIPAL) --}}
-<div class="sans-grid-2" style="margin-bottom:1.25rem;">
-    {{-- Cajón 1: Protocolos NASA y 7 Referencias Canónicas (RF-05 a RF-08, AT-02) --}}
-    <details class="card collapsible-card" style="padding:1rem 1.2rem;">
-        <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-            <span>
-                <i class="fa fa-book" style="color:var(--interactive-text);"></i>
-                {{ $isEn
-                    ? 'NASA Protocols, Previously Applied Version & 7 Scientific References (AT-02)'
-                    : 'Protocolos NASA, Versión Previa Aplicada y 7 Referencias Científicas (AT-02)' }}
-            </span>
-            <span class="interactive-pill">{{ $isEn ? 'Click to expand +' : 'Clic para abrir +' }}</span>
-        </summary>
-        <div style="margin-top:0.85rem;font-size:0.8rem;">
-            <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
-                <strong>{{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}</strong>
-                @if($catalogSearch['previously_applied'])
-                    <div>
-                        <code>{{ $catalogSearch['previously_applied']->version_id }}</code> —
-                        {{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})
-                    </div>
-                @else
-                    <div>{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
-                @endif
-            </div>
-
-            @if(!empty($catalogSearch['newer_verified_versions']))
-                <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
-                    <strong>{{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}</strong>
-                    @foreach($catalogSearch['newer_verified_versions'] as $nv)
-                        <div>
-                            <code>{{ $nv->version_id }}</code> — {{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})
-                        </div>
-                    @endforeach
+{{-- CATÁLOGO DE PROTOCOLOS CIENTÍFICOS NASA Y 7 REFERENCIAS CANÓNICAS (RF-05 A RF-08, AT-02) --}}
+<details class="card collapsible-card" style="padding:1rem 1.2rem;margin-bottom:1.25rem;">
+    <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+        <span>
+            <i class="fa fa-book" style="color:var(--interactive-text);"></i>
+            {{ $isEn
+                ? 'NASA Clinical Protocols, Previously Applied Version & 7 Scientific References (AT-02)'
+                : 'Protocolos Clínicos NASA, Versión Previa Aplicada y 7 Referencias Científicas (AT-02)' }}
+        </span>
+        <span class="interactive-pill">{{ $isEn ? 'Click to expand +' : 'Clic para abrir +' }}</span>
+    </summary>
+    <div style="margin-top:0.85rem;font-size:0.8rem;">
+        <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
+            <strong>{{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}</strong>
+            @if($catalogSearch['previously_applied'])
+                <div>
+                    <code>{{ $catalogSearch['previously_applied']->version_id }}</code> —
+                    {{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})
                 </div>
+            @else
+                <div>{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
             @endif
+        </div>
 
-            <div style="font-weight:700;margin-bottom:0.35rem;">
-                {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
-            </div>
-            <ul style="margin:0;padding-left:1.15rem;">
-                @foreach($catalogSearch['followup_matches'] as $match)
-                    <li style="margin-bottom:0.3rem;">
-                        <strong>[{{ $match['document_type_badge'] }}]</strong>
-                        <code>{{ $match['protocol']->version_id }}</code> — {{ $match['protocol']->title }}
-                        @if($match['protocol']->source_url)
-                            <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener" style="text-decoration:underline;margin-left:4px;color:var(--interactive-text);font-weight:700;">
-                                <i class="fa fa-external-link"></i> NASA/Source
-                            </a>
-                        @endif
-                    </li>
+        @if(!empty($catalogSearch['newer_verified_versions']))
+            <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
+                <strong>{{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}</strong>
+                @foreach($catalogSearch['newer_verified_versions'] as $nv)
+                    <div>
+                        <code>{{ $nv->version_id }}</code> — {{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})
+                    </div>
                 @endforeach
-            </ul>
-        </div>
-    </details>
+            </div>
+        @endif
 
-    {{-- Cajón 2: Matriz de Evaluación NASA Space Apps (Impact, Creativity, Validity, Relevance, Presentation) --}}
-    <details class="card collapsible-card" style="padding:1rem 1.2rem;">
-        <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-            <span>
-                <i class="fa fa-trophy" style="color:var(--interactive-text);"></i>
-                {{ $isEn
-                    ? 'NASA Space Apps Judging Guide Matrix (Impact · Creativity · Validity · Relevance · Presentation)'
-                    : 'Matriz para el Jurado NASA Space Apps (Impacto · Creatividad · Validez · Relevancia · Presentación)' }}
-            </span>
-            <span class="interactive-pill">{{ $isEn ? 'Click to expand +' : 'Clic para abrir +' }}</span>
-        </summary>
-        <div style="margin-top:0.85rem;font-size:0.8rem;display:grid;gap:0.45rem;">
-            <div>
-                <strong><i class="fa fa-bullseye"></i> Impact:</strong>
-                {{ $isEn
-                    ? 'Structures longitudinal ocular surveillance (Before, During, and +30/+60/+90d post-flight) and -6° HDT Earth analogs without replacing medical judgment.'
-                    : 'Estructura la vigilancia ocular longitudinal (Antes, Durante y +30/+60/+90d posvuelo) y análogos terrestres -6° HDT sin sustituir el juicio médico.' }}
-            </div>
-            <div>
-                <strong><i class="fa fa-lightbulb-o"></i> Creativity:</strong>
-                {{ $isEn
-                    ? 'Combines a 6-biomarker explainable predictor, 3 reference scenario models (Stable, Worsens, Unscanned), and a dual 3D WebGL + OCT workstation.'
-                    : 'Combina un predictor explicable de 6 biomarcadores, 3 escenarios modelos (Estable, Empeora, No se escanea) y estación dual 3D WebGL + OCT.' }}
-            </div>
-            <div>
-                <strong><i class="fa fa-flask"></i> Validity:</strong>
-                {{ $isEn
-                    ? 'Deterministic ophthalmology (SE, LogMAR, Thibos vectors), strict separation of historical vs synthetic interpolation, and 99 automated tests (77 PHPUnit + 22 Pytest).'
-                    : 'Oftalmología determinista (SE, LogMAR, vectores de Thibos), separación estricta entre histórico y simulación sintética, y 99 tests automatizados.' }}
-            </div>
-            <div>
-                <strong><i class="fa fa-rocket"></i> Relevance:</strong>
-                {{ $isEn
-                    ? 'Grounded in NASA OCHMO-MTB-001, NASA-STD-3001, SLS-SPEC-159, NASAHRP SANS Evidence Report, OSDR, and NTRS.'
-                    : 'Fundamentado en NASA OCHMO-MTB-001, NASA-STD-3001, SLS-SPEC-159, NASAHRP SANS Evidence Report, OSDR y NTRS.' }}
-            </div>
-            <div>
-                <strong><i class="fa fa-desktop"></i> Presentation:</strong>
-                {{ $isEn
-                    ? 'Zero-login public access at root URL (/), bilingual ES/EN switch, WCAG 2.2 AA high-contrast theme, and NEXUS × Visual Rehab Center attribution.'
-                    : 'Acceso público sin login en la raíz (/), selector bilingüe ES/EN, alto contraste WCAG 2.2 AA y atribución NEXUS × Visual Rehab Center.' }}
-            </div>
+        <div style="font-weight:700;margin-bottom:0.35rem;">
+            {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
         </div>
-    </details>
-</div>
+        <ul style="margin:0;padding-left:1.15rem;">
+            @foreach($catalogSearch['followup_matches'] as $match)
+                <li style="margin-bottom:0.3rem;">
+                    <strong>[{{ $match['document_type_badge'] }}]</strong>
+                    <code>{{ $match['protocol']->version_id }}</code> — {{ $match['protocol']->title }}
+                    @if($match['protocol']->source_url)
+                        <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener" style="text-decoration:underline;margin-left:4px;color:var(--interactive-text);font-weight:700;">
+                            <i class="fa fa-external-link"></i> NASA/Source
+                        </a>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</details>
 
 <script id="sans-monitor-chart-data" type="application/json">
 {!! json_encode([
@@ -1047,6 +924,7 @@
     ],
 ]) !!}
 </script>
+@endif
 </div>
 
 <script>

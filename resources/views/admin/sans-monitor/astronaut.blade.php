@@ -1,0 +1,392 @@
+@php
+    $crew = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
+@endphp
+
+<section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
+    <header class="crew-hero">
+        <div class="crew-identity">
+            <img src="{{ $crew['avatar'] }}" alt="{{ $crew['name'] }}" class="crew-avatar">
+            <div>
+                <p class="crew-kicker">{{ $isEn ? 'Mission day 30 · Personal eye log' : 'Día 30 de misión · Bitácora visual personal' }}</p>
+                <h1>{{ $isEn ? 'Good morning,' : 'Buenos días,' }} {{ explode(' ', $crew['name'])[0] }}</h1>
+                <p>{{ $isEn ? 'Your next check is ready. It takes about 8 minutes.' : 'Tu siguiente revisión está lista. Toma aproximadamente 8 minutos.' }}</p>
+            </div>
+        </div>
+        <div class="crew-sync" role="status">
+            <span class="crew-sync-dot" aria-hidden="true"></span>
+            {{ $isEn ? 'Synced with ground team' : 'Sincronizado con el equipo en Tierra' }}
+        </div>
+    </header>
+
+    <nav class="crew-tabs" aria-label="{{ $isEn ? 'Astronaut workspace' : 'Espacio del astronauta' }}">
+        <button type="button" class="crew-tab is-active" data-crew-tab="today"><i class="fa fa-sun-o"></i><span>{{ $isEn ? 'Today' : 'Hoy' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="log"><i class="fa fa-book"></i><span>{{ $isEn ? 'Logbook' : 'Bitácora' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="trends"><i class="fa fa-line-chart"></i><span>{{ $isEn ? 'Trends' : 'Tendencias' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="profile"><i class="fa fa-user-o"></i><span>{{ $isEn ? 'Profile' : 'Perfil' }}</span></button>
+    </nav>
+
+    <div class="crew-view is-active" data-crew-view="today">
+        <div class="crew-today-grid">
+            <article class="crew-primary-panel">
+                <div class="crew-panel-icon" aria-hidden="true"><i class="fa fa-eye"></i></div>
+                <p class="crew-eyebrow">{{ $isEn ? 'TODAY’S CHECK' : 'REVISIÓN DE HOY' }}</p>
+                <h2>{{ $isEn ? 'How are your eyes feeling?' : '¿Cómo se sienten tus ojos?' }}</h2>
+                <p>{{ $isEn ? 'We will record symptoms, six visual checks, eye pressure and the conditions around the measurement.' : 'Registraremos síntomas, seis pruebas visuales, presión ocular y las condiciones de la medición.' }}</p>
+                <ul class="crew-check-list" aria-label="{{ $isEn ? 'Included activities' : 'Actividades incluidas' }}">
+                    <li><i class="fa fa-check"></i> {{ $isEn ? 'Symptoms and wellbeing' : 'Síntomas y bienestar' }}</li>
+                    <li><i class="fa fa-check"></i> {{ $isEn ? 'Visual acuity, Amsler and contrast' : 'Agudeza visual, Amsler y contraste' }}</li>
+                    <li><i class="fa fa-check"></i> {{ $isEn ? 'Eye pressure and physiological context' : 'Presión ocular y contexto fisiológico' }}</li>
+                </ul>
+                <button type="button" class="crew-primary-action" data-start-check>
+                    {{ $isEn ? 'Start today’s check' : 'Comenzar revisión de hoy' }} <i class="fa fa-arrow-right"></i>
+                </button>
+                <p class="crew-action-note"><i class="fa fa-lock"></i> {{ $isEn ? 'Saved under your pseudonymous mission record.' : 'Se guarda en tu expediente de misión seudonimizado.' }}</p>
+            </article>
+
+            <aside class="crew-side-panel">
+                <div class="crew-side-heading">
+                    <div>
+                        <p class="crew-eyebrow">{{ $isEn ? 'LAST CHECK' : 'ÚLTIMA REVISIÓN' }}</p>
+                        <h3>{{ $isEn ? 'No relevant change' : 'Sin cambios relevantes' }}</h3>
+                    </div>
+                    <span class="crew-state-ok"><i class="fa fa-check"></i></span>
+                </div>
+                <p>{{ $isEn ? 'Completed yesterday at 08:40. All captures passed the quality check.' : 'Completada ayer a las 08:40. Todas las capturas aprobaron el control de calidad.' }}</p>
+                <dl class="crew-last-values">
+                    <div><dt>{{ $isEn ? 'Right eye pressure' : 'Presión ojo derecho' }}</dt><dd>16 mmHg</dd></div>
+                    <div><dt>{{ $isEn ? 'Left eye pressure' : 'Presión ojo izquierdo' }}</dt><dd>15 mmHg</dd></div>
+                    <div><dt>{{ $isEn ? 'Reported symptoms' : 'Síntomas reportados' }}</dt><dd>{{ $isEn ? 'None' : 'Ninguno' }}</dd></div>
+                </dl>
+                <button type="button" class="crew-text-action" data-open-tab="log">{{ $isEn ? 'See complete entry' : 'Ver registro completo' }} <i class="fa fa-angle-right"></i></button>
+            </aside>
+        </div>
+
+        <div class="crew-guidance">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <div><strong>{{ $isEn ? 'Before you begin' : 'Antes de comenzar' }}</strong><span>{{ $isEn ? 'Use the calibrated tablet stand, sit in the indicated position and have the rebound tonometer ready.' : 'Usa el soporte calibrado de la tableta, adopta la posición indicada y ten listo el tonómetro de rebote.' }}</span></div>
+        </div>
+    </div>
+
+    <div class="crew-view" data-crew-view="log" hidden>
+        <div class="crew-page-heading">
+            <div><p class="crew-eyebrow">{{ $isEn ? 'PERSONAL RECORD' : 'REGISTRO PERSONAL' }}</p><h2>{{ $isEn ? 'Mission logbook' : 'Bitácora de misión' }}</h2></div>
+            <button type="button" class="crew-secondary-action" data-start-check><i class="fa fa-plus"></i> {{ $isEn ? 'New entry' : 'Nueva entrada' }}</button>
+        </div>
+        <div class="crew-timeline" data-log-list>
+            <article class="crew-log-entry">
+                <time datetime="2026-11-13T08:40"><strong>{{ $isEn ? 'Yesterday' : 'Ayer' }}</strong><span>08:40</span></time>
+                <div class="crew-log-mark is-ok"><i class="fa fa-check"></i></div>
+                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'No symptoms · Visual tests completed · IOP 16 / 15 mmHg' : 'Sin síntomas · Pruebas visuales completas · PIO 16 / 15 mmHg' }}</p><span class="crew-quality">{{ $isEn ? 'Quality verified' : 'Calidad verificada' }}</span></div>
+            </article>
+            <article class="crew-log-entry">
+                <time datetime="2026-11-10T08:35"><strong>{{ $isEn ? 'Nov 10' : '10 nov' }}</strong><span>08:35</span></time>
+                <div class="crew-log-mark is-note"><i class="fa fa-repeat"></i></div>
+                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'Amsler capture repeated due to distance. Second attempt accepted.' : 'Captura de Amsler repetida por distancia. Segundo intento aceptado.' }}</p><span class="crew-quality">{{ $isEn ? 'Repeat resolved' : 'Repetición resuelta' }}</span></div>
+            </article>
+            <article class="crew-log-entry">
+                <time datetime="2026-11-06T08:42"><strong>{{ $isEn ? 'Nov 6' : '6 nov' }}</strong><span>08:42</span></time>
+                <div class="crew-log-mark is-ok"><i class="fa fa-check"></i></div>
+                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'Mild headache · Visual tests completed · IOP 15 / 15 mmHg' : 'Cefalea leve · Pruebas visuales completas · PIO 15 / 15 mmHg' }}</p><span class="crew-quality">{{ $isEn ? 'Sent to ground review' : 'Enviado a revisión en Tierra' }}</span></div>
+            </article>
+        </div>
+    </div>
+
+    <div class="crew-view" data-crew-view="trends" hidden>
+        <div class="crew-page-heading"><div><p class="crew-eyebrow">{{ $isEn ? 'FROM YOUR BASELINE' : 'DESDE TU LÍNEA BASAL' }}</p><h2>{{ $isEn ? 'Changes over time' : 'Cambios a través del tiempo' }}</h2></div><span class="crew-neutral-status">{{ $isEn ? 'No persistent change' : 'Sin cambio persistente' }}</span></div>
+        <div class="crew-trend-layout">
+            <div class="crew-trend-chart">
+                <div class="crew-chart-heading"><div><strong>{{ $isEn ? 'Intraocular pressure' : 'Presión intraocular' }}</strong><span>{{ $isEn ? 'Same device · seated protocol' : 'Mismo dispositivo · protocolo sentado' }}</span></div><div class="crew-eye-legend"><span><i class="od"></i>OD</span><span><i class="os"></i>OS</span></div></div>
+                <svg viewBox="0 0 720 260" role="img" aria-label="{{ $isEn ? 'Intraocular pressure trend by eye' : 'Tendencia de presión intraocular por ojo' }}">
+                    <g class="crew-grid-lines"><line x1="58" y1="38" x2="690" y2="38"/><line x1="58" y1="102" x2="690" y2="102"/><line x1="58" y1="166" x2="690" y2="166"/><line x1="58" y1="230" x2="690" y2="230"/></g>
+                    <path class="crew-line od" d="M62 176 C150 170 188 154 270 158 S390 146 474 151 S586 132 686 140"/>
+                    <path class="crew-line os" d="M62 182 C150 181 188 167 270 171 S390 159 474 165 S586 151 686 155"/>
+                    <g class="crew-chart-labels"><text x="58" y="252">{{ $isEn ? 'Baseline' : 'Basal' }}</text><text x="255" y="252">{{ $isEn ? 'Day 10' : 'Día 10' }}</text><text x="462" y="252">{{ $isEn ? 'Day 20' : 'Día 20' }}</text><text x="650" y="252">{{ $isEn ? 'Today' : 'Hoy' }}</text></g>
+                </svg>
+            </div>
+            <aside class="crew-trend-summary"><p class="crew-eyebrow">{{ $isEn ? 'PLAIN-LANGUAGE SUMMARY' : 'RESUMEN CLARO' }}</p><h3>{{ $isEn ? 'Your measurements remain close to baseline.' : 'Tus mediciones permanecen cerca de la línea basal.' }}</h3><p>{{ $isEn ? 'Small day-to-day differences are expected. No persistent pattern has been identified in this demonstration record.' : 'Se esperan pequeñas diferencias entre días. No se ha identificado un patrón persistente en este expediente demostrativo.' }}</p><div class="crew-honesty"><i class="fa fa-shield"></i><span>{{ $isEn ? 'This view supports monitoring and ground review. It does not diagnose SANS or estimate intracranial pressure.' : 'Esta vista apoya el seguimiento y la revisión en Tierra. No diagnostica SANS ni estima la presión intracraneal.' }}</span></div></aside>
+        </div>
+    </div>
+
+    <div class="crew-view" data-crew-view="profile" hidden>
+        <div class="crew-page-heading"><div><p class="crew-eyebrow">{{ $isEn ? 'BASELINE PROFILE' : 'PERFIL BASAL' }}</p><h2>{{ $isEn ? 'Verified before flight' : 'Verificado antes del vuelo' }}</h2></div><span class="crew-neutral-status"><i class="fa fa-lock"></i> {{ $isEn ? 'Read only in flight' : 'Solo lectura en vuelo' }}</span></div>
+        <div class="crew-profile-form">
+            <p class="crew-profile-note"><i class="fa fa-shield"></i> {{ $isEn ? 'A specialist established this profile before launch. The astronaut cannot change baseline information during the mission.' : 'Un especialista estableció este perfil antes del lanzamiento. El astronauta no puede modificar la información basal durante la misión.' }}</p>
+            <dl class="crew-profile-values"><div><dt>{{ $isEn ? 'Participant code' : 'Código de participante' }}</dt><dd>{{ $activeCase->case_id }}</dd></div><div><dt>{{ $isEn ? 'Age at launch' : 'Edad al lanzamiento' }}</dt><dd>42</dd></div><div><dt>{{ $isEn ? 'Sex assigned at birth' : 'Sexo asignado al nacer' }}</dt><dd>{{ $isEn ? 'Female' : 'Femenino' }}</dd></div><div><dt>{{ $isEn ? 'Height' : 'Estatura' }}</dt><dd>168 cm</dd></div><div><dt>{{ $isEn ? 'Pre-flight weight' : 'Peso pre-vuelo' }}</dt><dd>64 kg</dd></div><div><dt>{{ $isEn ? 'Baseline completed' : 'Línea basal completada' }}</dt><dd>{{ $isEn ? 'Yes · verified' : 'Sí · verificada' }}</dd></div></dl>
+            <details><summary><span><i class="fa fa-eye"></i>{{ $isEn ? 'Verified eye history' : 'Antecedentes oculares verificados' }}</span><i class="fa fa-angle-down"></i></summary><div class="crew-detail-body"><p>{{ $isEn ? 'Uses corrective lenses. No prior ocular surgery or documented retinal disease in this demonstration profile.' : 'Usa lentes correctivos. Sin cirugía ocular previa ni enfermedad retiniana documentada en este perfil demostrativo.' }}</p></div></details>
+            <details><summary><span><i class="fa fa-heartbeat"></i>{{ $isEn ? 'What updates during flight' : 'Qué se actualiza durante el vuelo' }}</span><i class="fa fa-angle-down"></i></summary><div class="crew-detail-body"><p>{{ $isEn ? 'Only measurements, symptoms, medication changes and environmental context are appended through the guided check.' : 'Solo se agregan mediciones, síntomas, cambios de medicamentos y contexto ambiental mediante la revisión guiada.' }}</p></div></details>
+        </div>
+    </div>
+
+    <div class="crew-check-flow" data-check-flow hidden aria-live="polite">
+        <div class="crew-flow-topbar"><button type="button" class="crew-close-flow" data-close-flow><i class="fa fa-times"></i><span>{{ $isEn ? 'Exit check' : 'Salir de la revisión' }}</span></button><div class="crew-progress-track"><span data-progress-bar></span></div><span data-progress-label>1 / 4</span></div>
+        <form data-check-form>
+            <section class="crew-step is-active" data-step="0">
+                <p class="crew-eyebrow">{{ $isEn ? 'SYMPTOMS' : 'SÍNTOMAS' }}</p><h2>{{ $isEn ? 'How do you feel right now?' : '¿Cómo te sientes en este momento?' }}</h2><p>{{ $isEn ? 'Choose every symptom you have noticed since your last check.' : 'Selecciona todos los síntomas que hayas notado desde tu última revisión.' }}</p>
+                <div class="crew-choice-list"><label><input type="checkbox" name="symptoms" value="blur"><span><i class="fa fa-eye"></i>{{ $isEn ? 'Blurred near vision' : 'Visión cercana borrosa' }}</span></label><label><input type="checkbox" name="symptoms" value="headache"><span><i class="fa fa-bolt"></i>{{ $isEn ? 'Headache or pressure sensation' : 'Cefalea o sensación de presión' }}</span></label><label><input type="checkbox" name="symptoms" value="double"><span><i class="fa fa-clone"></i>{{ $isEn ? 'Double vision' : 'Visión doble' }}</span></label><label><input type="checkbox" name="symptoms" value="none"><span><i class="fa fa-check-circle"></i>{{ $isEn ? 'No symptoms' : 'Sin síntomas' }}</span></label></div>
+                <p class="crew-step-feedback" data-step-feedback="0" hidden></p>
+            </section>
+            <section class="crew-step" data-step="1" hidden>
+                <p class="crew-eyebrow">{{ $isEn ? 'GUIDED VISUAL CHECKS' : 'PRUEBAS VISUALES GUIADAS' }}</p><h2>{{ $isEn ? 'Complete the six screen checks' : 'Completa las seis pruebas en pantalla' }}</h2><p>{{ $isEn ? 'Follow the distance shown for each check. Cover one eye only when instructed.' : 'Sigue la distancia indicada en cada prueba. Cubre un ojo solo cuando se indique.' }}</p>
+                <div class="crew-tests-toolbar" aria-label="{{ $isEn ? 'Test progress' : 'Progreso de pruebas' }}">
+                    <div><span>01</span><i></i><span>02</span><i></i><span>03</span><i></i><span>04</span><i></i><span>05</span><i></i><span>06</span></div>
+                    <output data-tests-progress>{{ $isEn ? '0 of 6 recorded' : '0 de 6 registradas' }}</output>
+                </div>
+                <div class="crew-guided-tests">
+                    <article class="crew-guided-test" data-visual-test data-test-number="1">
+                        <header><span class="crew-test-number">01</span><span class="crew-test-icon"><i class="fa fa-binoculars"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Distance vision' : 'Visión lejana' }}</strong><small>{{ $isEn ? 'Calibrated distance acuity' : 'Agudeza lejana calibrada' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage crew-optotype" aria-hidden="true"><b>E</b><span>F P</span><small>T O Z</small></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-arrows-h"></i><span><strong>{{ $isEn ? 'Distance: 3 m (10 ft)' : 'Distancia: 3 m (10 pies)' }}</strong>{{ $isEn ? 'Use the calibrated display, cover one eye and read the smallest clear line.' : 'Usa la pantalla calibrada, cubre un ojo y lee la línea más pequeña que distingas.' }}</span></p>
+                                <div class="crew-eye-responses"><label><span>OD<small>{{ $isEn ? 'Right' : 'Derecho' }}</small></span><select name="distance_acuity_od" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option>20/20</option><option>20/25</option><option>20/40</option><option value="unreadable">{{ $isEn ? 'Unable to read' : 'No puede leer' }}</option></select></label><label><span>OS<small>{{ $isEn ? 'Left' : 'Izquierdo' }}</small></span><select name="distance_acuity_os" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option>20/20</option><option>20/25</option><option>20/40</option><option value="unreadable">{{ $isEn ? 'Unable to read' : 'No puede leer' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="crew-guided-test" data-visual-test data-test-number="2">
+                        <header><span class="crew-test-number">02</span><span class="crew-test-icon"><i class="fa fa-book"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Near vision' : 'Visión cercana' }}</strong><small>{{ $isEn ? 'Reading acuity at 40 cm' : 'Agudeza de lectura a 40 cm' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage"><div class="crew-near-card" aria-hidden="true"><b>SPACE VISION</b><span>ORBITAL HEALTH</span><small>VISUAL MONITOR</small></div></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-arrows-h"></i><span><strong>{{ $isEn ? 'Distance: 40 cm (16 in)' : 'Distancia: 40 cm (16 pulgadas)' }}</strong>{{ $isEn ? 'Cover one eye and record the smallest line you can read comfortably.' : 'Cubre un ojo y registra la línea más pequeña que puedes leer con comodidad.' }}</span></p>
+                                <div class="crew-eye-responses"><label><span>OD<small>{{ $isEn ? 'Right' : 'Derecho' }}</small></span><select name="near_acuity_od" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option>N5</option><option>N6</option><option>N8</option><option value="unreadable">{{ $isEn ? 'Unable to read' : 'No puede leer' }}</option></select></label><label><span>OS<small>{{ $isEn ? 'Left' : 'Izquierdo' }}</small></span><select name="near_acuity_os" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option>N5</option><option>N6</option><option>N8</option><option value="unreadable">{{ $isEn ? 'Unable to read' : 'No puede leer' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="crew-guided-test" data-visual-test data-test-number="3">
+                        <header><span class="crew-test-number">03</span><span class="crew-test-icon"><i class="fa fa-paint-brush"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Color vision' : 'Visión del color' }}</strong><small>{{ $isEn ? 'Color discrimination screening' : 'Tamizaje de discriminación cromática' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage"><div class="crew-color-plate" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b>12</b></div></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-tint"></i><span><strong>{{ $isEn ? 'Read the number in the color field' : 'Lee el número dentro del campo de color' }}</strong>{{ $isEn ? 'Test one eye at a time under neutral lighting. This is a demonstration screen, not a diagnostic plate.' : 'Evalúa un ojo a la vez con luz neutra. Esta es una pantalla demostrativa, no una lámina diagnóstica.' }}</span></p>
+                                <div class="crew-eye-responses"><label><span>OD<small>{{ $isEn ? 'Right' : 'Derecho' }}</small></span><select name="color_od" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="12">12</option><option value="unclear">{{ $isEn ? 'Unclear' : 'No es claro' }}</option><option value="none">{{ $isEn ? 'No number identified' : 'No identifica número' }}</option></select></label><label><span>OS<small>{{ $isEn ? 'Left' : 'Izquierdo' }}</small></span><select name="color_os" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="12">12</option><option value="unclear">{{ $isEn ? 'Unclear' : 'No es claro' }}</option><option value="none">{{ $isEn ? 'No number identified' : 'No identifica número' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="crew-guided-test" data-visual-test data-test-number="4">
+                        <header><span class="crew-test-number">04</span><span class="crew-test-icon"><i class="fa fa-cubes"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Stereopsis' : 'Estereopsis' }}</strong><small>{{ $isEn ? 'Binocular depth perception' : 'Percepción binocular de profundidad' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage"><div class="crew-stereo-sample" aria-hidden="true"><span class="circle"></span><span class="square"></span><span class="triangle"></span></div></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-cube"></i><span><strong>{{ $isEn ? 'Use the paired red/cyan viewer' : 'Usa el visor rojo/cian vinculado' }}</strong>{{ $isEn ? 'With both eyes open, select the shape that appears closest. A calibrated viewer is required.' : 'Con ambos ojos abiertos, selecciona la figura que parece más cercana. Se requiere un visor calibrado.' }}</span></p>
+                                <div class="crew-eye-responses crew-single-response"><label><span>{{ $isEn ? 'Binocular result' : 'Resultado binocular' }}<small>OU</small></span><select name="stereopsis" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="circle">{{ $isEn ? 'Circle' : 'Círculo' }}</option><option value="square">{{ $isEn ? 'Square' : 'Cuadrado' }}</option><option value="triangle">{{ $isEn ? 'Triangle' : 'Triángulo' }}</option><option value="none">{{ $isEn ? 'No depth perceived' : 'No percibe profundidad' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="crew-guided-test" data-visual-test data-test-number="5">
+                        <header><span class="crew-test-number">05</span><span class="crew-test-icon"><i class="fa fa-th"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Amsler grid' : 'Rejilla de Amsler' }}</strong><small>{{ $isEn ? 'Central field check' : 'Revisión del campo central' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage"><div class="crew-amsler" aria-hidden="true"><span></span></div></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-dot-circle-o"></i><span><strong>{{ $isEn ? 'Keep looking at the center point' : 'Mantén la mirada en el punto central' }}</strong>{{ $isEn ? 'Indicate whether the lines look straight, distorted or incomplete.' : 'Indica si las líneas se ven rectas, distorsionadas o incompletas.' }}</span></p>
+                                <div class="crew-eye-responses"><label><span>OD<small>{{ $isEn ? 'Right' : 'Derecho' }}</small></span><select name="amsler_od" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="straight">{{ $isEn ? 'All lines straight' : 'Todas rectas' }}</option><option value="distorted">{{ $isEn ? 'Distorted lines' : 'Líneas distorsionadas' }}</option><option value="missing">{{ $isEn ? 'Missing area' : 'Área faltante' }}</option></select></label><label><span>OS<small>{{ $isEn ? 'Left' : 'Izquierdo' }}</small></span><select name="amsler_os" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="straight">{{ $isEn ? 'All lines straight' : 'Todas rectas' }}</option><option value="distorted">{{ $isEn ? 'Distorted lines' : 'Líneas distorsionadas' }}</option><option value="missing">{{ $isEn ? 'Missing area' : 'Área faltante' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="crew-guided-test" data-visual-test data-test-number="6">
+                        <header><span class="crew-test-number">06</span><span class="crew-test-icon"><i class="fa fa-adjust"></i></span><span class="crew-test-title"><strong>{{ $isEn ? 'Contrast sensitivity' : 'Sensibilidad al contraste' }}</strong><small>{{ $isEn ? 'Low-contrast recognition' : 'Reconocimiento de bajo contraste' }}</small></span><em data-test-state><i class="fa fa-circle-o"></i>{{ $isEn ? 'Pending' : 'Pendiente' }}</em></header>
+                        <div class="crew-test-body">
+                            <div class="crew-test-stage crew-contrast-sample" aria-hidden="true"><span>C</span><span>C</span><span>C</span></div>
+                            <div class="crew-test-controls">
+                                <p class="crew-test-instruction"><i class="fa fa-eye"></i><span><strong>{{ $isEn ? 'Identify the faintest visible group' : 'Identifica el grupo más tenue visible' }}</strong>{{ $isEn ? 'Record the last group you can recognize with each eye.' : 'Registra el último grupo que reconoces con cada ojo.' }}</span></p>
+                                <div class="crew-eye-responses"><label><span>OD<small>{{ $isEn ? 'Right' : 'Derecho' }}</small></span><select name="contrast_od" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="all">{{ $isEn ? 'All three groups' : 'Los tres grupos' }}</option><option value="medium">{{ $isEn ? 'Up to medium' : 'Hasta el intermedio' }}</option><option value="high">{{ $isEn ? 'High contrast only' : 'Solo alto contraste' }}</option></select></label><label><span>OS<small>{{ $isEn ? 'Left' : 'Izquierdo' }}</small></span><select name="contrast_os" data-test-answer><option value="">{{ $isEn ? 'Select result' : 'Seleccionar resultado' }}</option><option value="all">{{ $isEn ? 'All three groups' : 'Los tres grupos' }}</option><option value="medium">{{ $isEn ? 'Up to medium' : 'Hasta el intermedio' }}</option><option value="high">{{ $isEn ? 'High contrast only' : 'Solo alto contraste' }}</option></select></label></div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <p class="crew-step-feedback" data-step-feedback="1" hidden></p>
+            </section>
+            <section class="crew-step" data-step="2" hidden>
+                <p class="crew-eyebrow">{{ $isEn ? 'PHYSICAL MEASUREMENTS' : 'MEDICIONES FÍSICAS' }}</p><h2>{{ $isEn ? 'Receive readings from digital devices' : 'Recibe lecturas de dispositivos digitales' }}</h2><p>{{ $isEn ? 'In operation, paired devices would send these measurements directly to the application.' : 'En operación, los dispositivos vinculados enviarían estas mediciones directamente a la aplicación.' }}</p>
+                <div class="crew-demo-notice" role="note"><i class="fa fa-info-circle"></i><span><strong>{{ $isEn ? 'Demonstration mode' : 'Modo demostración' }}</strong>{{ $isEn ? 'The buttons simulate the data transfer. No physical hardware is connected to this prototype.' : 'Los botones simulan la transferencia de datos. Este prototipo no está conectado a hardware físico.' }}</span></div>
+                <figure class="crew-equipment-guide">
+                    <div class="crew-equipment-visual"><img src="{{ asset('images/sans/mission-medical-devices.png') }}" alt="{{ $isEn ? 'Rebound tonometer and wearable mission health sensor' : 'Tonómetro de rebote y sensor portátil de salud de misión' }}"></div>
+                    <figcaption>
+                        <span class="crew-equipment-label"><i class="fa fa-check-circle"></i>{{ $isEn ? 'DIGITAL EQUIPMENT REFERENCE' : 'REFERENCIA DE EQUIPO DIGITAL' }}</span>
+                        <strong>{{ $isEn ? 'Identify the devices before capturing' : 'Identifica los dispositivos antes de capturar' }}</strong>
+                        <p>{{ $isEn ? 'Use the rebound tonometer for eye pressure and the wearable sensor for vital signs.' : 'Usa el tonómetro de rebote para la presión ocular y el sensor portátil para los signos vitales.' }}</p>
+                        <div><span><i class="fa fa-eye"></i>{{ $isEn ? 'Eye pressure' : 'Presión ocular' }}</span><span><i class="fa fa-heartbeat"></i>{{ $isEn ? 'Vital signs' : 'Signos vitales' }}</span></div>
+                    </figcaption>
+                </figure>
+                <div class="crew-sync-console" data-sync-console role="status" aria-live="polite">
+                    <span class="crew-sync-orbit" aria-hidden="true"><i class="fa fa-rss"></i></span>
+                    <span><strong data-sync-title>{{ $isEn ? 'Secure device link ready' : 'Enlace seguro de dispositivos listo' }}</strong><small data-sync-detail>{{ $isEn ? 'Start each simulated reading to view the transfer sequence.' : 'Inicia cada lectura simulada para ver la secuencia de transferencia.' }}</small></span>
+                    <output data-sync-count>0 / 2</output>
+                </div>
+                <div class="crew-device-list">
+                    <article data-device="tonometer"><div><i class="fa fa-eye"></i><span><strong>{{ $isEn ? 'Digital rebound tonometer' : 'Tonómetro digital de rebote' }}</strong><small>{{ $isEn ? 'Measures OD, then OS under the same baseline protocol.' : 'Mide OD y después OS con el mismo protocolo basal.' }}</small></span></div><dl><div><dt>OD</dt><dd><output data-reading="iop_od">—</output> mmHg<input type="hidden" name="iop_od"></dd></div><div><dt>OS</dt><dd><output data-reading="iop_os">—</output> mmHg<input type="hidden" name="iop_os"></dd></div></dl><button type="button" class="crew-secondary-action" data-capture-device="tonometer"><i class="fa fa-play"></i>{{ $isEn ? 'Simulate reading' : 'Simular lectura' }}</button></article>
+                    <article data-device="vitals"><div><i class="fa fa-heartbeat"></i><span><strong>{{ $isEn ? 'Digital mission health sensor' : 'Sensor digital de salud de misión' }}</strong><small>{{ $isEn ? 'Measures blood pressure and heart rate with a timestamp.' : 'Mide presión arterial y frecuencia cardiaca con hora.' }}</small></span></div><dl><div><dt>{{ $isEn ? 'Blood pressure' : 'Presión arterial' }}</dt><dd><output data-reading="bp">— / —</output> mmHg<input type="hidden" name="bp_sys"><input type="hidden" name="bp_dia"></dd></div><div><dt>{{ $isEn ? 'Heart rate' : 'Frecuencia cardiaca' }}</dt><dd><output data-reading="hr">—</output> bpm<input type="hidden" name="hr"></dd></div></dl><button type="button" class="crew-secondary-action" data-capture-device="vitals"><i class="fa fa-play"></i>{{ $isEn ? 'Simulate reading' : 'Simular lectura' }}</button></article>
+                </div>
+                <p class="crew-step-feedback" data-step-feedback="2" hidden></p>
+            </section>
+            <section class="crew-step" data-step="3" hidden>
+                <p class="crew-eyebrow">{{ $isEn ? 'MEASUREMENT CONTEXT' : 'CONTEXTO DE MEDICIÓN' }}</p><h2>{{ $isEn ? 'A little context makes the data useful' : 'Un poco de contexto hace útiles los datos' }}</h2><p>{{ $isEn ? 'These factors are recorded alongside the eye results; they do not diagnose a cause.' : 'Estos factores se registran junto con los resultados oculares; no diagnostican una causa.' }}</p>
+                <div class="crew-measure-grid"><label>{{ $isEn ? 'Sleep last night' : 'Sueño anoche' }}<select name="sleep"><option value="under5">{{ $isEn ? 'Less than 5 hours' : 'Menos de 5 horas' }}</option><option value="5to7">5–7 h</option><option value="7to9" selected>7–9 h</option><option value="over9">{{ $isEn ? 'More than 9 hours' : 'Más de 9 horas' }}</option></select></label><label>{{ $isEn ? 'Hydration today' : 'Hidratación hoy' }}<select name="hydration"><option value="usual">{{ $isEn ? 'Usual' : 'Habitual' }}</option><option value="low">{{ $isEn ? 'Less than usual' : 'Menor a la habitual' }}</option><option value="high">{{ $isEn ? 'More than usual' : 'Mayor a la habitual' }}</option></select></label><label>{{ $isEn ? 'Exercise in last 2 hours' : 'Ejercicio en últimas 2 horas' }}<select name="exercise"><option value="no">{{ $isEn ? 'No' : 'No' }}</option><option value="yes">{{ $isEn ? 'Yes' : 'Sí' }}</option></select></label><label>{{ $isEn ? 'Measurement posture' : 'Postura de medición' }}<select name="posture"><option value="seated">{{ $isEn ? 'Seated / secured' : 'Sentado / asegurado' }}</option><option value="supine">{{ $isEn ? 'Supine' : 'Decúbito supino' }}</option></select></label><label class="crew-wide-label">{{ $isEn ? 'Relevant change since last check' : 'Cambio relevante desde la última revisión' }}<select name="context_change"><option value="none">{{ $isEn ? 'No relevant change' : 'Sin cambios relevantes' }}</option><option value="medication">{{ $isEn ? 'Medication changed' : 'Cambió un medicamento' }}</option><option value="illness">{{ $isEn ? 'New illness or discomfort' : 'Nueva enfermedad o malestar' }}</option><option value="other">{{ $isEn ? 'Other — request ground follow-up' : 'Otro — solicitar seguimiento en Tierra' }}</option></select></label></div>
+            </section>
+            <section class="crew-step crew-complete-step" data-step="4" hidden>
+                <span class="crew-complete-mark"><i class="fa fa-check"></i></span><p class="crew-eyebrow">{{ $isEn ? 'CHECK COMPLETE' : 'REVISIÓN COMPLETA' }}</p><h2>{{ $isEn ? 'Your entry is ready for ground review' : 'Tu registro está listo para revisión en Tierra' }}</h2><p>{{ $isEn ? 'The measurements were saved with their context. This result supports monitoring and is not an automated diagnosis.' : 'Las mediciones se guardaron con su contexto. Este resultado apoya el seguimiento y no es un diagnóstico automatizado.' }}</p><button type="button" class="crew-primary-action" data-finish-flow>{{ $isEn ? 'Return to today' : 'Volver a Hoy' }}</button>
+            </section>
+            <div class="crew-flow-actions" data-flow-actions><button type="button" class="crew-secondary-action" data-prev-step disabled><i class="fa fa-arrow-left"></i> {{ $isEn ? 'Back' : 'Atrás' }}</button><button type="button" class="crew-primary-action" data-next-step>{{ $isEn ? 'Continue' : 'Continuar' }} <i class="fa fa-arrow-right"></i></button></div>
+        </form>
+    </div>
+</section>
+
+<script>
+(() => {
+    const app = document.querySelector('[data-crew-app]');
+    if (!app || app.dataset.bound === 'true') return;
+    app.dataset.bound = 'true';
+    const isEn = app.dataset.locale === 'en';
+    const tabs = [...app.querySelectorAll('[data-crew-tab]')];
+    const views = [...app.querySelectorAll('[data-crew-view]')];
+    const flow = app.querySelector('[data-check-flow]');
+    const steps = [...app.querySelectorAll('[data-step]')];
+    let currentStep = 0;
+
+    function openTab(name) {
+        flow.hidden = true;
+        tabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.crewTab === name));
+        views.forEach(view => { const active = view.dataset.crewView === name; view.hidden = !active; view.classList.toggle('is-active', active); });
+    }
+    function renderStep() {
+        steps.forEach((step, index) => { step.hidden = index !== currentStep; step.classList.toggle('is-active', index === currentStep); });
+        const actions = app.querySelector('[data-flow-actions]');
+        actions.hidden = currentStep === 4;
+        app.querySelector('[data-prev-step]').disabled = currentStep === 0;
+        app.querySelector('[data-next-step]').innerHTML = currentStep === 3 ? `${isEn ? 'Save check' : 'Guardar revisión'} <i class="fa fa-check"></i>` : `${isEn ? 'Continue' : 'Continuar'} <i class="fa fa-arrow-right"></i>`;
+        app.querySelector('[data-progress-bar]').style.width = `${Math.min((currentStep + 1) / 4 * 100, 100)}%`;
+        app.querySelector('[data-progress-label]').textContent = currentStep < 4 ? `${currentStep + 1} / 4` : (isEn ? 'Complete' : 'Completa');
+    }
+    function startFlow() { views.forEach(view => view.hidden = true); flow.hidden = false; currentStep = 0; renderStep(); flow.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    function saveEntry() {
+        const form = app.querySelector('[data-check-form]');
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.completed_at = new Date().toISOString();
+        try { localStorage.setItem(`space-vision-check-${app.dataset.case}`, JSON.stringify(data)); } catch (_) {}
+        currentStep = 4;
+        renderStep();
+    }
+
+    function showFeedback(step, message) {
+        const feedback = app.querySelector(`[data-step-feedback="${step}"]`);
+        if (!feedback) return;
+        feedback.textContent = message;
+        feedback.hidden = false;
+    }
+
+    function clearFeedback(step) {
+        const feedback = app.querySelector(`[data-step-feedback="${step}"]`);
+        if (feedback) feedback.hidden = true;
+    }
+
+    function updateVisualProgress() {
+        const completed = app.querySelectorAll('[data-visual-test].is-complete').length;
+        const total = app.querySelectorAll('[data-visual-test]').length;
+        const progress = app.querySelector('[data-tests-progress]');
+        if (progress) progress.textContent = isEn ? `${completed} of ${total} recorded` : `${completed} de ${total} registradas`;
+    }
+
+    function canAdvance() {
+        clearFeedback(currentStep);
+        if (currentStep === 0 && !app.querySelector('input[name="symptoms"]:checked')) {
+            showFeedback(0, isEn ? 'Select a symptom or “No symptoms” to continue.' : 'Selecciona un síntoma o “Sin síntomas” para continuar.');
+            return false;
+        }
+        if (currentStep === 1) {
+            const answers = [...app.querySelectorAll('[data-test-answer]')];
+            if (answers.some(answer => !answer.value)) {
+                showFeedback(1, isEn ? 'Complete every required result in all six visual checks.' : 'Completa todos los resultados requeridos en las seis pruebas visuales.');
+                return false;
+            }
+        }
+        if (currentStep === 2 && app.querySelectorAll('[data-device].is-complete').length < 2) {
+            showFeedback(2, isEn ? 'Simulate both device readings before continuing.' : 'Simula las lecturas de ambos dispositivos antes de continuar.');
+            return false;
+        }
+        return true;
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => openTab(tab.dataset.crewTab)));
+    app.querySelectorAll('[data-open-tab]').forEach(button => button.addEventListener('click', () => openTab(button.dataset.openTab)));
+    app.querySelectorAll('[data-start-check]').forEach(button => button.addEventListener('click', startFlow));
+    app.querySelector('[data-close-flow]').addEventListener('click', () => openTab('today'));
+    app.querySelector('[data-finish-flow]').addEventListener('click', () => openTab('today'));
+    app.querySelector('[data-prev-step]').addEventListener('click', () => { if (currentStep > 0) { currentStep--; renderStep(); } });
+    app.querySelector('[data-next-step]').addEventListener('click', () => {
+        if (!canAdvance()) return;
+        if (currentStep === 3) saveEntry(); else { currentStep++; renderStep(); }
+    });
+
+    app.querySelectorAll('input[name="symptoms"]').forEach(input => input.addEventListener('change', () => {
+        const symptomInputs = [...app.querySelectorAll('input[name="symptoms"]')];
+        if (input.value === 'none' && input.checked) symptomInputs.filter(item => item !== input).forEach(item => item.checked = false);
+        if (input.value !== 'none' && input.checked) symptomInputs.find(item => item.value === 'none').checked = false;
+        clearFeedback(0);
+    }));
+
+    app.querySelectorAll('[data-test-answer]').forEach(select => select.addEventListener('change', () => {
+        const test = select.closest('[data-visual-test]');
+        const complete = [...test.querySelectorAll('[data-test-answer]')].every(answer => answer.value);
+        test.classList.toggle('is-complete', complete);
+        test.querySelector('[data-test-state]').innerHTML = complete
+            ? `<i class="fa fa-check"></i>${isEn ? 'Recorded' : 'Registrada'}`
+            : `<i class="fa fa-circle-o"></i>${isEn ? 'Pending' : 'Pendiente'}`;
+        updateVisualProgress();
+        clearFeedback(1);
+    }));
+
+    app.querySelectorAll('[data-capture-device]').forEach(button => button.addEventListener('click', () => {
+        if (button.disabled) return;
+        const type = button.dataset.captureDevice;
+        const device = button.closest('[data-device]');
+        button.disabled = true;
+        device.setAttribute('aria-busy', 'true');
+        device.classList.add('is-syncing');
+        button.innerHTML = `<i class="fa fa-refresh fa-spin"></i>${isEn ? 'Synchronizing…' : 'Sincronizando…'}`;
+
+        const consolePanel = app.querySelector('[data-sync-console]');
+        const consoleTitle = app.querySelector('[data-sync-title]');
+        const consoleDetail = app.querySelector('[data-sync-detail]');
+        consolePanel.classList.add('is-active');
+        consoleTitle.textContent = isEn ? 'Establishing encrypted link' : 'Estableciendo enlace cifrado';
+        consoleDetail.textContent = isEn ? 'Verifying device identity and simulated telemetry channel…' : 'Verificando identidad del dispositivo y canal de telemetría simulado…';
+
+        window.setTimeout(() => {
+            device.classList.remove('is-syncing');
+            device.classList.add('is-processing');
+            button.innerHTML = `<i class="fa fa-cog fa-spin"></i>${isEn ? 'Processing…' : 'Procesando…'}`;
+            consoleTitle.textContent = isEn ? 'Processing telemetry' : 'Procesando telemetría';
+            consoleDetail.textContent = isEn ? 'Validating units, timestamp and signal integrity…' : 'Validando unidades, marca de tiempo e integridad de señal…';
+        }, 700);
+
+        window.setTimeout(() => {
+            if (type === 'tonometer') {
+                device.querySelector('[data-reading="iop_od"]').textContent = '16';
+                device.querySelector('[data-reading="iop_os"]').textContent = '15';
+                device.querySelector('input[name="iop_od"]').value = '16';
+                device.querySelector('input[name="iop_os"]').value = '15';
+            } else {
+                device.querySelector('[data-reading="bp"]').textContent = '118 / 76';
+                device.querySelector('[data-reading="hr"]').textContent = '68';
+                device.querySelector('input[name="bp_sys"]').value = '118';
+                device.querySelector('input[name="bp_dia"]').value = '76';
+                device.querySelector('input[name="hr"]').value = '68';
+            }
+            device.classList.remove('is-processing');
+            device.classList.add('is-complete');
+            device.setAttribute('aria-busy', 'false');
+            button.innerHTML = `<i class="fa fa-check"></i>${isEn ? 'Simulation complete' : 'Simulación completada'}`;
+
+            const completed = app.querySelectorAll('[data-device].is-complete').length;
+            app.querySelector('[data-sync-count]').textContent = `${completed} / 2`;
+            consolePanel.classList.remove('is-active');
+            consoleTitle.textContent = completed === 2
+                ? (isEn ? 'All simulated readings synchronized' : 'Todas las lecturas simuladas están sincronizadas')
+                : (isEn ? 'Simulated reading synchronized' : 'Lectura simulada sincronizada');
+            consoleDetail.textContent = completed === 2
+                ? (isEn ? 'The demonstration dataset is ready to continue.' : 'El conjunto de datos demostrativo está listo para continuar.')
+                : (isEn ? 'Start the remaining device when ready.' : 'Inicia el dispositivo restante cuando estés listo.');
+            clearFeedback(2);
+        }, 1400);
+    }));
+})();
+</script>
