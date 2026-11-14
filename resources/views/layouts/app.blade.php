@@ -31,147 +31,105 @@
         </a>
 
         <div class="sidebar-scroll">
-            <nav class="nav-section" aria-label="Operaciones de Misión">
-                <div class="nav-label">Misión y Telemetría</div>
+            <nav class="nav-section" aria-label="Flujo Principal SANS">
+                <div class="nav-label">Flujo Principal Hackathon</div>
                 <ul class="nav-list">
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                            <i class="fa fa-tachometer" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Mission Control Dashboard
+                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && !in_array(request('tab'), ['seguimiento', 'simulador', 'escenarios']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
+                            <i class="fa fa-Sliders fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
+                            1. Predictor y Biomarcadores
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index') }}">
-                            <i class="fa fa-line-chart" style="width:20px; text-align:center; font-size:15px;"></i>
-                            SANS Monitor (5 Pestañas)
+                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && request('tab') === 'seguimiento' ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
+                            <i class="fa fa-calendar-check-o" style="width:20px; text-align:center; font-size:15px;"></i>
+                            2. Tiempo (+30 / +60 / +90 d)
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('admin.vision-lab.index') }}">
+                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && in_array(request('tab'), ['escenarios', 'simulador']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
+                            <i class="fa fa-cubes" style="width:20px; text-align:center; font-size:15px;"></i>
+                            3. Escenarios (Estable/Empeora)
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('admin.digital-twin') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}">
                             <i class="fa fa-eye" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Vision Lab
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <nav class="nav-section" aria-label="Investigación">
-                <div class="nav-label">Investigación SANS</div>
-                <ul class="nav-list">
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.digital-twin') && request('mode') !== 'oct' ? 'active' : '' }}" href="{{ route('admin.digital-twin') }}">
-                            <i class="fa fa-cube" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Gemelo Digital
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.oct-analysis') || (request()->routeIs('admin.digital-twin') && request('mode') === 'oct') ? 'active' : '' }}" href="{{ route('admin.oct-analysis') }}">
-                            <i class="fa fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Tomografía Cirrus OCT
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.mission-simulator') ? 'active' : '' }}" href="{{ route('admin.mission-simulator') }}">
-                            <i class="fa fa-sliders" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Simulador SANS
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('admin.nasa-data') }}">
-                            <i class="fa fa-globe" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Datos NASA
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.research-intelligence*') ? 'active' : '' }}" href="{{ route('admin.research-intelligence') }}">
-                            <i class="fa fa-book" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Inteligencia Científica
+                            Visor 3D + Consola OCT
                         </a>
                     </li>
                     <li>
                         <a class="nav-link {{ request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('admin.demo-theater') }}">
                             <i class="fa fa-play-circle" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Demo Theater (Jueces)
+                            Demo Pitch (3 Minutos)
                         </a>
                     </li>
                 </ul>
             </nav>
 
-            <nav class="nav-section" aria-label="Inteligencia Artificial y ML">
-                <div class="nav-label">Inteligencia Artificial & ML</div>
-                <ul class="nav-list">
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.ai-command*') ? 'active' : '' }}" href="{{ route('admin.ai-command') }}">
-                            <i class="fa fa-terminal" style="width:20px; text-align:center; font-size:15px;"></i>
-                            AI Command Center
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.model-lab*') ? 'active' : '' }}" href="{{ route('admin.model-lab') }}">
-                            <i class="fa fa-flask" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Laboratorio de Modelos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('admin.explainability') }}">
-                            <i class="fa fa-pie-chart" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Explainability Center (XAI)
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.data-quality*') ? 'active' : '' }}" href="{{ route('admin.data-quality') }}">
-                            <i class="fa fa-check-circle" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Calidad de Datos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.model-registry*') ? 'active' : '' }}" href="{{ route('admin.model-registry') }}">
-                            <i class="fa fa-archive" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Registro de Modelos
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <details style="padding: 0 0.75rem; margin-top: 0.5rem;">
+                <summary style="cursor:pointer; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted-foreground); padding:0.5rem 0.5rem; list-style:none; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border);">
+                    <span><i class="fa fa-folder-o"></i> Módulos de Apoyo y Admin</span>
+                    <i class="fa fa-angle-down"></i>
+                </summary>
 
-            <nav class="nav-section" aria-label="Sistema">
-                <div class="nav-label">Administración</div>
-                <ul class="nav-list">
-                    @can('users.manage')
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                            <i class="fa fa-users" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Usuarios
-                        </a>
-                    </li>
-                    @endcan
-                    @role('super-admin')
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.automations*') ? 'active' : '' }}" href="{{ route('admin.automations') }}">
-                            <i class="fa fa-cogs" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Automatizaciones
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
-                            <i class="fa fa-shield" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Roles y Permisos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.api-keys*') ? 'active' : '' }}" href="{{ route('admin.api-keys.index') }}">
-                            <i class="fa fa-key" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Claves de APIs & Arquitectura
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('admin.maintenance*') ? 'active' : '' }}" href="{{ route('admin.maintenance') }}">
-                            <i class="fa fa-wrench" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Comandos y Migraciones
-                        </a>
-                    </li>
-                    @endrole
-                </ul>
-            </nav>
+                <nav class="nav-section" aria-label="Telemetría e IA" style="margin-top:0.35rem;">
+                    <ul class="nav-list">
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                                <i class="fa fa-tachometer" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Mission Control
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('admin.vision-lab.index') }}">
+                                <i class="fa fa-calculator" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Calculadora Óptica
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('admin.nasa-data') }}">
+                                <i class="fa fa-globe" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Repositorios NASA
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.model-lab*') ? 'active' : '' }}" href="{{ route('admin.model-lab') }}">
+                                <i class="fa fa-flask" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Benchmark ML (RF / GBM)
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('admin.explainability') }}">
+                                <i class="fa fa-pie-chart" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Pesos SHAP (XAI)
+                            </a>
+                        </li>
+                        @can('users.manage')
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                                <i class="fa fa-users" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Usuarios
+                            </a>
+                        </li>
+                        @endcan
+                        @role('super-admin')
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.api-keys*') ? 'active' : '' }}" href="{{ route('admin.api-keys.index') }}">
+                                <i class="fa fa-key" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Claves de APIs
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link {{ request()->routeIs('admin.maintenance*') ? 'active' : '' }}" href="{{ route('admin.maintenance') }}">
+                                <i class="fa fa-wrench" style="width:20px; text-align:center; font-size:14px;"></i>
+                                Consola Artisan
+                            </a>
+                        </li>
+                        @endrole
+                    </ul>
+                </nav>
+            </details>
         </div>
 
         <div class="sidebar-user">

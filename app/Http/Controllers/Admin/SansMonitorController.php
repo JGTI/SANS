@@ -33,7 +33,7 @@ class SansMonitorController extends Controller
         $selectedCaseId = $request->query('case_id', 'CASE-PROG-02');
         $activeCase = $cases->firstWhere('case_id', $selectedCaseId) ?? $cases->first();
 
-        $activeTab = $request->query('tab', 'ficha'); // ficha, seguimiento, simulador, estudios, inclinacion
+        $activeTab = $request->query('tab', 'biomarcadores'); // biomarcadores, seguimiento, escenarios (soporta ficha, simulador, estudios, inclinacion)
         $selectedEye = strtoupper($request->query('eye', 'OD')); // OD, OS, BILATERAL
         $simEye = $selectedEye === 'BILATERAL' ? 'OD' : $selectedEye;
         $selectedDay = (int) $request->query('day', 30);
@@ -119,6 +119,17 @@ class SansMonitorController extends Controller
             ? $this->engine->compareExposureVisits($activeExposure->exposure_id, $initialObsId, $compareObsId)
             : null;
 
+        // 6. Predictor basado en los 6 Biomarcadores Clave (Pestaña 1)
+        $biomarkerPredictor = $this->engine->evaluateBiomarkerPredictor($activeCase, [
+            'oct_trt_baseline_um' => $request->query('oct_trt_baseline_um'),
+            'oct_trt_current_um' => $request->query('oct_trt_current_um'),
+            'axial_length_mm' => $request->query('axial_length_mm'),
+            'hyperopia_sim_d' => $request->query('hyperopia_sim_d'),
+            'papilledema_frisen' => $request->query('papilledema_frisen'),
+            'iop_mmhg' => $request->query('iop_mmhg'),
+            'prior_hdt6_exposure' => $request->query('prior_hdt6_exposure'),
+        ]);
+
         return view('admin.sans-monitor.index', compact(
             'cases',
             'activeCase',
@@ -145,7 +156,8 @@ class SansMonitorController extends Controller
             'exposureObservations',
             'initialObsId',
             'compareObsId',
-            'exposureComparison'
+            'exposureComparison',
+            'biomarkerPredictor'
         ));
     }
 

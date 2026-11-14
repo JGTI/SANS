@@ -883,4 +883,156 @@ class SansMonitorEngine
                 : null,
         ];
     }
+
+    /**
+     * Predictor basado en los 6 Biomarcadores Clave del Formulario Inicial:
+     * 1. Espesor medio por OCT (TRT µm)
+     * 2. Longitud axial del ojo (mm)
+     * 3. Hipermetropía simulada (ΔSE en Dioptrías D)
+     * 4. Edema papilar (Escala Frisén 0-5)
+     * 5. Presión intraocular (PIO mmHg)
+     * 6. Exposición previa a inclinación cefálica de -6° en la Tierra (HDT -6°)
+     */
+    public function evaluateBiomarkerPredictor(object $case, array $customInputs = []): array
+    {
+        $archetype = $case->scenario_archetype ?? 'EMPEORA';
+
+        // Valores por defecto según el escenario seleccionado (Estable, Empeora o Sin Escaneo)
+        $defaults = match ($archetype) {
+            'ESTABLE' => [
+                'oct_trt_baseline_um' => 278.0,
+                'oct_trt_current_um' => 284.0,
+                'axial_length_mm' => 24.08,
+                'axial_baseline_mm' => 24.10,
+                'hyperopia_sim_d' => 0.15,
+                'papilledema_frisen' => 0,
+                'iop_mmhg' => 15.0,
+                'prior_hdt6_exposure' => 'NO',
+                'prior_hdt6_days' => 0,
+            ],
+            'SIN_ESCANEO', 'SIN_CONTROL_RECIENTE' => [
+                'oct_trt_baseline_um' => null,
+                'oct_trt_current_um' => null,
+                'axial_length_mm' => null,
+                'axial_baseline_mm' => 24.10,
+                'hyperopia_sim_d' => 0.25,
+                'papilledema_frisen' => null,
+                'iop_mmhg' => 16.0,
+                'prior_hdt6_exposure' => 'SI_14_DIAS',
+                'prior_hdt6_days' => 14,
+            ],
+            default => [ // EMPEORA / INCLINACION
+                'oct_trt_baseline_um' => 280.0,
+                'oct_trt_current_um' => 306.0,
+                'axial_length_mm' => 23.82,
+                'axial_baseline_mm' => 24.10,
+                'hyperopia_sim_d' => 0.75,
+                'papilledema_frisen' => 2,
+                'iop_mmhg' => 18.5,
+                'prior_hdt6_exposure' => 'SI_14_DIAS',
+                'prior_hdt6_days' => 14,
+            ],
+        };
+
+        $b = array_merge($defaults, array_filter($customInputs, fn ($v) => $v !== null && $v !== ''));
+
+        $deltaTrt = ($b['oct_trt_baseline_um'] !== null && $b['oct_trt_current_um'] !== null)
+            ? round((float) $b['oct_trt_current_um'] - (float) $b['oct_trt_baseline_um'], 1)
+            : null;
+
+        $deltaAxial = ($b['axial_length_mm'] !== null && $b['axial_baseline_mm'] !== null)
+            ? round((float) $b['axial_length_mm'] - (float) $b['axial_baseline_mm'], 2)
+            : null;
+
+        // Cálculo de señal predictiva explicable basada en los 6 biomarcadores
+        $signals = [];
+        $weights = [];
+        $signalIndex = 0;
+
+        // 1. Espesor medio por OCT
+        if ($deltaTrt === null) {
+            $signals[] = 'OCT No escaneada: falta espesor retiniano medio para cuantificar progresión estructural.';
+            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => 'Sin escaneo OCT', 'impact' => 0, 'status' => 'FALTANTE'];
+        } elseif ($deltaTrt >= 20) {
+            $pts = min(40, (int) round($deltaTrt * 1.1));
+            $signalIndex += $pts;
+            $signals[] = "Espesor medio OCT en ascenso (+{$deltaTrt} µm vs línea base de {$b['oct_trt_baseline_um']} µm).";
+            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)", 'impact' => $pts, 'status' => 'PROGRESION'];
+        } else {
+            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)", 'impact' => 5, 'status' => 'ESTABLE'];
+        }
+
+        // 2. Longitud Axial del Ojo
+        if ($deltaAxial === null) {
+            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => 'No medida', 'impact' => 0, 'status' => 'FALTANTE'];
+        } elseif ($deltaAxial <= -0.15) {
+            $pts = 18;
+            $signalIndex += $pts;
+            $signals[] = "Acortamiento de longitud axial ({$b['axial_length_mm']} mm; Δ {$deltaAxial} mm compatible con aplanamiento posterior).";
+            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)", 'impact' => $pts, 'status' => 'ALERTA'];
+        } else {
+            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)", 'impact' => 4, 'status' => 'ESTABLE'];
+        }
+
+        // 3. Hipermetropía Simulada (Escenario separado RF-35)
+        $hyp = (float) ($b['hyperopia_sim_d'] ?? 0.0);
+        if ($hyp >= 0.50) {
+            $pts = 15;
+            $signalIndex += $pts;
+            $signals[] = "Hipermetropía simulada significativa (+{$hyp} D de corrimiento refractivo hipermetrópico).";
+            $weights['simulated_hyperopia'] = ['label' => 'Hipermetropía Simulada', 'value' => "+{$hyp} D (Escenario)", 'impact' => $pts, 'status' => 'ESCENARIO_ACTIVO'];
+        } else {
+            $weights['simulated_hyperopia'] = ['label' => 'Hipermetropía Simulada', 'value' => "+{$hyp} D (Escenario)", 'impact' => 3, 'status' => 'LEVE'];
+        }
+
+        // 4. Edema Papilar (Grado Frisén)
+        $frisen = $b['papilledema_frisen'] !== null ? (int) $b['papilledema_frisen'] : null;
+        if ($frisen === null) {
+            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => 'No evaluado', 'impact' => 0, 'status' => 'FALTANTE'];
+        } elseif ($frisen >= 1) {
+            $pts = $frisen * 14;
+            $signalIndex += $pts;
+            $signals[] = "Edema papilar documentado (Grado Frisén {$frisen}/5 — Objetivo principal de pronóstico).";
+            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => "Grado {$frisen} / 5", 'impact' => $pts, 'status' => 'HALLAZGO_CLINICO'];
+        } else {
+            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => 'Grado 0 / 5 (Ausente)', 'impact' => 2, 'status' => 'ESTABLE'];
+        }
+
+        // 5. Presión Intraocular (PIO)
+        $iop = (float) ($b['iop_mmhg'] ?? 15.0);
+        $iopStatus = ($iop >= 20.0) ? 'ELEVADA' : 'RANGO_FISIOLOGICO';
+        if ($iop >= 20.0) {
+            $signalIndex += 8;
+            $signals[] = "Presión intraocular en límite superior ({$iop} mmHg).";
+        }
+        $weights['iop'] = ['label' => 'Presión Intraocular (PIO)', 'value' => "{$iop} mmHg", 'impact' => $iop >= 20.0 ? 8 : 3, 'status' => $iopStatus];
+
+        // 6. Exposición previa a inclinación cefálica de -6° en la Tierra
+        $hdt = (string) ($b['prior_hdt6_exposure'] ?? 'NO');
+        $hasHdt = str_starts_with($hdt, 'SI');
+        $weights['hdt6_exposure'] = [
+            'label' => 'Exposición Previa -6° en Tierra',
+            'value' => $hasHdt ? 'Sí (-6° HDT · 14 días · +24 µm -> +4 µm a +30d)' : 'Sin exposición previa a -6°',
+            'impact' => $hasHdt ? 10 : 0,
+            'status' => $hasHdt ? 'ANTECEDENTE_ANALOGO' : 'NO_REGISTRADO',
+        ];
+        if ($hasHdt) {
+            $signals[] = 'Antecedente de exposición terrestre a -6° cabeza abajo registrado con su propia cronología separada.';
+        }
+
+        $predictedTrajectory = $deltaTrt === null
+            ? 'No estimable (Falta escaneo OCT basal/control)'
+            : ($signalIndex >= 35 ? 'Tendencia de Progresión Neuro-ocular (Priorizar vigilancia a +30, +60 y +90 días)' : 'Trayectoria Ocular Estable dentro de ventana');
+
+        return [
+            'inputs' => $b,
+            'delta_trt_um' => $deltaTrt,
+            'delta_axial_mm' => $deltaAxial,
+            'signal_index' => min(100, $signalIndex),
+            'predicted_trajectory' => $predictedTrajectory,
+            'biomarker_cards' => $weights,
+            'signals' => $signals,
+        ];
+    }
 }
+
