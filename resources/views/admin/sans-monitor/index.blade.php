@@ -50,6 +50,7 @@
 @endpush
 
 @section('content')
+<div id="sans-monitor-workspace">
 
 {{-- CABECERA DE ALTO IMPACTO EJECUTIVO --}}
 <div class="card" style="padding:1.35rem 1.5rem;margin-bottom:1.25rem;border:1px solid var(--foreground);">
@@ -190,6 +191,7 @@
 <div class="sans-grid-3" style="margin-bottom:1.25rem;" role="tablist" aria-label="{{ $isEn ? '3 Main Wizard Steps' : '3 Pasos Principales del Wizard' }}">
     {{-- PASO 1 --}}
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}"
+       data-wizard-tab="biomarcadores"
        role="tab"
        aria-selected="{{ $normalizedTab === 'biomarcadores' ? 'true' : 'false' }}"
        style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'biomarcadores' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
@@ -197,7 +199,7 @@
             <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
                 {{ $isEn ? 'STEP 1 OF 3 · INTAKE & PREDICTOR' : 'PASO 1 DE 3 · INGRESO Y PREDICTOR' }}
             </span>
-            <i class="fa {{ $normalizedTab === 'biomarcadores' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+            <i class="fa {{ $normalizedTab === 'biomarcadores' ? 'fa-dot-circle-o' : 'fa-circle-o' }}" data-wizard-icon></i>
         </div>
         <div style="font-size:0.95rem;font-weight:800;">
             <i class="fa fa-heartbeat"></i> {{ $isEn ? '1. Initial Form & 6 Biomarkers' : '1. Formulario Inicial y 6 Biomarcadores' }}
@@ -209,6 +211,7 @@
 
     {{-- PASO 2 --}}
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}"
+       data-wizard-tab="seguimiento"
        role="tab"
        aria-selected="{{ $normalizedTab === 'seguimiento' ? 'true' : 'false' }}"
        style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'seguimiento' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
@@ -216,7 +219,7 @@
             <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
                 {{ $isEn ? 'STEP 2 OF 3 · LONGITUDINAL CUTS' : 'PASO 2 DE 3 · CORTES EN EL TIEMPO' }}
             </span>
-            <i class="fa {{ $normalizedTab === 'seguimiento' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+            <i class="fa {{ $normalizedTab === 'seguimiento' ? 'fa-dot-circle-o' : 'fa-circle-o' }}" data-wizard-icon></i>
         </div>
         <div style="font-size:0.95rem;font-weight:800;">
             <i class="fa fa-calendar"></i> {{ $isEn ? '2. Before · During · After (+30, +60, +90 days)' : '2. Antes · Durante · Después (+30, +60, +90 días)' }}
@@ -228,6 +231,7 @@
 
     {{-- PASO 3 --}}
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}"
+       data-wizard-tab="escenarios"
        role="tab"
        aria-selected="{{ $normalizedTab === 'escenarios' ? 'true' : 'false' }}"
        style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'escenarios' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
@@ -235,7 +239,7 @@
             <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
                 {{ $isEn ? 'STEP 3 OF 3 · REFERENCE ARCHETYPES' : 'PASO 3 DE 3 · ARQUETIPOS DE REFERENCIA' }}
             </span>
-            <i class="fa {{ $normalizedTab === 'escenarios' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+            <i class="fa {{ $normalizedTab === 'escenarios' ? 'fa-dot-circle-o' : 'fa-circle-o' }}" data-wizard-icon></i>
         </div>
         <div style="font-size:0.95rem;font-weight:800;">
             <i class="fa fa-sliders"></i> {{ $isEn ? '3. Scenario Models (Stable · Worsens · Unscanned)' : '3. Escenarios Modelos (Estable · Empeora · No se escanea)' }}
@@ -279,7 +283,7 @@
 {{-- =============================================================================================== --}}
 {{-- PESTAÑA 1: FORMULARIO INICIAL DE LA PERSONA + LOS 6 BIOMARCADORES Y PREDICTOR EN VIVO            --}}
 {{-- =============================================================================================== --}}
-@if($normalizedTab === 'biomarcadores')
+<div id="wizard-panel-biomarcadores" data-wizard-panel="biomarcadores" style="{{ $normalizedTab === 'biomarcadores' ? '' : 'display:none;' }}">
 <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
 
     {{-- COLUMNA IZQUIERDA: FORMULARIO DE CAPTURA Y SIMULACIÓN DE LOS 6 BIOMARCADORES --}}
@@ -513,12 +517,23 @@
         </details>
     </div>
 </div>
-@endif
+<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+    <div style="font-size:0.8rem;color:var(--muted-foreground);">
+        <i class="fa fa-compass"></i>
+        <strong>{{ $isEn ? 'Current Step: 1 / 3 (Initial Form & 6 Biomarkers)' : 'Paso Actual: 1 / 3 (Formulario Inicial y 6 Biomarcadores)' }}</strong>
+    </div>
+    <div>
+        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" data-wizard-tab="seguimiento" class="btn btn-primary" style="font-weight:700;">
+            {{ $isEn ? 'Next: Step 2 (Timeline +30/+60/+90d)' : 'Siguiente: Paso 2 (Tiempo +30/+60/+90d)' }} <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+</div>
 
 {{-- =============================================================================================== --}}
 {{-- PESTAÑA 2: MEDIR EL TIEMPO: ANTES · DURANTE · DESPUÉS (CORTE DE +30, +60 Y +90 DÍAS)            --}}
 {{-- =============================================================================================== --}}
-@if($normalizedTab === 'seguimiento')
+<div id="wizard-panel-seguimiento" data-wizard-panel="seguimiento" style="{{ $normalizedTab === 'seguimiento' ? '' : 'display:none;' }}">
 <div class="card" style="padding:1.35rem;margin-bottom:1.25rem;">
     <h2 style="font-size:1.15rem;font-weight:800;margin:0 0 0.35rem;">
         <i class="fa fa-clock-o"></i>
@@ -669,12 +684,26 @@
         </div>
     </div>
 </div>
-@endif
+<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+    <div style="font-size:0.8rem;color:var(--muted-foreground);">
+        <i class="fa fa-compass"></i>
+        <strong>{{ $isEn ? 'Current Step: 2 / 3 (Before · During · After +30/+60/+90d)' : 'Paso Actual: 2 / 3 (Antes · Durante · Después +30/+60/+90d)' }}</strong>
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}" data-wizard-tab="biomarcadores" class="btn btn-outline" style="font-weight:700;">
+            <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 1 (Biomarkers)' : 'Anterior: Paso 1 (Biomarcadores)' }}
+        </a>
+        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}" data-wizard-tab="escenarios" class="btn btn-primary" style="font-weight:700;">
+            {{ $isEn ? 'Next: Step 3 (3 Scenario Models)' : 'Siguiente: Paso 3 (3 Escenarios)' }} <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+</div>
 
 {{-- =============================================================================================== --}}
 {{-- PESTAÑA 3: LOS 3 ESCENARIOS MODELOS (1. ESTABLE · 2. EMPEORA · 3. NO SE ESCANEA)                --}}
 {{-- =============================================================================================== --}}
-@if($normalizedTab === 'escenarios')
+<div id="wizard-panel-escenarios" data-wizard-panel="escenarios" style="{{ $normalizedTab === 'escenarios' ? '' : 'display:none;' }}">
 <div class="card" style="padding:1.35rem;margin-bottom:1.25rem;">
     <h2 style="font-size:1.15rem;font-weight:800;margin:0 0 0.35rem;">
         <i class="fa fa-cubes"></i>
@@ -809,41 +838,20 @@
         </div>
     </div>
 </div>
-@endif
-
-{{-- PIE DE NAVEGACIÓN SECUENCIAL DEL WIZARD (ANTERIOR / SIGUIENTE PASO) --}}
 <div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
     <div style="font-size:0.8rem;color:var(--muted-foreground);">
         <i class="fa fa-compass"></i>
-        @if($normalizedTab === 'biomarcadores')
-            <strong>{{ $isEn ? 'Current Step: 1 / 3 (Initial Form & 6 Biomarkers)' : 'Paso Actual: 1 / 3 (Formulario Inicial y 6 Biomarcadores)' }}</strong>
-        @elseif($normalizedTab === 'seguimiento')
-            <strong>{{ $isEn ? 'Current Step: 2 / 3 (Before · During · After +30/+60/+90d)' : 'Paso Actual: 2 / 3 (Antes · Durante · Después +30/+60/+90d)' }}</strong>
-        @else
-            <strong>{{ $isEn ? 'Current Step: 3 / 3 (3 Reference Scenario Models)' : 'Paso Actual: 3 / 3 (3 Escenarios Modelos de Referencia)' }}</strong>
-        @endif
+        <strong>{{ $isEn ? 'Current Step: 3 / 3 (3 Reference Scenario Models)' : 'Paso Actual: 3 / 3 (3 Escenarios Modelos de Referencia)' }}</strong>
     </div>
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-        @if($normalizedTab === 'seguimiento')
-            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}" class="btn btn-outline" style="font-weight:700;">
-                <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 1 (Biomarkers)' : 'Anterior: Paso 1 (Biomarcadores)' }}
-            </a>
-            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}" class="btn btn-primary" style="font-weight:700;">
-                {{ $isEn ? 'Next: Step 3 (3 Scenario Models)' : 'Siguiente: Paso 3 (3 Escenarios)' }} <i class="fa fa-arrow-right"></i>
-            </a>
-        @elseif($normalizedTab === 'escenarios')
-            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" class="btn btn-outline" style="font-weight:700;">
-                <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 2 (Timeline +30/+60/+90d)' : 'Anterior: Paso 2 (Tiempo +30/+60/+90d)' }}
-            </a>
-            <a href="{{ url('/digital-twin?mode=dual') }}" class="btn btn-primary" style="font-weight:700;">
-                <i class="fa fa-eye"></i> {{ $isEn ? 'Continue to 3D Eye + OCT Viewer' : 'Continuar al Visor 3D + OCT' }} <i class="fa fa-arrow-right"></i>
-            </a>
-        @else
-            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" class="btn btn-primary" style="font-weight:700;">
-                {{ $isEn ? 'Next: Step 2 (Timeline +30/+60/+90d)' : 'Siguiente: Paso 2 (Tiempo +30/+60/+90d)' }} <i class="fa fa-arrow-right"></i>
-            </a>
-        @endif
+        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" data-wizard-tab="seguimiento" class="btn btn-outline" style="font-weight:700;">
+            <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 2 (Timeline +30/+60/+90d)' : 'Anterior: Paso 2 (Tiempo +30/+60/+90d)' }}
+        </a>
+        <a href="{{ url('/digital-twin?mode=dual') }}" class="btn btn-primary" style="font-weight:700;">
+            <i class="fa fa-eye"></i> {{ $isEn ? 'Continue to 3D Eye + OCT Viewer' : 'Continuar al Visor 3D + OCT' }} <i class="fa fa-arrow-right"></i>
+        </a>
     </div>
+</div>
 </div>
 
 {{-- CAJONES DESPLEGABLES DE EVIDENCIA CIENTÍFICA NASA Y MATRIZ DEL JURADO (SIN RECARGAR LA VISTA PRINCIPAL) --}}
@@ -948,88 +956,229 @@
     </details>
 </div>
 
+<script id="sans-monitor-chart-data" type="application/json">
+{!! json_encode([
+    'isEn' => $isEn,
+    'impacts' => [
+        $bp['biomarker_cards']['oct_thickness']['impact'] ?? 0,
+        $bp['biomarker_cards']['axial_length']['impact'] ?? 0,
+        $bp['biomarker_cards']['simulated_hyperopia']['impact'] ?? 0,
+        $bp['biomarker_cards']['papilledema']['impact'] ?? 0,
+        $bp['biomarker_cards']['iop']['impact'] ?? 0,
+        $bp['biomarker_cards']['hdt6_exposure']['impact'] ?? 0,
+    ],
+]) !!}
+</script>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const isDark = document.documentElement.dataset.theme === 'dark';
-    const textColor = isDark ? '#f4f4f5' : '#09090b';
-    const gridColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(9,9,11,0.1)';
-    const isEn = @json($isEn);
+(function () {
+    let bioChartInstance = null;
+    let timeChartInstance = null;
 
-    const bioCanvas = document.getElementById('biomarkerImpactChart');
-    if (bioCanvas && typeof Chart !== 'undefined') {
-        new Chart(bioCanvas.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: isEn
-                    ? ['1. OCT Thickness', '2. Axial Length', '3. Hyperopia', '4. Papilledema', '5. IOP', '6. -6° Analog']
-                    : ['1. Espesor OCT', '2. Long. Axial', '3. Hipermetropía', '4. Edema Papilar', '5. PIO', '6. Análogo -6°'],
-                datasets: [{
-                    label: isEn ? 'Predictive Signal Weight' : 'Peso en Señal Predictiva',
-                    data: [
-                        {{ $bp['biomarker_cards']['oct_thickness']['impact'] ?? 0 }},
-                        {{ $bp['biomarker_cards']['axial_length']['impact'] ?? 0 }},
-                        {{ $bp['biomarker_cards']['simulated_hyperopia']['impact'] ?? 0 }},
-                        {{ $bp['biomarker_cards']['papilledema']['impact'] ?? 0 }},
-                        {{ $bp['biomarker_cards']['iop']['impact'] ?? 0 }},
-                        {{ $bp['biomarker_cards']['hdt6_exposure']['impact'] ?? 0 }}
-                    ],
-                    backgroundColor: textColor,
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
-                    y: { beginAtZero: true, max: 45, ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } }
-                }
-            }
-        });
-    }
+    function renderSansCharts() {
+        const dataEl = document.getElementById('sans-monitor-chart-data');
+        if (!dataEl || typeof Chart === 'undefined') return;
+        const cfg = JSON.parse(dataEl.textContent || '{}');
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        const textColor = isDark ? '#f4f4f5' : '#09090b';
+        const gridColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(9,9,11,0.1)';
+        const isEn = !!cfg.isEn;
 
-    const timeCanvas = document.getElementById('timelineCutChart');
-    if (timeCanvas && typeof Chart !== 'undefined') {
-        new Chart(timeCanvas.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: isEn
-                    ? ['Before (Baseline)', 'During Day 10', 'During Day 15', 'During Day 30', 'Cut +30d', 'Cut +60d (Unmeasured)', 'Cut +90d']
-                    : ['Antes (Basal)', 'Durante Día 10', 'Durante Día 15', 'Durante Día 30', 'Corte +30d', 'Corte +60d (Sin dato)', 'Corte +90d'],
-                datasets: [
-                    {
-                        label: isEn ? 'Worsening Scenario OD (µm)' : 'Escenario en Progresión OD (µm)',
-                        data: [280, 288, 294, 306, 295, null, 285],
-                        borderColor: textColor,
+        if (bioChartInstance) { bioChartInstance.destroy(); bioChartInstance = null; }
+        if (timeChartInstance) { timeChartInstance.destroy(); timeChartInstance = null; }
+
+        const bioCanvas = document.getElementById('biomarkerImpactChart');
+        if (bioCanvas) {
+            bioChartInstance = new Chart(bioCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: isEn
+                        ? ['1. OCT Thickness', '2. Axial Length', '3. Hyperopia', '4. Papilledema', '5. IOP', '6. -6° Analog']
+                        : ['1. Espesor OCT', '2. Long. Axial', '3. Hipermetropía', '4. Edema Papilar', '5. PIO', '6. Análogo -6°'],
+                    datasets: [{
+                        label: isEn ? 'Predictive Signal Weight' : 'Peso en Señal Predictiva',
+                        data: cfg.impacts || [0, 0, 0, 0, 0, 0],
                         backgroundColor: textColor,
-                        borderWidth: 2.5,
-                        pointRadius: 4,
-                        spanGaps: false
-                    },
-                    {
-                        label: isEn ? 'Stable Scenario (µm)' : 'Escenario Estable (µm)',
-                        data: [278, 281, 283, 284, 281, 279, 278],
-                        borderColor: '#71717a',
-                        borderDash: [5, 4],
-                        borderWidth: 2,
-                        pointRadius: 3
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { labels: { color: textColor, font: { size: 11 } } }
+                        borderRadius: 4
+                    }]
                 },
-                scales: {
-                    x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
-                    y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
+                        y: { beginAtZero: true, max: 45, ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } }
+                    }
                 }
+            });
+        }
+
+        const timeCanvas = document.getElementById('timelineCutChart');
+        if (timeCanvas) {
+            timeChartInstance = new Chart(timeCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: isEn
+                        ? ['Before (Baseline)', 'During Day 10', 'During Day 15', 'During Day 30', 'Cut +30d', 'Cut +60d (Unmeasured)', 'Cut +90d']
+                        : ['Antes (Basal)', 'Durante Día 10', 'Durante Día 15', 'Durante Día 30', 'Corte +30d', 'Corte +60d (Sin dato)', 'Corte +90d'],
+                    datasets: [
+                        {
+                            label: isEn ? 'Worsening Scenario OD (µm)' : 'Escenario en Progresión OD (µm)',
+                            data: [280, 288, 294, 306, 295, null, 285],
+                            borderColor: textColor,
+                            backgroundColor: textColor,
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            spanGaps: false
+                        },
+                        {
+                            label: isEn ? 'Stable Scenario (µm)' : 'Escenario Estable (µm)',
+                            data: [278, 281, 283, 284, 281, 279, 278],
+                            borderColor: '#71717a',
+                            borderDash: [5, 4],
+                            borderWidth: 2,
+                            pointRadius: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: textColor, font: { size: 11 } } }
+                    },
+                    scales: {
+                        x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
+                        y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } }
+                    }
+                }
+            });
+        }
+    }
+
+    function activateWizardTabInPlace(tabName) {
+        const workspace = document.getElementById('sans-monitor-workspace');
+        if (!workspace) return;
+
+        workspace.querySelectorAll('[data-wizard-panel]').forEach(panel => {
+            panel.style.display = (panel.getAttribute('data-wizard-panel') === tabName) ? '' : 'none';
+        });
+
+        workspace.querySelectorAll('[role="tablist"] [data-wizard-tab]').forEach(tabEl => {
+            const isTarget = tabEl.getAttribute('data-wizard-tab') === tabName;
+            tabEl.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+            tabEl.style.background = isTarget ? 'var(--foreground)' : 'var(--card)';
+            tabEl.style.color = isTarget ? 'var(--background)' : 'var(--foreground)';
+            tabEl.style.border = isTarget ? '2px solid var(--foreground)' : '1px solid var(--border)';
+            const icon = tabEl.querySelector('[data-wizard-icon]');
+            if (icon) {
+                icon.className = 'fa ' + (isTarget ? 'fa-dot-circle-o' : 'fa-circle-o');
             }
         });
+
+        workspace.querySelectorAll('input[name="tab"]').forEach(inp => {
+            inp.value = tabName;
+        });
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('tab', tabName);
+        window.history.replaceState({}, '', url.toString());
+
+        if (bioChartInstance) bioChartInstance.resize();
+        if (timeChartInstance) timeChartInstance.resize();
     }
-});
+
+    async function loadWorkspaceInPlace(targetUrl) {
+        const scrollY = window.scrollY;
+        sessionStorage.setItem('sans_scroll_y', String(scrollY));
+        try {
+            const response = await fetch(targetUrl, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (!response.ok) {
+                window.location.href = targetUrl;
+                return;
+            }
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newWorkspace = doc.getElementById('sans-monitor-workspace');
+            const currentWorkspace = document.getElementById('sans-monitor-workspace');
+            if (newWorkspace && currentWorkspace) {
+                currentWorkspace.innerHTML = newWorkspace.innerHTML;
+                window.history.replaceState({}, '', targetUrl);
+                renderSansCharts();
+                window.scrollTo({ top: scrollY, behavior: 'instant' });
+            } else {
+                window.location.href = targetUrl;
+            }
+        } catch (err) {
+            window.location.href = targetUrl;
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        const workspace = document.getElementById('sans-monitor-workspace');
+        if (!workspace || !workspace.contains(e.target)) return;
+
+        // 1. Si es cambio de pestaña del Wizard (Paso 1, 2 o 3) sin cambiar de sujeto/día -> cambio instantáneo 0ms
+        const wizardTabBtn = e.target.closest('[data-wizard-tab]');
+        if (wizardTabBtn && !e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+            activateWizardTabInPlace(wizardTabBtn.getAttribute('data-wizard-tab'));
+            return;
+        }
+
+        // 2. Si es clic en un escenario, astronauta o botón de día dentro del workspace -> actualizar in-place sin subir al top
+        const link = e.target.closest('a[href]');
+        if (link && !link.target && !e.metaKey && !e.ctrlKey) {
+            const href = link.getAttribute('href');
+            if (href && (href.includes('sans-monitor') || href.includes('case_id=') || href.includes('day=') || href.includes('mode='))) {
+                e.preventDefault();
+                loadWorkspaceInPlace(link.href);
+            }
+        }
+    });
+
+    document.addEventListener('change', function (e) {
+        const workspace = document.getElementById('sans-monitor-workspace');
+        if (!workspace || !workspace.contains(e.target)) return;
+        const select = e.target.closest('select[name="case_id"], select[name="eye"]');
+        if (select && select.form) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            const formData = new FormData(select.form);
+            const url = new URL(select.form.action || window.location.href, window.location.origin);
+            url.search = new URLSearchParams(formData).toString();
+            loadWorkspaceInPlace(url.toString());
+        }
+    }, true);
+
+    document.addEventListener('submit', function (e) {
+        const workspace = document.getElementById('sans-monitor-workspace');
+        if (!workspace || !workspace.contains(e.target)) return;
+        const form = e.target.closest('form');
+        if (form && (form.method || 'GET').toUpperCase() === 'GET') {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const url = new URL(form.action || window.location.href, window.location.origin);
+            url.search = new URLSearchParams(formData).toString();
+            loadWorkspaceInPlace(url.toString());
+        } else if (form) {
+            sessionStorage.setItem('sans_scroll_y', String(window.scrollY));
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        renderSansCharts();
+        const savedScroll = sessionStorage.getItem('sans_scroll_y');
+        if (savedScroll !== null) {
+            sessionStorage.removeItem('sans_scroll_y');
+            window.scrollTo({ top: parseInt(savedScroll, 10) || 0, behavior: 'instant' });
+        }
+    });
+})();
 </script>
 @endsection
