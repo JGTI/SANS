@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\MissionSimulatorController;
 use App\Http\Controllers\Admin\NasaObservatoryController;
 use App\Http\Controllers\Admin\ResearchIntelligenceController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SansMonitorController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisionLabController;
 use App\Http\Controllers\AuthController;
@@ -42,6 +43,13 @@ Route::post('/logout', [AuthController::class, 'destroy'])
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Mission Control Dashboard
     Route::get('/', [MissionControlController::class, 'index'])->name('dashboard');
+
+    // SANS Monitor — Workspace Longitudinal Unificado de 5 Pestañas (Especificación Canónica)
+    Route::get('/sans-monitor', [SansMonitorController::class, 'index'])->name('sans-monitor.index');
+    Route::post('/sans-monitor/cases', [SansMonitorController::class, 'storeCase'])->name('sans-monitor.cases.store');
+    Route::post('/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('sans-monitor.import');
+    Route::post('/sans-monitor/adopt-protocol', [SansMonitorController::class, 'adoptProtocol'])->name('sans-monitor.adopt-protocol');
+    Route::post('/sans-monitor/clinician-decision', [SansMonitorController::class, 'storeClinicianDecision'])->name('sans-monitor.clinician-decision');
 
     // Vision Lab (Laboratorio oftalmológico espacial)
     Route::get('/vision-lab', [VisionLabController::class, 'index'])->name('vision-lab.index');

@@ -41,6 +41,12 @@
                         </a>
                     </li>
                     <li>
+                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index') }}">
+                            <i class="fa fa-line-chart" style="width:20px; text-align:center; font-size:15px;"></i>
+                            SANS Monitor (5 Pestañas)
+                        </a>
+                    </li>
+                    <li>
                         <a class="nav-link {{ request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('admin.vision-lab.index') }}">
                             <i class="fa fa-eye" style="width:20px; text-align:center; font-size:15px;"></i>
                             Vision Lab

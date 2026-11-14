@@ -64,5 +64,6 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call(OphthalmologySeeder::class);
+        $this->call(SansMonitorSeeder::class);
     }
 }

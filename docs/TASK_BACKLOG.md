@@ -101,24 +101,25 @@
 
 ---
 
-## Épica 14: Especificación Canónica SANS Monitor — Trazabilidad Longitudinal, Inclinación y Seguimiento +30/+60/+90 [📌 DEFINIDA EN `docs/SANS_MONITOR_SPEC.md`]
-- [x] **Documentación Canónica Adoptada:** Incorporación íntegra de [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md) como especificación oficial del proyecto.
-- [ ] **A. Formulario inicial y alimentación de datos (`RF-01` a `RF-04`):**
+## Épica 14: Especificación Canónica SANS Monitor — Trazabilidad Longitudinal, Inclinación y Seguimiento +30/+60/+90 [✅ COMPLETADA]
+- [x] **Documentación Canónica Adoptada:** Incorporación íntegra de [`docs/SANS_MONITOR_SPEC.md`](SANS_MONITOR_SPEC.md) y [`docs/IMPLEMENTATION_PHASES.md`](IMPLEMENTATION_PHASES.md) como especificación oficial del proyecto.
+- [x] **A. Formulario inicial y alimentación de datos (`RF-01` a `RF-04`):**
   - Ficha con ID pseudónimo/ficticio, distinción explícita «desconocido» vs «no aplica», apertura sin OCT previa (`AT-01`).
   - Separación entre fecha de observación (`observed_at` / `mission_day`) y fecha de disponibilidad (`available_at` / `available_day`) (`AT-04`).
   - Importación CSV con detección de duplicados y OCT no comparables sin sobrescribir el dato original (`AT-09`).
-- [ ] **B. Catálogo curado y búsqueda de protocolos (`RF-05` a `RF-09`):**
+- [x] **B. Catálogo curado y búsqueda de protocolos (`RF-05` a `RF-09`):**
   - Precarga de las 7 referencias normativas y científicas (NASA OCHMO, Consenso 2026, Macias 2020, Carter 2025, NLSP, Laurie 2019, NASA HRP 2026).
   - Separación entre protocolo previamente aplicado, referencias de seguimiento posterior y versiones verificadas (`AT-02`).
-- [ ] **C. Revisión de candidatos sin dictamen automático (`RF-10` a `RF-12`):**
+- [x] **C. Revisión de candidatos sin dictamen automático (`RF-10` a `RF-12`):**
   - Salidas operativas estrictas: «Listo para revisión», «Faltan datos», «Priorizar revisión» y estado «Aptitud no evaluada» salvo registro humano en `ClinicianDecision` (`AT-05`, `AT-08`).
-- [ ] **D. Dashboard de expedientes, estudios y tendencias (`RF-13` a `RF-17`):**
+- [x] **D. Dashboard de expedientes, estudios y tendencias (`RF-13` a `RF-17`):**
   - Cuatro ejes de filtro combinables: conjunto de datos (ficticio, análogo terrestre, orbital autorizado), evolución observada, cobertura (sin línea base vs sin escaneos previos vs sin control reciente) y motor de evaluación (`AT-06`, `AT-07`).
-- [ ] **E. Simulador temporal sincronizado (`RF-18` a `RF-22`):**
+- [x] **E. Simulador temporal sincronizado (`RF-18` a `RF-22`):**
   - Hitos de demo **10 → 15 → 30** y rangos **0–30**, **0–90**, **0–150** días, con separación entre reproducción histórica y simulación ilustrativa (`AT-03`, `AT-17`).
-- [ ] **G. Pestaña «Inclinación y seguimiento» (`RF-26` a `RF-30`):**
+- [x] **G. Pestaña «Inclinación y seguimiento» (`RF-26` a `RF-30`):**
   - `ExposureSession` y `ExposureSegment` (ángulo en grados, dirección cabeza abajo/arriba/horizontal, tramos múltiples sin promediar, fin de exposición como día 0 de recuperación) y clasificación por hallazgo (cambio observado, retorno al rango basal con tolerancia documentada, cambio aún observado o seguimiento insuficiente) (`AT-10` a `AT-14`, `AT-19`).
-- [ ] **H. Seguimiento cronológico y acciones de revisión hasta +90 días (`RF-31` a `RF-34`):**
+- [x] **H. Seguimiento cronológico y acciones de revisión hasta +90 días (`RF-31` a `RF-34`):**
   - Tarjetas de hitos **+30, +60 y +90 días** tras aterrizaje o fin de exposición, sin interpolar visitas faltantes (`AT-15`, `AT-16`).
-- [ ] **I. Indicadores oculares y capa plegable de contexto (`RF-35` a `RF-37`):**
+- [x] **I. Indicadores oculares y capa plegable de contexto (`RF-35` a `RF-37`):**
   - Panel secundario con los 5 dominios (Neurológico, Metabólico, Cardiovascular, Ambiental, Conductual) que no altera el estado ocular ni la acción sugerida en P0 (`AT-18`).
+- [x] **Suite de Pruebas de Aceptación (`SansMonitorAcceptanceTest`):** 8 pruebas integradas cubriendo `AT-01` a `AT-19` (66 aserciones nuevas), elevando el total a **75 tests en Laravel (353 aserciones)** y **21 en Python Pytest** (100% en verde).
