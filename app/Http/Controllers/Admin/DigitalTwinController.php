@@ -22,6 +22,9 @@ class DigitalTwinController extends Controller
 
     public function index(Request $request): View
     {
+        if (AstronautProfile::count() === 0) {
+            app(\Database\Seeders\OphthalmologySeeder::class)->run();
+        }
         $astronauts = AstronautProfile::with(['evaluations', 'sansObservations'])->get();
         $selectedCode = $request->query('astro', 'ASTRO-01');
         

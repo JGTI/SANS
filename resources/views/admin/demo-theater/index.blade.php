@@ -117,7 +117,7 @@
         <a href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}" class="btn btn-primary" style="font-size:13px;">
             <i class="fa fa-heartbeat"></i> Abrir Predictor SANS (3 Pestañas)
         </a>
-        <a href="{{ route('admin.demo-theater.report', ['code' => $astronaut->code]) }}" target="_blank" class="btn btn-outline" style="font-size:13px;">
+        <a href="{{ route('public.demo-theater.report', ['code' => $astronaut->code]) }}" target="_blank" class="btn btn-outline" style="font-size:13px;">
             <i class="fa fa-print"></i> Ver Reporte Oficial Imprimible
         </a>
     </div>
@@ -393,7 +393,7 @@
             <p style="font-size:13px; color:var(--muted-foreground); margin:0 0 16px;">
                 Genera el expediente clínico de vuelo con formato estándar NASA / Artemis, tablas de refracción, análisis de agudeza visual y firmas médicas.
             </p>
-            <a href="{{ route('admin.demo-theater.report', ['code' => $astronaut->code]) }}" target="_blank" class="btn btn-primary" style="padding:10px 24px; font-size:14px; font-weight:700;">
+            <a href="{{ route('public.demo-theater.report', ['code' => $astronaut->code]) }}" target="_blank" class="btn btn-primary" style="padding:10px 24px; font-size:14px; font-weight:700;">
                 <i class="fa fa-file-text-o"></i> Abrir Expediente Oficial para Impresión / PDF
             </a>
         </div>

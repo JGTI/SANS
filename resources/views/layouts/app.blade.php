@@ -57,13 +57,13 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.digital-twin') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}">
+                        <a class="nav-link {{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                             <i class="fa fa-eye" style="width:20px; text-align:center; font-size:15px;"></i>
                             {{ $isEn ? '3D Viewer + OCT Console' : 'Visor 3D + Consola OCT' }}
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('admin.demo-theater') }}">
+                        <a class="nav-link {{ request()->routeIs('public.demo-theater*') || request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('public.demo-theater') }}">
                             <i class="fa fa-play-circle" style="width:20px; text-align:center; font-size:15px;"></i>
                             {{ $isEn ? 'Demo Pitch (3 Minutes)' : 'Demo Pitch (3 Minutos)' }}
                         </a>
@@ -80,31 +80,25 @@
                 <nav class="nav-section" aria-label="{{ $isEn ? 'Telemetry & AI' : 'Telemetría e IA' }}" style="margin-top:0.35rem;">
                     <ul class="nav-list">
                         <li>
-                            <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                                <i class="fa fa-tachometer" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Mission Control
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('admin.vision-lab.index') }}">
+                            <a class="nav-link {{ request()->routeIs('public.vision-lab') || request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('public.vision-lab') }}">
                                 <i class="fa fa-calculator" style="width:20px; text-align:center; font-size:14px;"></i>
                                 {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
                             </a>
                         </li>
                         <li>
-                            <a class="nav-link {{ request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('admin.nasa-data') }}">
+                            <a class="nav-link {{ request()->routeIs('public.nasa-data') || request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('public.nasa-data') }}">
                                 <i class="fa fa-globe" style="width:20px; text-align:center; font-size:14px;"></i>
                                 {{ $isEn ? 'NASA Repositories' : 'Repositorios NASA' }}
                             </a>
                         </li>
                         <li>
-                            <a class="nav-link {{ request()->routeIs('admin.model-lab*') ? 'active' : '' }}" href="{{ route('admin.model-lab') }}">
+                            <a class="nav-link {{ request()->routeIs('public.model-lab') || request()->routeIs('admin.model-lab*') ? 'active' : '' }}" href="{{ route('public.model-lab') }}">
                                 <i class="fa fa-flask" style="width:20px; text-align:center; font-size:14px;"></i>
                                 Benchmark ML (RF / GBM)
                             </a>
                         </li>
                         <li>
-                            <a class="nav-link {{ request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('admin.explainability') }}">
+                            <a class="nav-link {{ request()->routeIs('public.explainability') || request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('public.explainability') }}">
                                 <i class="fa fa-pie-chart" style="width:20px; text-align:center; font-size:14px;"></i>
                                 {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
                             </a>

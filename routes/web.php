@@ -41,6 +41,17 @@ Route::post('/admin/sans-monitor/cases', [SansMonitorController::class, 'storeCa
 Route::post('/admin/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('admin.sans-monitor.import');
 Route::post('/admin/sans-monitor/adopt-protocol', [SansMonitorController::class, 'adoptProtocol'])->name('admin.sans-monitor.adopt-protocol');
 
+// Espejos públicos sin login para módulos científicos y de demostración (preservando /admin/* para tests de RBAC)
+Route::get('/digital-twin', [DigitalTwinController::class, 'index'])->name('public.digital-twin');
+Route::get('/digital-twin/oct-telemetry', [DigitalTwinController::class, 'octTelemetry'])->name('public.digital-twin.oct-telemetry');
+Route::get('/oct-analysis', [DigitalTwinController::class, 'octWorkstation'])->name('public.oct-analysis');
+Route::get('/demo-theater', [DemoTheaterController::class, 'index'])->name('public.demo-theater');
+Route::get('/demo-theater/report/{code}', [DemoTheaterController::class, 'report'])->name('public.demo-theater.report');
+Route::get('/vision-lab', [VisionLabController::class, 'index'])->name('public.vision-lab');
+Route::get('/nasa-data', [NasaObservatoryController::class, 'index'])->name('public.nasa-data');
+Route::get('/model-lab', [ModelLabController::class, 'index'])->name('public.model-lab');
+Route::get('/explainability', [ExplainabilityCenterController::class, 'index'])->name('public.explainability');
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('login');
     Route::post('/login', [AuthController::class, 'store'])->name('login.store');

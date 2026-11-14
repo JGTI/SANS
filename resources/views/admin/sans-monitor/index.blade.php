@@ -92,7 +92,7 @@
             <a href="{{ route('home', ['lang' => app()->getLocale()]) }}" class="btn btn-outline" style="padding:0.6rem 0.85rem;" title="{{ $isEn ? 'Reset Demo to default scenario' : 'Reiniciar demostración al estado inicial' }}">
                 <i class="fa fa-refresh"></i> {{ $isEn ? 'Reset Demo' : 'Reiniciar Demo' }}
             </a>
-            <a href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.6rem 1rem;">
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.6rem 1rem;">
                 <i class="fa fa-cube"></i> {{ $isEn ? 'Open 3D Viewer + OCT' : 'Abrir Visor 3D + OCT' }}
             </a>
         </div>

@@ -20,6 +20,9 @@ class DemoTheaterController extends Controller
 
     public function index(Request $request): View
     {
+        if (AstronautProfile::count() === 0) {
+            app(\Database\Seeders\OphthalmologySeeder::class)->run();
+        }
         $astronauts = AstronautProfile::with(['evaluations' => fn($q) => $q->orderBy('mission_day'), 'sansObservations'])->get();
         $selectedCode = $request->query('astro', 'ASTRO-01');
 

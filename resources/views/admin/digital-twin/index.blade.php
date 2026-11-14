@@ -1477,7 +1477,7 @@ function renderDay(index) {
     }
 
     // 6. Actualización Reactiva de la Estación Tomográfica ZEISS Cirrus HD-OCT
-    fetch(`{{ route('admin.digital-twin.oct-telemetry') }}?code=${currentAstroCode}&name=${encodeURIComponent(currentAstroName)}&day=${day}&scenario=${currentScenario}`)
+    fetch(`{{ route('public.digital-twin.oct-telemetry') }}?code=${currentAstroCode}&name=${encodeURIComponent(currentAstroName)}&day=${day}&scenario=${currentScenario}`)
         .then(res => res.json())
         .then(octData => {
             currentCirrusData = octData;
