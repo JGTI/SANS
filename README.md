@@ -89,6 +89,7 @@ flowchart TB
 | Documento | Propósito |
 |---|---|
 | **[`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md)** | **Especificación canónica de software (`RF-01`–`RF-37`, `RNF-01`–`RNF-06`, contrato de datos y pruebas `AT-01`–`AT-19`).** |
+| **[`docs/IMPLEMENTATION_PHASES.md`](docs/IMPLEMENTATION_PHASES.md)** | **Esquema maestro de las 6 fases de implementación (P0 $\to$ P1 $\to$ P2), arquitectura modular y casos de prueba.** |
 | [`docs/PROJECT_VISION.md`](docs/PROJECT_VISION.md) | Visión científica, fases P0/P1/P2, indicadores oculares, los 5 dominios de contexto y referencias bibliográficas. |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Arquitectura híbrida de 5 capas (Frontend Blade/Three.js, Laravel 11, Enlace Bearer, Python FastAPI `:8001` y conectores NASA). |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Registro de Decisiones de Arquitectura (`ADR-001` a `ADR-005`). |
