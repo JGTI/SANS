@@ -204,23 +204,28 @@
             : 'Vigilancia ocular trazable en 6 biomarcadores centrales, cortes Antes · Durante · Después (+30, +60, +90 días) y 3 escenarios de referencia — sin emitir dictamen automático de aptitud.' }}
     </div>
 
-    {{-- Cuadrícula de metadatos del sujeto --}}
-    <div class="meta-grid">
-        <div class="meta-cell">
-            <span class="meta-label">{{ $isEn ? 'Subject / Crew' : 'Tripulante / Sujeto' }}</span>
-            <span class="meta-val">{{ $astronaut->name }} ({{ $linkedSansCase->case_id ?? 'CASE-PROG-02' }})</span>
-        </div>
-        <div class="meta-cell">
-            <span class="meta-label">{{ $isEn ? 'Scenario Archetype' : 'Escenario Modelo' }}</span>
-            <span class="meta-val">{{ $linkedSansCase->scenario_archetype ?? 'EMPEORA' }} · {{ $astronaut->code }}</span>
-        </div>
-        <div class="meta-cell">
-            <span class="meta-label">{{ $isEn ? 'Mission / Context' : 'Misión / Contexto' }}</span>
-            <span class="meta-val">{{ $astronaut->mission_name }} (FD{{ $astronaut->days_in_space }})</span>
-        </div>
-        <div class="meta-cell">
-            <span class="meta-label">{{ $isEn ? 'Fit-for-Duty Verdict' : 'Dictamen de Aptitud' }}</span>
-            <span class="meta-val">{{ $isEn ? 'NOT EVALUATED' : 'APTITUD NO EVALUADA' }}</span>
+    {{-- Cuadrícula de metadatos del sujeto con retrato IA --}}
+    <div style="display:flex;align-items:center;gap:16px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:20px;">
+        <img src="{{ $astronaut->avatar_url }}"
+             alt="{{ $astronaut->name }}"
+             style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:2px solid #0f172a;filter:grayscale(100%) contrast(1.08);flex-shrink:0;">
+        <div class="meta-grid" style="margin:0;border:none;padding:0;background:transparent;flex:1;">
+            <div class="meta-cell">
+                <span class="meta-label">{{ $isEn ? 'Subject / Crew' : 'Tripulante / Sujeto' }}</span>
+                <span class="meta-val">{{ $astronaut->name }} ({{ $linkedSansCase->case_id ?? 'CASE-PROG-02' }})</span>
+            </div>
+            <div class="meta-cell">
+                <span class="meta-label">{{ $isEn ? 'Scenario Archetype' : 'Escenario Modelo' }}</span>
+                <span class="meta-val">{{ $linkedSansCase->scenario_archetype ?? 'EMPEORA' }} · {{ $astronaut->code }}</span>
+            </div>
+            <div class="meta-cell">
+                <span class="meta-label">{{ $isEn ? 'Mission / Context' : 'Misión / Contexto' }}</span>
+                <span class="meta-val">{{ $astronaut->mission_name }} (FD{{ $astronaut->days_in_space }})</span>
+            </div>
+            <div class="meta-cell">
+                <span class="meta-label">{{ $isEn ? 'Fit-for-Duty Verdict' : 'Dictamen de Aptitud' }}</span>
+                <span class="meta-val">{{ $isEn ? 'NOT EVALUATED' : 'APTITUD NO EVALUADA' }}</span>
+            </div>
         </div>
     </div>
 

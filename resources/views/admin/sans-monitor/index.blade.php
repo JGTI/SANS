@@ -118,41 +118,72 @@
     </div>
 @endif
 
-{{-- BARRA COMPACTA DE SELECCIÓN DE EXPEDIENTE / OJO + WIZARD DE 3 PASOS EN LA MISMA PANTALLA --}}
-<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
-    <div style="display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;">
-        <span class="badge" style="border:1px solid var(--foreground);font-weight:800;padding:0.35rem 0.65rem;">
-            <i class="fa fa-sitemap"></i>
-            {{ $isEn ? '3-STEP INTERACTIVE WIZARD' : 'WIZARD INTERACTIVO DE 3 PASOS' }}
-        </span>
-        <span style="font-size:0.82rem;color:var(--muted-foreground);">
-            {{ $isEn
-                ? 'Single unified workspace: switch freely between tabs or follow the 3 steps sequentially.'
-                : 'Una sola pantalla unificada: cambia libremente de pestaña o avanza paso a paso en el wizard.' }}
-        </span>
+{{-- BARRA COMPACTA DE SELECCIÓN DE EXPEDIENTE / OJO + GALERÍA IA DE ASTRONAUTAS + WIZARD DE 3 PASOS --}}
+@php
+    $activeCrewMeta = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
+@endphp
+<div class="card" style="padding:0.9rem 1.15rem;margin-bottom:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding-bottom:0.75rem;border-bottom:1px solid var(--border);margin-bottom:0.75rem;">
+        <div style="display:flex;align-items:center;gap:0.85rem;">
+            <img src="{{ $activeCrewMeta['avatar'] }}"
+                 alt="{{ $activeCrewMeta['name'] }}"
+                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+            <div>
+                <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                    <span style="font-size:0.98rem;font-weight:800;">{{ $activeCrewMeta['name'] }}</span>
+                    <span class="badge" style="border:1px solid var(--foreground);font-weight:800;font-size:0.7rem;">
+                        {{ $activeCase->case_id }} · {{ $t($activeCase->scenario_archetype) }}
+                    </span>
+                </div>
+                <div style="font-size:0.76rem;color:var(--muted-foreground);">
+                    {{ $activeCrewMeta['role'] }} · {{ $isEn ? 'AI Monochrome Clinical Portrait (Synthetic Cohort)' : 'Retrato Clínico Monocromático IA (Cohorte Sintética)' }}
+                </div>
+            </div>
+        </div>
+
+        <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin:0;">
+            <input type="hidden" name="tab" value="{{ $activeTab }}">
+            <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
+                <i class="fa fa-user"></i> {{ $isEn ? 'Dossier:' : 'Expediente:' }}
+            </label>
+            <select name="case_id" class="form-control" style="width:auto;min-width:220px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select subject' : 'Seleccionar expediente' }}">
+                @foreach($cases as $c)
+                    @php $cm = \App\Models\AstronautProfile::crewMetaForCase($c->case_id); @endphp
+                    <option value="{{ $c->case_id }}" {{ $c->case_id === $activeCase->case_id ? 'selected' : '' }}>
+                        {{ $cm['name'] }} — {{ $c->case_id }} ({{ $t($c->scenario_archetype) }})
+                    </option>
+                @endforeach
+            </select>
+            <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
+                <i class="fa fa-eye"></i> {{ $isEn ? 'Eye:' : 'Ojo:' }}
+            </label>
+            <select name="eye" class="form-control" style="width:auto;min-width:170px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
+                <option value="OD" {{ $selectedEye === 'OD' ? 'selected' : '' }}>{{ $isEn ? 'Right Eye (OD)' : 'Ojo Derecho (OD)' }}</option>
+                <option value="OS" {{ $selectedEye === 'OS' ? 'selected' : '' }}>{{ $isEn ? 'Left Eye (OS)' : 'Ojo Izquierdo (OS)' }}</option>
+                <option value="BILATERAL" {{ $selectedEye === 'BILATERAL' ? 'selected' : '' }}>{{ $isEn ? 'Bilateral (OD + OS)' : 'Bilateral (OD + OS)' }}</option>
+            </select>
+        </form>
     </div>
 
-    <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin:0;">
-        <input type="hidden" name="tab" value="{{ $activeTab }}">
-        <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
-            <i class="fa fa-user"></i> {{ $isEn ? 'Dossier:' : 'Expediente:' }}
-        </label>
-        <select name="case_id" class="form-control" style="width:auto;min-width:220px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select subject' : 'Seleccionar expediente' }}">
-            @foreach($cases as $c)
-                <option value="{{ $c->case_id }}" {{ $c->case_id === $activeCase->case_id ? 'selected' : '' }}>
-                    {{ $isEn ? 'Subject:' : 'Sujeto:' }} {{ $c->case_id }} ({{ $t($c->scenario_archetype) }})
-                </option>
-            @endforeach
-        </select>
-        <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
-            <i class="fa fa-eye"></i> {{ $isEn ? 'Eye:' : 'Ojo:' }}
-        </label>
-        <select name="eye" class="form-control" style="width:auto;min-width:170px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
-            <option value="OD" {{ $selectedEye === 'OD' ? 'selected' : '' }}>{{ $isEn ? 'Right Eye (OD)' : 'Ojo Derecho (OD)' }}</option>
-            <option value="OS" {{ $selectedEye === 'OS' ? 'selected' : '' }}>{{ $isEn ? 'Left Eye (OS)' : 'Ojo Izquierdo (OS)' }}</option>
-            <option value="BILATERAL" {{ $selectedEye === 'BILATERAL' ? 'selected' : '' }}>{{ $isEn ? 'Bilateral (OD + OS)' : 'Bilateral (OD + OS)' }}</option>
-        </select>
-    </form>
+    {{-- TIRA VISUAL DE ASTRONAUTAS CON FOTO IA (1 CLIC PARA CAMBIAR DE SUJETO) --}}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.5rem;">
+        @foreach($cases as $c)
+            @php
+                $cm = \App\Models\AstronautProfile::crewMetaForCase($c->case_id);
+                $isActiveCrew = $c->case_id === $activeCase->case_id;
+            @endphp
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['case_id' => $c->case_id])) }}"
+               style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.55rem;padding:0.4rem 0.55rem;border-radius:6px;border:{{ $isActiveCrew ? '2px solid var(--foreground)' : '1px solid var(--border)' }};background:{{ $isActiveCrew ? 'var(--accent)' : 'transparent' }};">
+                <img src="{{ $cm['avatar'] }}"
+                     alt="{{ $cm['name'] }}"
+                     style="width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);flex-shrink:0;">
+                <div style="min-width:0;overflow:hidden;">
+                    <div style="font-size:0.75rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $cm['name'] }}</div>
+                    <div style="font-size:0.66rem;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $c->case_id }} · {{ $t($c->scenario_archetype) }}</div>
+                </div>
+            </a>
+        @endforeach
+    </div>
 </div>
 
 {{-- NAVEGADOR VISUAL DEL WIZARD / TABS DE 3 PASOS --}}
@@ -657,16 +688,22 @@
             : 'Haz clic en cualquiera de los 3 escenarios para cargar instantáneamente sus biomarcadores, su curva temporal y su representación anatómica.' }}
     </p>
 
-    {{-- TARJETAS DE 1 CLIC PARA LOS 3 ESCENARIOS MODELOS --}}
+    {{-- TARJETAS DE 1 CLIC PARA LOS 3 ESCENARIOS MODELOS (CON RETRATO IA DEL ASTRONAUTA) --}}
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;">
         {{-- Escenario 1: Estable --}}
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-STABLE-01', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-STABLE-01' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                <span style="font-size:1rem;font-weight:800;">
-                    <i class="fa fa-check-circle"></i> {{ $isEn ? '1. Stable Scenario' : '1. Escenario Estable' }}
-                </span>
-                <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Ready for review' : 'Listo para revisión' }}</span>
+            <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
+                <img src="{{ asset('images/astronauts/astro-02.jpg') }}" alt="Dr. Sara Lindqvist" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
+                        <span style="font-size:0.95rem;font-weight:800;">
+                            <i class="fa fa-check-circle"></i> {{ $isEn ? '1. Stable Scenario' : '1. Escenario Estable' }}
+                        </span>
+                        <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Ready for review' : 'Listo para revisión' }}</span>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--muted-foreground);">Dr. Sara Lindqvist · ASTRO-02</div>
+                </div>
             </div>
             <div style="font-size:0.82rem;color:var(--muted-foreground);">
                 <strong>CASE-STABLE-01:</strong>
@@ -679,11 +716,17 @@
         {{-- Escenario 2: Empeora --}}
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-PROG-02', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-PROG-02' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                <span style="font-size:1rem;font-weight:800;">
-                    <i class="fa fa-exclamation-triangle"></i> {{ $isEn ? '2. Worsening Scenario' : '2. Escenario que Empeora' }}
-                </span>
-                <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Prioritize review' : 'Priorizar revisión' }}</span>
+            <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
+                <img src="{{ asset('images/astronauts/astro-01.jpg') }}" alt="CDR Alex Mercer" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
+                        <span style="font-size:0.95rem;font-weight:800;">
+                            <i class="fa fa-exclamation-triangle"></i> {{ $isEn ? '2. Worsening Scenario' : '2. Escenario que Empeora' }}
+                        </span>
+                        <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Prioritize review' : 'Priorizar revisión' }}</span>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--muted-foreground);">CDR Alex Mercer · ASTRO-01</div>
+                </div>
             </div>
             <div style="font-size:0.82rem;color:var(--muted-foreground);">
                 <strong>CASE-PROG-02:</strong>
@@ -696,11 +739,17 @@
         {{-- Escenario 3: No se escanea --}}
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-NOSCAN-03A', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-NOSCAN-03A' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-                <span style="font-size:1rem;font-weight:800;">
-                    <i class="fa fa-question-circle"></i> {{ $isEn ? '3. Unscanned Scenario' : '3. Escenario No se Escanea' }}
-                </span>
-                <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Missing data' : 'Faltan datos' }}</span>
+            <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
+                <img src="{{ asset('images/astronauts/astro-03.jpg') }}" alt="Kenji Sato" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
+                        <span style="font-size:0.95rem;font-weight:800;">
+                            <i class="fa fa-question-circle"></i> {{ $isEn ? '3. Unscanned Scenario' : '3. Escenario No se Escanea' }}
+                        </span>
+                        <span class="badge" style="border:1px solid var(--border);">{{ $isEn ? 'Missing data' : 'Faltan datos' }}</span>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--muted-foreground);">Kenji Sato · ASTRO-03</div>
+                </div>
             </div>
             <div style="font-size:0.82rem;color:var(--muted-foreground);">
                 <strong>CASE-NOSCAN-03A:</strong>

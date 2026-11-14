@@ -302,6 +302,11 @@
         <p>Modelo biomecánico tridimensional interactivo del globo ocular y vaina del nervio óptico bajo redistribución cefálica de fluidos (SANS).</p>
     </div>
     <div style="display:flex; gap:12px; align-items:center;">
+        @if($astronaut)
+            <img src="{{ $astronaut->avatar_url }}"
+                 alt="{{ $astronaut->name }}"
+                 style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+        @endif
         <label for="astro-select" style="font-size:13px; font-weight:600; color:var(--muted-foreground);">Tripulante:</label>
         <select id="astro-select" class="form-control" style="max-width:280px; height:36px;" onchange="location.href='?astro=' + this.value">
             @foreach ($astronauts as $item)

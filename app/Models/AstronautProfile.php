@@ -65,4 +65,66 @@ class AstronautProfile extends Model
     {
         return $this->hasOne(SansObservation::class, 'astronaut_id')->latestOfMany('observed_at');
     }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        return self::avatarForCaseOrCode($this->code ?? 'ASTRO-01');
+    }
+
+    public static function avatarForCaseOrCode(?string $identifier): string
+    {
+        $file = match (strtoupper((string) $identifier)) {
+            'ASTRO-01', 'CASE-PROG-02' => 'astro-01.jpg',
+            'ASTRO-02', 'CASE-STABLE-01' => 'astro-02.jpg',
+            'ASTRO-03', 'CASE-NOSCAN-03A' => 'astro-03.jpg',
+            'ASTRO-04', 'CASE-ASO-05' => 'astro-04.jpg',
+            'ASTRO-05', 'CASE-NORECENT-03B' => 'astro-05.jpg',
+            'ASTRO-06', 'CASE-TILT-04' => 'astro-06.jpg',
+            default => 'astro-01.jpg',
+        };
+
+        return asset('images/astronauts/' . $file);
+    }
+
+    public static function crewMetaForCase(?string $caseId): array
+    {
+        return match (strtoupper((string) $caseId)) {
+            'CASE-STABLE-01' => [
+                'code' => 'ASTRO-02',
+                'name' => 'Dr. Sara Lindqvist',
+                'role' => 'Science Officer · ISS Exp 71',
+                'avatar' => asset('images/astronauts/astro-02.jpg'),
+            ],
+            'CASE-NOSCAN-03A' => [
+                'code' => 'ASTRO-03',
+                'name' => 'Kenji Sato',
+                'role' => 'Flight Engineer · ISS Exp 72',
+                'avatar' => asset('images/astronauts/astro-03.jpg'),
+            ],
+            'CASE-ASO-05' => [
+                'code' => 'ASTRO-04',
+                'name' => 'Maj. Elena Rostova',
+                'role' => 'Orbital Specialist · Mixed Asymmetry',
+                'avatar' => asset('images/astronauts/astro-04.jpg'),
+            ],
+            'CASE-NORECENT-03B' => [
+                'code' => 'ASTRO-05',
+                'name' => 'Dr. Marcus Thorne',
+                'role' => 'Payload Specialist · Delayed Window',
+                'avatar' => asset('images/astronauts/astro-05.jpg'),
+            ],
+            'CASE-TILT-04' => [
+                'code' => 'ASTRO-06',
+                'name' => 'Capt. Mateo Vargas',
+                'role' => '-6° HDT Analog & Orbital Subject',
+                'avatar' => asset('images/astronauts/astro-06.jpg'),
+            ],
+            default => [
+                'code' => 'ASTRO-01',
+                'name' => 'CDR Alex Mercer',
+                'role' => 'Mission Commander · Artemis III',
+                'avatar' => asset('images/astronauts/astro-01.jpg'),
+            ],
+        };
+    }
 }

@@ -128,26 +128,51 @@
     </div>
 </div>
 
-{{-- Puente de Trazabilidad Directa con los 3 Pasos del SANS Monitor --}}
-<div class="card" style="padding:14px 18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-    <div style="font-size:12px;">
-        <strong><i class="fa fa-link"></i> {{ $isEn ? 'Direct Connection with Core Project (SANS Monitor):' : 'Relación Directa con el Proyecto Central (SANS Monitor):' }}</strong>
-        <span style="color:var(--muted-foreground);">
-            {{ $isEn
-                ? "Active Subject {$astronaut->name} ({$astronaut->code}) maps to Dossier {$linkedSansCase->case_id} ({$linkedSansCase->scenario_archetype})."
-                : "El sujeto activo {$astronaut->name} ({$astronaut->code}) corresponde al expediente {$linkedSansCase->case_id} ({$linkedSansCase->scenario_archetype})." }}
-        </span>
+{{-- Puente de Trazabilidad Directa con los 3 Pasos del SANS Monitor + Selector de Astronautas con Foto IA --}}
+<div class="card" style="padding:14px 18px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <img src="{{ $astronaut->avatar_url }}"
+                 alt="{{ $astronaut->name }}"
+                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+            <div style="font-size:12px;">
+                <div>
+                    <strong><i class="fa fa-link"></i> {{ $isEn ? 'Direct Connection with Core Project (SANS Monitor):' : 'Relación Directa con el Proyecto Central (SANS Monitor):' }}</strong>
+                </div>
+                <span style="color:var(--muted-foreground);">
+                    {{ $isEn
+                        ? "Active Subject {$astronaut->name} ({$astronaut->code}) maps to Dossier {$linkedSansCase->case_id} ({$linkedSansCase->scenario_archetype})."
+                        : "El sujeto activo {$astronaut->name} ({$astronaut->code}) corresponde al expediente {$linkedSansCase->case_id} ({$linkedSansCase->scenario_archetype})." }}
+                </span>
+            </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <a href="{{ url('/?tab=biomarcadores&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
+                {{ $isEn ? 'Step 1: 6 Biomarkers' : 'Paso 1: 6 Biomarcadores' }}
+            </a>
+            <a href="{{ url('/?tab=seguimiento&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
+                {{ $isEn ? 'Step 2: +30/+60/+90d Cuts' : 'Paso 2: Cortes +30/+60/+90d' }}
+            </a>
+            <a href="{{ url('/?tab=escenarios&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
+                {{ $isEn ? 'Step 3: 3 Scenarios' : 'Paso 3: 3 Escenarios' }}
+            </a>
+        </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <a href="{{ url('/?tab=biomarcadores&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
-            {{ $isEn ? 'Step 1: 6 Biomarkers' : 'Paso 1: 6 Biomarcadores' }}
-        </a>
-        <a href="{{ url('/?tab=seguimiento&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
-            {{ $isEn ? 'Step 2: +30/+60/+90d Cuts' : 'Paso 2: Cortes +30/+60/+90d' }}
-        </a>
-        <a href="{{ url('/?tab=escenarios&case_id=' . ($linkedSansCase->case_id ?? 'CASE-PROG-02')) }}" class="btn btn-outline" style="padding:4px 10px;font-size:12px;">
-            {{ $isEn ? 'Step 3: 3 Scenarios' : 'Paso 3: 3 Escenarios' }}
-        </a>
+
+    {{-- Selector rápido de astronautas con retrato IA --}}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;padding-top:12px;border-top:1px solid var(--border);">
+        @foreach($astronauts as $aItem)
+            <a href="{{ url('/demo-theater?astro=' . $aItem->code) }}"
+               style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:{{ $aItem->code === $astronaut->code ? '2px solid var(--foreground)' : '1px solid var(--border)' }};background:{{ $aItem->code === $astronaut->code ? 'var(--accent)' : 'transparent' }};">
+                <img src="{{ $aItem->avatar_url }}"
+                     alt="{{ $aItem->name }}"
+                     style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <div>
+                    <div style="font-size:12px;font-weight:800;">{{ $aItem->name }}</div>
+                    <div style="font-size:11px;color:var(--muted-foreground);">{{ $aItem->code }} · {{ $aItem->mission_name }}</div>
+                </div>
+            </a>
+        @endforeach
     </div>
 </div>
 
