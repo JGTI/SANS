@@ -26,6 +26,13 @@ use Illuminate\Support\Facades\Route;
 // Ruta Raíz: Abre directamente el proyecto (Predictor SANS de 3 Pestañas sin login ni landing intermedia)
 Route::get('/', [SansMonitorController::class, 'index'])->name('home');
 
+// Selector Multilenguaje (Español / Inglés)
+Route::get('/locale/{locale}', function (string $locale) {
+    $norm = strtolower($locale) === 'en' ? 'en' : 'es';
+    session(['locale' => $norm]);
+    return redirect()->back()->withCookie(cookie('spacevision_locale', $norm, 60 * 24 * 365));
+})->name('locale.switch');
+
 // Rutas Públicas de Demostración Directa (REGLA P0: Acceso inmediato sin requerir login para el jurado)
 Route::get('/demo', [SansMonitorController::class, 'index'])->name('public.demo');
 Route::get('/sans-monitor', [SansMonitorController::class, 'index'])->name('public.sans-monitor');

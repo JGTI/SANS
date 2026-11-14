@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,9 +17,12 @@
     @stack('styles')
 </head>
 <body>
+@php
+    $isEn = app()->getLocale() === 'en';
+@endphp
 <div class="admin-shell">
-    <aside class="sidebar" id="app-sidebar" aria-label="Navegación principal">
-        <a class="workspace-switcher" href="{{ route('admin.dashboard') }}">
+    <aside class="sidebar" id="app-sidebar" aria-label="{{ $isEn ? 'Main navigation' : 'Navegación principal' }}">
+        <a class="workspace-switcher" href="{{ route('home') }}">
             <span class="workspace-logo" aria-hidden="true" style="background:#fff;padding:4px;display:flex;align-items:center;justify-content:center;">
                 <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:22px;height:22px;object-fit:contain;">
             </span>
@@ -31,37 +34,37 @@
         </a>
 
         <div class="sidebar-scroll">
-            <nav class="nav-section" aria-label="Flujo Principal SANS">
-                <div class="nav-label">Flujo Principal Hackathon</div>
+            <nav class="nav-section" aria-label="{{ $isEn ? 'Main SANS Flow' : 'Flujo Principal SANS' }}">
+                <div class="nav-label">{{ $isEn ? 'Main Hackathon Flow' : 'Flujo Principal Hackathon' }}</div>
                 <ul class="nav-list">
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && !in_array(request('tab'), ['seguimiento', 'simulador', 'escenarios']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
+                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['seguimiento', 'simulador', 'escenarios']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
                             <i class="fa fa-Sliders fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
-                            1. Predictor y Biomarcadores
+                            {{ $isEn ? '1. Predictor & Biomarkers' : '1. Predictor y Biomarcadores' }}
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && request('tab') === 'seguimiento' ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
+                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && request('tab') === 'seguimiento' ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
                             <i class="fa fa-calendar-check-o" style="width:20px; text-align:center; font-size:15px;"></i>
-                            2. Tiempo (+30 / +60 / +90 d)
+                            {{ $isEn ? '2. Timeline (+30 / +60 / +90 d)' : '2. Tiempo (+30 / +60 / +90 d)' }}
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link {{ request()->routeIs('admin.sans-monitor.*') && in_array(request('tab'), ['escenarios', 'simulador']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
+                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && in_array(request('tab'), ['escenarios', 'simulador']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
                             <i class="fa fa-cubes" style="width:20px; text-align:center; font-size:15px;"></i>
-                            3. Escenarios (Estable/Empeora)
+                            {{ $isEn ? '3. Scenarios (Stable/Worsens)' : '3. Escenarios (Estable/Empeora)' }}
                         </a>
                     </li>
                     <li>
                         <a class="nav-link {{ request()->routeIs('admin.digital-twin') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}">
                             <i class="fa fa-eye" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Visor 3D + Consola OCT
+                            {{ $isEn ? '3D Viewer + OCT Console' : 'Visor 3D + Consola OCT' }}
                         </a>
                     </li>
                     <li>
                         <a class="nav-link {{ request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('admin.demo-theater') }}">
                             <i class="fa fa-play-circle" style="width:20px; text-align:center; font-size:15px;"></i>
-                            Demo Pitch (3 Minutos)
+                            {{ $isEn ? 'Demo Pitch (3 Minutes)' : 'Demo Pitch (3 Minutos)' }}
                         </a>
                     </li>
                 </ul>
@@ -69,11 +72,11 @@
 
             <details style="padding: 0 0.75rem; margin-top: 0.5rem;">
                 <summary style="cursor:pointer; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted-foreground); padding:0.5rem 0.5rem; list-style:none; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border);">
-                    <span><i class="fa fa-folder-o"></i> Módulos de Apoyo y Admin</span>
+                    <span><i class="fa fa-folder-o"></i> {{ $isEn ? 'Support & Admin Modules' : 'Módulos de Apoyo y Admin' }}</span>
                     <i class="fa fa-angle-down"></i>
                 </summary>
 
-                <nav class="nav-section" aria-label="Telemetría e IA" style="margin-top:0.35rem;">
+                <nav class="nav-section" aria-label="{{ $isEn ? 'Telemetry & AI' : 'Telemetría e IA' }}" style="margin-top:0.35rem;">
                     <ul class="nav-list">
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
@@ -84,13 +87,13 @@
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('admin.vision-lab.index') }}">
                                 <i class="fa fa-calculator" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Calculadora Óptica
+                                {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
                             </a>
                         </li>
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('admin.nasa-data') }}">
                                 <i class="fa fa-globe" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Repositorios NASA
+                                {{ $isEn ? 'NASA Repositories' : 'Repositorios NASA' }}
                             </a>
                         </li>
                         <li>
@@ -102,14 +105,14 @@
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('admin.explainability') }}">
                                 <i class="fa fa-pie-chart" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Pesos SHAP (XAI)
+                                {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
                             </a>
                         </li>
                         @can('users.manage')
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
                                 <i class="fa fa-users" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Usuarios
+                                {{ $isEn ? 'Users' : 'Usuarios' }}
                             </a>
                         </li>
                         @endcan
@@ -117,13 +120,13 @@
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.api-keys*') ? 'active' : '' }}" href="{{ route('admin.api-keys.index') }}">
                                 <i class="fa fa-key" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Claves de APIs
+                                {{ $isEn ? 'API Keys' : 'Claves de APIs' }}
                             </a>
                         </li>
                         <li>
                             <a class="nav-link {{ request()->routeIs('admin.maintenance*') ? 'active' : '' }}" href="{{ route('admin.maintenance') }}">
                                 <i class="fa fa-wrench" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Consola Artisan
+                                {{ $isEn ? 'Artisan Console' : 'Consola Artisan' }}
                             </a>
                         </li>
                         @endrole
@@ -135,7 +138,7 @@
         <div class="sidebar-user">
             @php
                 $currentUserName = auth()->user()?->name ?? 'Public Demo Judge';
-                $currentUserEmail = auth()->user()?->email ?? 'Public Mode · No Login Required';
+                $currentUserEmail = auth()->user()?->email ?? ($isEn ? 'Public Mode · No Login Required' : 'Modo Público · Sin Login');
             @endphp
             <button class="user-button" id="user-menu-button" type="button" aria-expanded="false" aria-controls="user-menu">
                 <span class="avatar">{{ strtoupper(mb_substr($currentUserName, 0, 2)) }}</span>
@@ -149,36 +152,44 @@
                 @auth
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit"><i class="fa fa-sign-out" style="margin-right:8px;"></i> Cerrar sesión</button>
+                    <button type="submit"><i class="fa fa-sign-out" style="margin-right:8px;"></i> {{ $isEn ? 'Sign out' : 'Cerrar sesión' }}</button>
                 </form>
                 @else
                 <a href="{{ route('login') }}" style="display:block;padding:8px 12px;text-decoration:none;color:inherit;font-size:13px;">
-                    <i class="fa fa-sign-in" style="margin-right:8px;"></i> Acceso Staff / Admin (Opcional)
+                    <i class="fa fa-sign-in" style="margin-right:8px;"></i> {{ $isEn ? 'Staff / Admin Login (Optional)' : 'Acceso Staff / Admin (Opcional)' }}
                 </a>
                 @endauth
             </div>
         </div>
     </aside>
 
-    <button class="sidebar-overlay" id="sidebar-overlay" type="button" aria-label="Cerrar menú"></button>
+    <button class="sidebar-overlay" id="sidebar-overlay" type="button" aria-label="{{ $isEn ? 'Close menu' : 'Cerrar menú' }}"></button>
 
     <div class="admin-main">
         <header class="topbar">
-            <button class="icon-btn mobile-menu" id="mobile-menu" type="button" aria-label="Abrir menú">
+            <button class="icon-btn mobile-menu" id="mobile-menu" type="button" aria-label="{{ $isEn ? 'Open menu' : 'Abrir menú' }}">
                 <i class="fa fa-bars" style="font-size:16px;"></i>
             </button>
-            <nav class="topnav" aria-label="Secciones del dashboard">
-                <a class="active" href="{{ route('admin.dashboard') }}">Vista general</a>
-                <a href="#actividad">Actividad</a>
-                <a href="#progreso">Progreso</a>
+            <nav class="topnav" aria-label="{{ $isEn ? 'Main sections' : 'Secciones del dashboard' }}">
+                <a class="active" href="{{ route('home') }}">{{ $isEn ? 'SANS Predictor' : 'Predictor SANS' }}</a>
+                <a href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">{{ $isEn ? 'Timeline (+30/+60/+90d)' : 'Tiempo (+30/+60/+90d)' }}</a>
+                <a href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">{{ $isEn ? '3 Scenarios' : '3 Escenarios' }}</a>
             </nav>
             <span class="topbar-spacer"></span>
-            <label class="search-box">
-                <span class="sr-only">Buscar</span>
-                <i class="fa fa-search icon" style="display:inline-grid; place-items:center; font-size:14px; top:10px;"></i>
-                <input type="search" placeholder="Buscar…" disabled>
-            </label>
-            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar tema">
+
+            {{-- SELECTOR MULTILENGUAJE (ESPAÑOL / INGLÉS) --}}
+            <div style="display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden;font-size:0.76rem;font-weight:700;" role="group" aria-label="Language Selector">
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}"
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? 'var(--foreground)' : 'transparent' }};color:{{ !$isEn ? 'var(--background)' : 'var(--foreground)' }};">
+                    <i class="fa fa-globe"></i> ES
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
+                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? 'var(--foreground)' : 'transparent' }};color:{{ $isEn ? 'var(--background)' : 'var(--foreground)' }};border-left:1px solid var(--border);">
+                    EN
+                </a>
+            </div>
+
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="{{ $isEn ? 'Toggle theme' : 'Cambiar tema' }}">
                 <i class="fa fa-moon-o" style="font-size:16px;"></i>
             </button>
         </header>

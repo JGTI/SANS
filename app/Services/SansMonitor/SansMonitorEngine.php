@@ -945,33 +945,70 @@ class SansMonitorEngine
             : null;
 
         // Cálculo de señal predictiva explicable basada en los 6 biomarcadores
+        $isEn = app()->getLocale() === 'en';
         $signals = [];
         $weights = [];
         $signalIndex = 0;
 
         // 1. Espesor medio por OCT
         if ($deltaTrt === null) {
-            $signals[] = 'OCT No escaneada: falta espesor retiniano medio para cuantificar progresión estructural.';
-            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => 'Sin escaneo OCT', 'impact' => 0, 'status' => 'FALTANTE'];
+            $signals[] = $isEn
+                ? 'Unscanned OCT: missing mean retinal thickness to quantify structural progression.'
+                : 'OCT No escaneada: falta espesor retiniano medio para cuantificar progresión estructural.';
+            $weights['oct_thickness'] = [
+                'label' => $isEn ? 'Mean OCT Thickness (TRT)' : 'Espesor medio OCT (TRT)',
+                'value' => $isEn ? 'Unscanned OCT' : 'Sin escaneo OCT',
+                'impact' => 0,
+                'status' => 'FALTANTE',
+            ];
         } elseif ($deltaTrt >= 20) {
             $pts = min(40, (int) round($deltaTrt * 1.1));
             $signalIndex += $pts;
-            $signals[] = "Espesor medio OCT en ascenso (+{$deltaTrt} µm vs línea base de {$b['oct_trt_baseline_um']} µm).";
-            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)", 'impact' => $pts, 'status' => 'PROGRESION'];
+            $signals[] = $isEn
+                ? "Rising mean OCT thickness (+{$deltaTrt} µm vs baseline of {$b['oct_trt_baseline_um']} µm)."
+                : "Espesor medio OCT en ascenso (+{$deltaTrt} µm vs línea base de {$b['oct_trt_baseline_um']} µm).";
+            $weights['oct_thickness'] = [
+                'label' => $isEn ? 'Mean OCT Thickness (TRT)' : 'Espesor medio OCT (TRT)',
+                'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)",
+                'impact' => $pts,
+                'status' => 'PROGRESION',
+            ];
         } else {
-            $weights['oct_thickness'] = ['label' => 'Espesor medio OCT (TRT)', 'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)", 'impact' => 5, 'status' => 'ESTABLE'];
+            $weights['oct_thickness'] = [
+                'label' => $isEn ? 'Mean OCT Thickness (TRT)' : 'Espesor medio OCT (TRT)',
+                'value' => "{$b['oct_trt_current_um']} µm (Δ +{$deltaTrt} µm)",
+                'impact' => 5,
+                'status' => 'ESTABLE',
+            ];
         }
 
         // 2. Longitud Axial del Ojo
         if ($deltaAxial === null) {
-            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => 'No medida', 'impact' => 0, 'status' => 'FALTANTE'];
+            $weights['axial_length'] = [
+                'label' => $isEn ? 'Eye Axial Length' : 'Longitud Axial del Ojo',
+                'value' => $isEn ? 'Unmeasured' : 'No medida',
+                'impact' => 0,
+                'status' => 'FALTANTE',
+            ];
         } elseif ($deltaAxial <= -0.15) {
             $pts = 18;
             $signalIndex += $pts;
-            $signals[] = "Acortamiento de longitud axial ({$b['axial_length_mm']} mm; Δ {$deltaAxial} mm compatible con aplanamiento posterior).";
-            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)", 'impact' => $pts, 'status' => 'ALERTA'];
+            $signals[] = $isEn
+                ? "Axial length shortening ({$b['axial_length_mm']} mm; Δ {$deltaAxial} mm consistent with posterior globe flattening)."
+                : "Acortamiento de longitud axial ({$b['axial_length_mm']} mm; Δ {$deltaAxial} mm compatible con aplanamiento posterior).";
+            $weights['axial_length'] = [
+                'label' => $isEn ? 'Eye Axial Length' : 'Longitud Axial del Ojo',
+                'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)",
+                'impact' => $pts,
+                'status' => 'ALERTA',
+            ];
         } else {
-            $weights['axial_length'] = ['label' => 'Longitud Axial del Ojo', 'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)", 'impact' => 4, 'status' => 'ESTABLE'];
+            $weights['axial_length'] = [
+                'label' => $isEn ? 'Eye Axial Length' : 'Longitud Axial del Ojo',
+                'value' => "{$b['axial_length_mm']} mm (Δ {$deltaAxial} mm)",
+                'impact' => 4,
+                'status' => 'ESTABLE',
+            ];
         }
 
         // 3. Hipermetropía Simulada (Escenario separado RF-35)
@@ -979,23 +1016,52 @@ class SansMonitorEngine
         if ($hyp >= 0.50) {
             $pts = 15;
             $signalIndex += $pts;
-            $signals[] = "Hipermetropía simulada significativa (+{$hyp} D de corrimiento refractivo hipermetrópico).";
-            $weights['simulated_hyperopia'] = ['label' => 'Hipermetropía Simulada', 'value' => "+{$hyp} D (Escenario)", 'impact' => $pts, 'status' => 'ESCENARIO_ACTIVO'];
+            $signals[] = $isEn
+                ? "Significant simulated hyperopia (+{$hyp} D hyperopic refractive shift)."
+                : "Hipermetropía simulada significativa (+{$hyp} D de corrimiento refractivo hipermetrópico).";
+            $weights['simulated_hyperopia'] = [
+                'label' => $isEn ? 'Simulated Hyperopia' : 'Hipermetropía Simulada',
+                'value' => $isEn ? "+{$hyp} D (Scenario)" : "+{$hyp} D (Escenario)",
+                'impact' => $pts,
+                'status' => 'ESCENARIO_ACTIVO',
+            ];
         } else {
-            $weights['simulated_hyperopia'] = ['label' => 'Hipermetropía Simulada', 'value' => "+{$hyp} D (Escenario)", 'impact' => 3, 'status' => 'LEVE'];
+            $weights['simulated_hyperopia'] = [
+                'label' => $isEn ? 'Simulated Hyperopia' : 'Hipermetropía Simulada',
+                'value' => $isEn ? "+{$hyp} D (Scenario)" : "+{$hyp} D (Escenario)",
+                'impact' => 3,
+                'status' => 'LEVE',
+            ];
         }
 
         // 4. Edema Papilar (Grado Frisén)
         $frisen = $b['papilledema_frisen'] !== null ? (int) $b['papilledema_frisen'] : null;
         if ($frisen === null) {
-            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => 'No evaluado', 'impact' => 0, 'status' => 'FALTANTE'];
+            $weights['papilledema'] = [
+                'label' => $isEn ? 'Papilledema (Frisén)' : 'Edema Papilar (Frisén)',
+                'value' => $isEn ? 'Not evaluated' : 'No evaluado',
+                'impact' => 0,
+                'status' => 'FALTANTE',
+            ];
         } elseif ($frisen >= 1) {
             $pts = $frisen * 14;
             $signalIndex += $pts;
-            $signals[] = "Edema papilar documentado (Grado Frisén {$frisen}/5 — Objetivo principal de pronóstico).";
-            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => "Grado {$frisen} / 5", 'impact' => $pts, 'status' => 'HALLAZGO_CLINICO'];
+            $signals[] = $isEn
+                ? "Documented papilledema (Frisén Grade {$frisen}/5 — Primary prognostic target)."
+                : "Edema papilar documentado (Grado Frisén {$frisen}/5 — Objetivo principal de pronóstico).";
+            $weights['papilledema'] = [
+                'label' => $isEn ? 'Papilledema (Frisén)' : 'Edema Papilar (Frisén)',
+                'value' => $isEn ? "Grade {$frisen} / 5" : "Grado {$frisen} / 5",
+                'impact' => $pts,
+                'status' => 'HALLAZGO_CLINICO',
+            ];
         } else {
-            $weights['papilledema'] = ['label' => 'Edema Papilar (Frisén)', 'value' => 'Grado 0 / 5 (Ausente)', 'impact' => 2, 'status' => 'ESTABLE'];
+            $weights['papilledema'] = [
+                'label' => $isEn ? 'Papilledema (Frisén)' : 'Edema Papilar (Frisén)',
+                'value' => $isEn ? 'Grade 0 / 5 (Absent)' : 'Grado 0 / 5 (Ausente)',
+                'impact' => 2,
+                'status' => 'ESTABLE',
+            ];
         }
 
         // 5. Presión Intraocular (PIO)
@@ -1003,26 +1069,39 @@ class SansMonitorEngine
         $iopStatus = ($iop >= 20.0) ? 'ELEVADA' : 'RANGO_FISIOLOGICO';
         if ($iop >= 20.0) {
             $signalIndex += 8;
-            $signals[] = "Presión intraocular en límite superior ({$iop} mmHg).";
+            $signals[] = $isEn
+                ? "Upper-bound intraocular pressure ({$iop} mmHg)."
+                : "Presión intraocular en límite superior ({$iop} mmHg).";
         }
-        $weights['iop'] = ['label' => 'Presión Intraocular (PIO)', 'value' => "{$iop} mmHg", 'impact' => $iop >= 20.0 ? 8 : 3, 'status' => $iopStatus];
+        $weights['iop'] = [
+            'label' => $isEn ? 'Intraocular Pressure (IOP)' : 'Presión Intraocular (PIO)',
+            'value' => "{$iop} mmHg",
+            'impact' => $iop >= 20.0 ? 8 : 3,
+            'status' => $iopStatus,
+        ];
 
         // 6. Exposición previa a inclinación cefálica de -6° en la Tierra
         $hdt = (string) ($b['prior_hdt6_exposure'] ?? 'NO');
         $hasHdt = str_starts_with($hdt, 'SI');
         $weights['hdt6_exposure'] = [
-            'label' => 'Exposición Previa -6° en Tierra',
-            'value' => $hasHdt ? 'Sí (-6° HDT · 14 días · +24 µm -> +4 µm a +30d)' : 'Sin exposición previa a -6°',
+            'label' => $isEn ? 'Prior -6° Tilt on Earth' : 'Exposición Previa -6° en Tierra',
+            'value' => $hasHdt
+                ? ($isEn ? 'Yes (-6° HDT · 14d · +24 µm -> +4 µm at +30d)' : 'Sí (-6° HDT · 14 días · +24 µm -> +4 µm a +30d)')
+                : ($isEn ? 'No prior -6° tilt exposure' : 'Sin exposición previa a -6°'),
             'impact' => $hasHdt ? 10 : 0,
             'status' => $hasHdt ? 'ANTECEDENTE_ANALOGO' : 'NO_REGISTRADO',
         ];
         if ($hasHdt) {
-            $signals[] = 'Antecedente de exposición terrestre a -6° cabeza abajo registrado con su propia cronología separada.';
+            $signals[] = $isEn
+                ? 'Prior Earth -6° head-down tilt analog recorded with its own separate timeline.'
+                : 'Antecedente de exposición terrestre a -6° cabeza abajo registrado con su propia cronología separada.';
         }
 
         $predictedTrajectory = $deltaTrt === null
-            ? 'No estimable (Falta escaneo OCT basal/control)'
-            : ($signalIndex >= 35 ? 'Tendencia de Progresión Neuro-ocular (Priorizar vigilancia a +30, +60 y +90 días)' : 'Trayectoria Ocular Estable dentro de ventana');
+            ? ($isEn ? 'Not estimable (Missing baseline/follow-up OCT scan)' : 'No estimable (Falta escaneo OCT basal/control)')
+            : ($signalIndex >= 35
+                ? ($isEn ? 'Neuro-ocular Worsening Trend (Prioritize follow-up at +30, +60 & +90 days)' : 'Tendencia de Progresión Neuro-ocular (Priorizar vigilancia a +30, +60 y +90 días)')
+                : ($isEn ? 'Stable Ocular Trajectory within window' : 'Trayectoria Ocular Estable dentro de ventana'));
 
         return [
             'inputs' => $b,

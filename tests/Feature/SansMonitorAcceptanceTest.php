@@ -288,4 +288,26 @@ class SansMonitorAcceptanceTest extends TestCase
         $resTab3->assertSee('Escenario No se Escanea');
         $resTab3->assertSee('Faltan datos');
     }
+
+    /**
+     * Soporte Multilenguaje (Español / Inglés) para jurados locales e internacionales
+     */
+    public function test_bilingual_switch_between_spanish_and_english(): void
+    {
+        $resEn = $this->get('/?lang=en');
+        $resEn->assertOk();
+        $resEn->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
+        $resEn->assertSee('Prioritize review');
+        $resEn->assertSee('Mean OCT Thickness (TRT)');
+
+        $resEnTab2 = $this->get('/?tab=seguimiento&lang=en');
+        $resEnTab2->assertOk();
+        $resEnTab2->assertSee('Cut +30 Days');
+        $resEnTab2->assertSee('Unmeasured');
+
+        $resEs = $this->get('/?lang=es');
+        $resEs->assertOk();
+        $resEs->assertSee('Predictor SANS por Biomarcadores');
+        $resEs->assertSee('Priorizar revisión');
+    }
 }
