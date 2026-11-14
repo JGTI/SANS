@@ -1,12 +1,14 @@
-# 🚀 SPACE VISION
+# 🚀 SPACE VISION — SANS MONITOR
 ### NASA Space Apps Challenge 2026 · Querétaro, México
-**Plataforma de Investigación Médica Espacial, Telemetría Visual y Simulación Biomecánica del Síndrome SANS**
+**Revisión Longitudinal Trazable de Expedientes Oculares, Seguimiento de Protocolos y Simulación Biomecánica del Síndrome SANS**
 
 [![Producción en Vivo](https://img.shields.io/badge/Demo%20en%20Vivo-ONLINE-22c55e?style=for-the-badge&logo=googlechrome&logoColor=white)](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com)
 [![Repositorio GitHub](https://img.shields.io/badge/GitHub-JGTI%2FSANS-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JGTI/SANS)
+[![Especificación Oficial](https://img.shields.io/badge/Spec%20Can%C3%B3nica-SANS_MONITOR_SPEC.md-09090b?style=for-the-badge)](docs/SANS_MONITOR_SPEC.md)
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.3-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
+[![Python](https://img.shields.io/badge/Python-3.14%20FastAPI-3776AB?style=flat&logo=python&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PHPUnit Tests](https://img.shields.io/badge/PHPUnit-67%20Passed%20(287%20assertions)-22c55e?style=flat&logo=php&logoColor=white)]()
 [![FastAPI Pytest](https://img.shields.io/badge/Pytest%20FastAPI-21%20Passed-22c55e?style=flat&logo=pytest&logoColor=white)]()
 [![Event](https://img.shields.io/badge/NASA%20Space%20Apps-2026-38BDF8?style=flat&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
@@ -16,136 +18,128 @@
 > 🌐 **URL de Producción / Demostración en Vivo:**  
 > **[https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com)**
 >
+> 📄 **Especificación Definitiva de Software (Documento Canónico):**  
+> **[`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md)**
+>
 > 📦 **Repositorio Oficial:**  
 > **[https://github.com/JGTI/SANS](https://github.com/JGTI/SANS)**
 
 ---
 
-## 🌌 1. La Misión
+## 🌌 1. Objetivo y Alcance de SANS Monitor
 
-Durante misiones espaciales prolongadas (Estación Espacial Internacional, misiones Artemis lunares y futuros tránsitos tripulados a Marte), la ausencia de gradiente de gravedad terrestre redistribuye aproximadamente **2 litros de fluidos hacia la región cefálica**. 
+**SANS Monitor (SPACE VISION) reúne las revisiones oculares de una persona en una sola línea de tiempo.**  
+Convierte un expediente ocular en una revisión trazable: permite recuperar qué protocolo y estudios se usaron antes, encontrar referencias o seguimientos pertinentes, mostrar qué ha cambiado por ojo (**OD / OS**) antes, durante un vuelo o exposición inclinada y en controles posteriores (**+30, +60 y +90 días**), y estudiar si existen señales útiles para anticipar cambios futuros.
 
-Este fenómeno desencadena el **Spaceflight Associated Neuro-ocular Syndrome (SANS)**, un conjunto de alteraciones estructurales que incluye:
-- **Aplanamiento del polo posterior del globo ocular** (acortamiento del eje axial anteroposterior).
-- **Edema de la cabeza del nervio óptico (papiledema)** cuantificado mediante la Escala de Frisén.
-- **Pliegues coroideos y estrías retinianas** por congestión venosa.
-- **Desplazamiento refractivo hipermetrópico ($\Delta SE$)** que reduce la agudeza visual cercana para la lectura de instrumentación y pantallas de navegación.
+La aplicación ayuda al equipo médico a distinguir tres situaciones operativas:
+1. **«Listo para revisión» (Estable):** Hay datos comparables y el ojo se mantiene estable dentro del criterio del protocolo.
+2. **«Priorizar revisión» (En progresión):** Hay mediciones comparables que muestran empeoramiento (ej. $\Delta\text{TRT} \ge 20\ \mu\text{m}$ señal temprana o $\ge 55\ \mu\text{m}$ marcador primario).
+3. **«Faltan datos» (Seguimiento insuficiente):** Faltan línea base, escaneos previos o controles recientes para decidir.
 
-**SPACE VISION** es un sistema integral de telemetría biomédica, modelado biomecánico, visualización anatómica interactiva y análisis explicable, alimentado por repositorios y literatura científica de la NASA.
+> **Alcance ético y preventivo:** La aplicación ayuda al equipo médico a preparar la vigilancia y la evaluación del candidato, **sin emitir un veredicto automático de aptitud** («apto / no apto»), ni diagnosticar SANS, ni prescribir contramedidas. El foco permanece en el ojo; los antecedentes neurológicos, metabólicos, cardiovasculares, ambientales y conductuales se muestran en una capa plegable de contexto como información de apoyo para investigación.
+
+### Entregas del Proyecto
+- **P0:** Demo funcional con fichas pseudónimas y escenarios ficticios reproducibles (estable, empeora, sin escaneos previos / sin control reciente, asimetría interocular).
+- **P1:** Entorno de investigación con datos autorizados, procedencia (`observed_at` vs. `available_at`), curación de protocolos y revisión humana (`ClinicianDecision`).
+- **P2:** Pronóstico experimental validado en cohorte independiente (separado de observaciones y simulación; muestra «No estimable» fuera de su alcance validado).
 
 ---
 
-## 🛰️ 2. Sistemas y Módulos Implementados
+## 🧭 2. Flujo General de Revisión Longitudinal
+
+```mermaid
+flowchart TB
+    A["Crear ficha y registrar línea base"] --> B["Recuperar protocolo previo y buscar referencias"]
+    B --> C["Revisar y seleccionar plan de seguimiento"]
+    C --> D["Registrar nuevos controles por ojo"]
+    D --> E["Comparar evolución y señalar faltantes"]
+    E --> F["Buscar seguimiento pertinente para la nueva fase"]
+    F --> C
+    E --> G["Explorar simulaciones temporales"]
+    D --> H["Analizar cohortes y tendencias"]
+    E --> I["Preparar expediente para revisión médica"]
+    E --> J["Comparar inclinación y recuperación por ojo"]
+    J --> K["Revisar controles posteriores +30, +60 y +90"]
+```
+
+---
+
+## 🛰️ 3. Sistemas, Módulos y Rutas Operativas
 
 | Módulo | Ruta Web | Descripción y Capacidades |
 |---|---|---|
-| **Mission Control Dashboard** | `/admin` | Centro de operaciones en tiempo real con indicadores de salud visual de la tripulación, telemetría orbital y curvas longitudinales Chart.js. |
-| **Vision Lab** | `/admin/vision-lab` | Laboratorio clínico oftálmico con cálculo asistido en tiempo real de Equivalente Esférico ($SE = SPH + CYL/2$), agudeza Snellen &rarr; LogMAR y presión intraocular. |
-| **Astronaut Digital Twin** | `/admin/digital-twin` | Visor anatómico dinámico en SVG que ilustra en corte sagital el aplanamiento de polo posterior y la protrusión papilar a lo largo de los días de misión (FD0 &rarr; FD120). |
-| **Mission Simulator** | `/admin/mission-simulator` | Simulador determinista con 3 escenarios de vuelo acelerado (Control Estable, Hiperopía Gradual y SANS Crítico) con semillas reproducibles y avance temporal (FD0 a FD180). |
-| **NASA Data Observatory** | `/admin/nasa-data` | Explorador y conector de datasets biológicos en **NASA OSDR** (OSD-137, OSD-370, OSD-422), literatura técnica en **NASA NTRS** y telemetría de radiación en **NASA DONKI** con redundancia offline al 100%. |
-| **Research Intelligence** | `/admin/research-intelligence` | Matriz estructurada de hipótesis biomecánicas (gradiente translaminar IOP/ICP, estasis venosa, polimorfismos genéticos) y exportador de citas académicas en **BibTeX / APA**. |
-| **Automation Center** | `/admin/automations` | Monitor de procesos en segundo plano (workers/cron), verificación de integridad de datos y botón de sincronización bajo demanda. |
-| **Demo Theater (Pitch 3 Min)** | `/admin/demo-theater` | Experiencia interactiva estructurada en 5 pasos para comités evaluadores del hackatón. |
-| **Expediente de Vuelo Oficial** | `/admin/demo-theater/report/{code}` | Reporte clínico médico aeroespacial en formato oficial NASA, listo para impresión o descarga en **PDF en alta resolución** (`@media print`). |
-| **API RESTful v1** | `/api/space-vision/v1/*` | Endpoints públicos para misiones, tripulación, exámenes refractivos, evaluador matemático y fuentes NASA. |
+| **Mission Control Dashboard** | `/admin` | Centro de operaciones con estado de revisión por expediente («Listo para revisión», «Faltan datos», «Priorizar revisión»), telemetría orbital y curvas longitudinales Chart.js. |
+| **Expedientes de Salud Visual** | `/admin/crew/{code}` | Ficha longitudinal por ojo (OD/OS), protocolo previo, referencias de seguimiento, comparativa contra línea base y controles +30, +60 y +90 días. |
+| **Vision Lab Oftalmológico** | `/admin/vision-lab` | Registro determinista de refracción ($SE = \text{SPH} + \text{CYL}/2$), agudeza Snellen $\to$ LogMAR, vectores de Thibos ($M, J_0, J_{45}, B$), PIO y exportador CSV. |
+| **Consola ZEISS Cirrus™ HD-OCT** | `/admin/oct-analysis` | Estación clínica Macular Cube 512x128 con matriz de 9 paneles, mapas ILM-RPE, fondo LSO, B-Scans H/V, rejillas ETDRS y asimetría interocular ($\Delta\text{OD-OS}$). |
+| **Astronaut Digital Twin (3D + Dual)** | `/admin/digital-twin` | Gemelo Digital 3D WebGL (Three.js) con corte sagital, fondo de ojo y corte OCT sincronizados, y vista dual simultánea (`?mode=dual`). |
+| **Simulador Temporal SANS** | `/admin/mission-simulator` | Reproducción histórica y simulación ilustrativa (hitos 10 → 15 → 30 y rangos 0–30, 0–90, 0–150 días) con casos estable, empeora, sin escaneos y asimétrico. |
+| **NASA Data Observatory & Catálogo** | `/admin/nasa-data` | Catálogo curado de protocolos y conector resiliente con **NASA OSDR**, **NASA NTRS**, **NASA DONKI** y **APOD** con caché offline. |
+| **AI Command Center & Model Lab** | `/admin/ai-command` · `/admin/model-lab` | Monitoreo en vivo del motor científico Python FastAPI (`:8001`) y benchmark supervisado/no supervisado (Random Forest, GBM, OLS, Isolation Forest). |
+| **Explainability (XAI) & Data Quality** | `/admin/explainability` · `/admin/data-quality` | Atribución de características SHAP con intervalos de incertidumbre y auditoría de completitud, duplicados y límites fisiológicos. |
+| **Model Registry & Linaje** | `/admin/model-registry` | Versionado auditable de protocolos de análisis y modelos (`VALIDATED`, `CANDIDATE`, `EXPERIMENTAL`). |
+| **Demo Theater & Reporte Oficial** | `/admin/demo-theater` · `/admin/demo-theater/report/{code}` | Recorrido guiado de 5 pasos para evaluación del hackatón y expediente imprimible en formato médico aeroespacial (`@media print`). |
+| **Gestión de API Keys & Arquitectura** | `/admin/api-keys` | Administración de credenciales con prueba de ping en vivo, sincronización `.env` y diagrama interactivo SVG de 5 capas. |
+| **Consola de Mantenimiento** | `/admin/maintenance` | Ejecución segura de comandos Artisan y control del motor científico Python. |
 
 ---
 
-## 🔑 3. Credenciales Maestras de Demostración
+## 📚 4. Documentación Oficial del Proyecto
 
-La plataforma cuenta con **botones de autorrelleno con un solo clic** en la pantalla de inicio de sesión (`/login`):
+| Documento | Propósito |
+|---|---|
+| **[`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md)** | **Especificación canónica de software (`RF-01`–`RF-37`, `RNF-01`–`RNF-06`, contrato de datos y pruebas `AT-01`–`AT-19`).** |
+| [`docs/PROJECT_VISION.md`](docs/PROJECT_VISION.md) | Visión científica, fases P0/P1/P2, indicadores oculares, los 5 dominios de contexto y referencias bibliográficas. |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Arquitectura híbrida de 5 capas (Frontend Blade/Three.js, Laravel 11, Enlace Bearer, Python FastAPI `:8001` y conectores NASA). |
+| [`docs/DECISIONS.md`](docs/DECISIONS.md) | Registro de Decisiones de Arquitectura (`ADR-001` a `ADR-005`). |
+| [`docs/DEVELOPMENT_STATE.md`](docs/DEVELOPMENT_STATE.md) | Estado actual de módulos implementados y baseline de pruebas automatizadas. |
+| [`docs/TASK_BACKLOG.md`](docs/TASK_BACKLOG.md) | Backlog maestro por épicas (Épicas 1 a 14). |
+| [`docs/HACKATHON_SUBMISSION.md`](docs/HACKATHON_SUBMISSION.md) | Ficha ejecutiva oficial para el jurado del NASA Space Apps Challenge 2026. |
+
+---
+
+## 📖 5. Referencias Científicas Precargadas
+
+- **[NASA OCHMO, guía técnica sobre el riesgo SANS](https://www.nasa.gov/wp-content/uploads/2024/02/ochmo-mtb-001-sans.pdf):** Referencia técnica, no una autorización de uso clínico automático para la app.
+- **[Consenso de especialistas sobre diagnóstico y manejo de SANS (2026)](https://doi.org/10.1038/s41433-026-04651-6):** Referencia para separar hallazgos, umbrales y calendarios de investigación de los hitos de la demo.
+- **[Macias et al. (2020), cambios oculares estructurales y recuperación](https://doi.org/10.1001/jamaophthalmol.2020.0673):** Diferencias entre mediciones en órbita y controles antes/después.
+- **[Carter et al. (2025), estudio de progresión del edema del disco óptico](https://doi.org/10.1001/jamaophthalmol.2025.4635):** Referencia para los días 30 y 150, no un predictor de aptitud.
+- **[NASA Life Sciences Portal (NLSP)](https://www.nasa.gov/hrp/nlsp/):** Punto de partida para consultar o solicitar datos humanos autorizados.
+- **[Laurie et al. (2019), comparación ocular entre vuelo espacial y análogo terrestre de reposo inclinado](https://doi.org/10.1001/jamaophthalmol.2019.5261):** Fundamento para separar datos orbitales y de exposición inclinada ($-6^\circ$).
+- **[NASA Human Research Program, plan de investigación de riesgos 2026](https://www.nasa.gov/wp-content/uploads/2026/08/hrp-rap-for-web-62026-hhc.pdf):** Fundamenta tratar los factores fisiológicos y ambientales como preguntas abiertas y no como causas demostradas.
+
+---
+
+## 🔑 6. Credenciales Maestras de Demostración
+
+La pantalla de inicio de sesión (`/login`) incluye botones de autorrelleno con un solo clic:
 
 > **Contraseña universal para todas las cuentas de prueba:** `SpaceVision2026!`
 
-| Rol de Misión | Correo Electrónico | Alcance de Permisos |
-|---|---|---|
-| **🩺 Flight Surgeon** | `surgeon@spacevision.nasa` | Evaluaciones clínicas, estratificación SANS y emisión de expedientes médicos de vuelo. |
-| **🔬 Researcher** | `researcher@spacevision.nasa` | Acceso completo al observatorio NASA, biblioteca de hipótesis y simulador. |
-| **🚀 Super Admin** | `admin@spacevision.nasa` | Director de Vuelo, consola Artisan (`/admin/maintenance`), gestión de usuarios y roles. |
-| **🧑‍🚀 Astronaut** | `astronaut@spacevision.nasa` | Consulta de expediente y telemetría visual personal del tripulante. |
+| Rol en SANS Monitor | Rol del Sistema | Correo Electrónico | Responsabilidad |
+|---|---|---|---|
+| **Presentador / Evaluador de Demo** | `super-admin` | `admin@spacevision.nasa` | Crear/editar fichas ficticias, reproducir escenarios, control total y consola Artisan. |
+| **Responsable de Datos / Curador** | `admin` | `operator@spacevision.nasa` | Importar mediciones, auditar calidad/procedencia y curar el catálogo de protocolos. |
+| **Especialista Médico Autorizado** | `flight-surgeon` | `surgeon@spacevision.nasa` | Revisar el expediente, documentar seguimiento pertinente y registrar dictamen humano fuera del motor de reglas. |
+| **Investigador / Analista** | `researcher` | `researcher@spacevision.nasa` | Explorar cohortes, comparar inclinación/recuperación y ejecutar comparaciones de modelos. |
+| **Tripulante Simulado** | `astronaut` | `astronaut@spacevision.nasa` | Consulta de expediente visual longitudinal. |
 
 ---
 
-## 🔬 4. Rigor Científico y Fórmulas Validadas
+## 💻 7. Puesta en Marcha y Verificación de Pruebas
 
-### Equivalente Esférico (Spherical Equivalent)
-$$SE = \text{SPH} + \frac{\text{CYL}}{2}$$
-
-### Agudeza Visual LogMAR
-$$\text{LogMAR} = \log_{10}\left(\frac{\text{Denominador}}{\text{Numerador}}\right)$$
-
-### Desplazamiento Hipermetrópico (Hyperopic Shift)
-$$\Delta SE = SE_{\text{actual}} - SE_{\text{línea base}}$$
-
-> **Descargo Científico Ético:** SPACE VISION es una plataforma de investigación y entrenamiento. Los perfiles de astronautas sembrados corresponden a cohortes sintéticas (`is_simulated = true`) estructuradas según rangos observados por el *NASA Human Research Program*. La telemetría solar de NASA DONKI se incorpora como parámetro contextual de misión, sin asumir causalidad clínica no demostrada.
-
----
-
-## 💻 5. Instalación y Puesta en Marcha Local
-
-### Requisitos
-- Ubuntu 22.04 / 24.04 LTS o Linux compatible.
-- PHP 8.3+ con extensiones: `pdo_mysql`, `mbstring`, `xml`, `curl`, `bcmath`, `intl`.
-- MariaDB / MySQL.
-- Composer 2.x y Node.js 20+.
-
-### Comandos de Arranque
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/JGTI/SANS.git
-cd SANS
+# 1. Verificar o iniciar el microservicio científico Python (FastAPI en :8001)
+php artisan scientific:engine status
+php artisan scientific:engine start
 
-# 2. Instalar dependencias
-composer install
-npm install && npm run build
+# 2. Ejecutar la suite de pruebas científicas en Python (21 tests en Pytest)
+php artisan scientific:engine test
 
-# 3. Configurar entorno y base de datos
-cp .env.example .env
-php artisan key:generate
-
-# 4. Ejecutar migraciones y semillero de datos biomédicos de demostración
-php artisan migrate:fresh --seed
-
-# 5. Ejecutar la suite de pruebas automatizadas
+# 3. Ejecutar la suite completa de pruebas en Laravel (67 tests / 287 aserciones en PHPUnit)
 php artisan test
 ```
 
 ---
 
-## 🧪 6. Suite de Pruebas Automatizadas
-
-La aplicación cuenta con una cobertura integral de pruebas unitarias y de integración que verifican la integridad matemática, autorización, redundancia de APIs y reportes:
-
-```bash
-   PASS  Tests\Unit\ExampleTest
-   PASS  Tests\Unit\OphthalmologyCalculatorTest
-   PASS  Tests\Feature\AdminManagementTest
-   PASS  Tests\Feature\AuthenticationTest
-   PASS  Tests\Feature\DemoTheaterTest
-   PASS  Tests\Feature\DigitalTwinTest
-   PASS  Tests\Feature\ExampleTest
-   PASS  Tests\Feature\IntelligenceAndAutomationsTest
-   PASS  Tests\Feature\MissionSimulatorTest
-   PASS  Tests\Feature\NasaObservatoryTest
-   PASS  Tests\Feature\SpaceVisionApiTest
-   PASS  Tests\Feature\VisionLabTest
-
-Tests:    45 passed (194 assertions)
-Duration: ~2.5s
-Status:   100% VERDE
-```
-
----
-
-## 🚀 7. Despliegue en Producción
-El repositorio cuenta con integración continua automatizada mediante **GitHub Actions** ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)).
-Para actualizar el entorno público en cPanel:
-1. Navega a la pestaña **Actions** en el repositorio de GitHub.
-2. Selecciona el flujo **Publicar en cPanel**.
-3. Haz clic en **Run workflow**.
-
----
-
-**SPACE VISION — NASA Space Apps Challenge 2026**  
-*Desarrollado con rigor científico, ingeniería aeroespacial y pasión por la exploración del cosmos.*
+**SPACE VISION — SANS Monitor · NASA Space Apps Challenge 2026 (Querétaro, México)**
