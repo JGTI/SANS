@@ -107,3 +107,34 @@ def test_cirrus_oct_workstation_endpoint():
     assert "b_scans" in data
     assert "od" in data["etdrs_grid"]
     assert "os" in data["etdrs_grid"]
+
+
+def test_biomarker_predictor_endpoint():
+    res = client.post("/api/v1/ophthalmology/biomarker-predictor", json={
+        "case_id": "CASE-PROG-02",
+        "scenario_model": "EMPEORA",
+        "oct_trt_baseline_um": 280.0,
+        "oct_trt_current_um": 306.0,
+        "axial_length_mm": 23.82,
+        "axial_baseline_mm": 24.10,
+        "simulated_hyperopia_d": 0.75,
+        "papilledema_frisen": 2,
+        "iop_mmhg": 18.5,
+        "prior_hdt6_exposure": True,
+    }, headers=AUTH_HEADERS)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["operational_output"] == "Priorizar revisión"
+    assert data["fitness_verdict"] == "Aptitud no evaluada"
+    assert data["delta_trt_um"] == 26.0
+    assert data["timeline_cuts"]["after_flight_cuts_30_60_90_um"]["day_60"] == "Sin medición"
+
+    res_noscan = client.post("/api/v1/ophthalmology/biomarker-predictor", json={
+        "case_id": "CASE-NOSCAN-03A",
+        "scenario_model": "NO_ESCANEA",
+        "oct_trt_baseline_um": None,
+        "oct_trt_current_um": None,
+        "iop_mmhg": 16.0,
+    }, headers=AUTH_HEADERS)
+    assert res_noscan.status_code == 200
+    assert res_noscan.json()["operational_output"] == "Faltan datos"

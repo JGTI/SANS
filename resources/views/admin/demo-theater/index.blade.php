@@ -113,7 +113,10 @@
             Experiencia estructurada para jueces de hackatón. Recorre la hipótesis científica, evolución fisiológica del astronauta, algoritmo explicable de SANS y generación del reporte clínico oficial de misión.
         </p>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <a href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}" class="btn btn-primary" style="font-size:13px;">
+            <i class="fa fa-heartbeat"></i> Abrir Predictor SANS (3 Pestañas)
+        </a>
         <a href="{{ route('admin.demo-theater.report', ['code' => $astronaut->code]) }}" target="_blank" class="btn btn-outline" style="font-size:13px;">
             <i class="fa fa-print"></i> Ver Reporte Oficial Imprimible
         </a>

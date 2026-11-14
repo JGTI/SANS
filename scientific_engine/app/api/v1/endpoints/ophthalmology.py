@@ -86,3 +86,83 @@ def validate_ranges(req: RangeValidationRequest):
         iop=req.iop,
         rnfl_thickness=req.rnfl_thickness
     )
+
+
+class BiomarkerPredictorRequest(BaseModel):
+    case_id: str = Field("CASE-PROG-02", description="ID pseudónimo de la persona")
+    scenario_model: str = Field("EMPEORA", description="ESTABLE | EMPEORA | NO_ESCANEA")
+    oct_trt_baseline_um: Optional[float] = Field(280.0, description="1. Espesor medio OCT basal (µm)")
+    oct_trt_current_um: Optional[float] = Field(306.0, description="1. Espesor medio OCT actual (µm)")
+    axial_length_mm: Optional[float] = Field(23.82, description="2. Longitud axial del ojo (mm)")
+    axial_baseline_mm: float = Field(24.10, description="Longitud axial basal (mm)")
+    simulated_hyperopia_d: float = Field(0.75, description="3. Hipermetropía simulada (ΔSE en D)")
+    papilledema_frisen: Optional[int] = Field(2, ge=0, le=5, description="4. Edema papilar (Escala Frisén 0-5)")
+    iop_mmhg: float = Field(18.5, description="5. Presión intraocular (mmHg)")
+    prior_hdt6_exposure: bool = Field(True, description="6. Exposición previa a inclinación cefálica de -6° en la Tierra")
+
+
+@router.post("/biomarker-predictor", summary="Predictor SANS basado en los 6 biomarcadores oculares, corte +30/+60/+90 y 3 escenarios")
+def evaluate_biomarker_predictor(req: BiomarkerPredictorRequest):
+    if req.scenario_model == "NO_ESCANEA" or req.oct_trt_current_um is None or req.oct_trt_baseline_um is None:
+        return {
+            "case_id": req.case_id,
+            "scenario_model": "NO_ESCANEA",
+            "operational_output": "Faltan datos",
+            "fitness_verdict": "Aptitud no evaluada",
+            "delta_trt_um": None,
+            "delta_axial_mm": None,
+            "biomarkers": {
+                "oct_thickness_um": None,
+                "axial_length_mm": req.axial_length_mm,
+                "simulated_hyperopia_d": req.simulated_hyperopia_d,
+                "papilledema_frisen": req.papilledema_frisen,
+                "iop_mmhg": req.iop_mmhg,
+                "prior_hdt6_exposure": req.prior_hdt6_exposure,
+            },
+            "timeline_cuts": {
+                "before_flight_um": None,
+                "during_flight_days_10_15_30_um": [None, None, None],
+                "after_flight_cuts_30_60_90_um": {"day_30": None, "day_60": "Sin medición", "day_90": None},
+            },
+        }
+
+    delta_trt = round(req.oct_trt_current_um - req.oct_trt_baseline_um, 1)
+    delta_axial = round((req.axial_length_mm or req.axial_baseline_mm) - req.axial_baseline_mm, 2)
+
+    is_progressing = (
+        req.scenario_model == "EMPEORA"
+        or delta_trt >= 20.0
+        or (req.papilledema_frisen is not None and req.papilledema_frisen >= 1)
+    )
+
+    operational_output = "Priorizar revisión" if is_progressing else "Listo para revisión"
+
+    return {
+        "case_id": req.case_id,
+        "scenario_model": "EMPEORA" if is_progressing else "ESTABLE",
+        "operational_output": operational_output,
+        "fitness_verdict": "Aptitud no evaluada",
+        "delta_trt_um": delta_trt,
+        "delta_axial_mm": delta_axial,
+        "biomarkers": {
+            "oct_thickness_um": req.oct_trt_current_um,
+            "axial_length_mm": req.axial_length_mm,
+            "simulated_hyperopia_d": req.simulated_hyperopia_d,
+            "papilledema_frisen": req.papilledema_frisen,
+            "iop_mmhg": req.iop_mmhg,
+            "prior_hdt6_exposure": req.prior_hdt6_exposure,
+        },
+        "timeline_cuts": {
+            "before_flight_um": req.oct_trt_baseline_um,
+            "during_flight_days_10_15_30_um": [
+                round(req.oct_trt_baseline_um + delta_trt * 0.31, 1),
+                round(req.oct_trt_baseline_um + delta_trt * 0.54, 1),
+                req.oct_trt_current_um,
+            ],
+            "after_flight_cuts_30_60_90_um": {
+                "day_30": round(req.oct_trt_baseline_um + delta_trt * 0.58, 1),
+                "day_60": "Sin medición",
+                "day_90": round(req.oct_trt_baseline_um + delta_trt * 0.19, 1),
+            },
+        },
+    }
