@@ -83,7 +83,7 @@ class AstronautProfile extends Model
             default => 'astro-01.jpg',
         };
 
-        return asset('images/astronauts/' . $file);
+        return asset('images/astronauts/' . $file) . '?v=color2';
     }
 
     public static function crewMetaForCase(?string $caseId): array
@@ -93,37 +93,37 @@ class AstronautProfile extends Model
                 'code' => 'ASTRO-02',
                 'name' => 'Dr. Sara Lindqvist',
                 'role' => 'Science Officer · ISS Exp 71',
-                'avatar' => asset('images/astronauts/astro-02.jpg'),
+                'avatar' => asset('images/astronauts/astro-02.jpg') . '?v=color2',
             ],
             'CASE-NOSCAN-03A' => [
                 'code' => 'ASTRO-03',
                 'name' => 'Kenji Sato',
                 'role' => 'Flight Engineer · ISS Exp 72',
-                'avatar' => asset('images/astronauts/astro-03.jpg'),
+                'avatar' => asset('images/astronauts/astro-03.jpg') . '?v=color2',
             ],
             'CASE-ASO-05' => [
                 'code' => 'ASTRO-04',
                 'name' => 'Maj. Elena Rostova',
                 'role' => 'Orbital Specialist · Mixed Asymmetry',
-                'avatar' => asset('images/astronauts/astro-04.jpg'),
+                'avatar' => asset('images/astronauts/astro-04.jpg') . '?v=color2',
             ],
             'CASE-NORECENT-03B' => [
                 'code' => 'ASTRO-05',
                 'name' => 'Dr. Marcus Thorne',
                 'role' => 'Payload Specialist · Delayed Window',
-                'avatar' => asset('images/astronauts/astro-05.jpg'),
+                'avatar' => asset('images/astronauts/astro-05.jpg') . '?v=color2',
             ],
             'CASE-TILT-04' => [
                 'code' => 'ASTRO-06',
                 'name' => 'Capt. Mateo Vargas',
                 'role' => '-6° HDT Analog & Orbital Subject',
-                'avatar' => asset('images/astronauts/astro-06.jpg'),
+                'avatar' => asset('images/astronauts/astro-06.jpg') . '?v=color2',
             ],
             default => [
                 'code' => 'ASTRO-01',
                 'name' => 'CDR Alex Mercer',
                 'role' => 'Mission Commander · Artemis III',
-                'avatar' => asset('images/astronauts/astro-01.jpg'),
+                'avatar' => asset('images/astronauts/astro-01.jpg') . '?v=color2',
             ],
         };
     }

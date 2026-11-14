@@ -128,7 +128,7 @@
         <div style="display:flex;align-items:center;gap:0.85rem;">
             <img src="{{ $activeCrewMeta['avatar'] }}"
                  alt="{{ $activeCrewMeta['name'] }}"
-                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);">
             <div>
                 <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
                     <span style="font-size:0.98rem;font-weight:800;">{{ $activeCrewMeta['name'] }}</span>
@@ -137,7 +137,7 @@
                     </span>
                 </div>
                 <div style="font-size:0.76rem;color:var(--muted-foreground);">
-                    {{ $activeCrewMeta['role'] }} · {{ $isEn ? 'AI Monochrome Clinical Portrait (Synthetic Cohort)' : 'Retrato Clínico Monocromático IA (Cohorte Sintética)' }}
+                    {{ $activeCrewMeta['role'] }} · {{ $isEn ? 'AI Clinical Portrait (Synthetic Cohort)' : 'Retrato Clínico IA a Color (Cohorte Sintética)' }}
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
                style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.55rem;padding:0.4rem 0.55rem;border-radius:6px;border:{{ $isActiveCrew ? '2px solid var(--foreground)' : '1px solid var(--border)' }};background:{{ $isActiveCrew ? 'var(--accent)' : 'transparent' }};">
                 <img src="{{ $cm['avatar'] }}"
                      alt="{{ $cm['name'] }}"
-                     style="width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);flex-shrink:0;">
+                     style="width:36px;height:36px;border-radius:6px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;">
                 <div style="min-width:0;overflow:hidden;">
                     <div style="font-size:0.75rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $cm['name'] }}</div>
                     <div style="font-size:0.66rem;color:var(--muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $c->case_id }} · {{ $t($c->scenario_archetype) }}</div>
@@ -723,7 +723,7 @@
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-STABLE-01', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-STABLE-01' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
             <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
-                <img src="{{ asset('images/astronauts/astro-02.jpg') }}" alt="Dr. Sara Lindqvist" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <img src="{{ asset('images/astronauts/astro-02.jpg') }}?v=color2" alt="Dr. Sara Lindqvist" style="width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid var(--border);">
                 <div style="flex:1;min-width:0;">
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
                         <span style="font-size:0.95rem;font-weight:800;">
@@ -746,7 +746,7 @@
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-PROG-02', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-PROG-02' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
             <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
-                <img src="{{ asset('images/astronauts/astro-01.jpg') }}" alt="CDR Alex Mercer" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <img src="{{ asset('images/astronauts/astro-01.jpg') }}?v=color2" alt="CDR Alex Mercer" style="width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid var(--border);">
                 <div style="flex:1;min-width:0;">
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
                         <span style="font-size:0.95rem;font-weight:800;">
@@ -769,7 +769,7 @@
         <a href="{{ route('admin.sans-monitor.index', ['case_id' => 'CASE-NOSCAN-03A', 'tab' => 'escenarios']) }}"
            style="text-decoration:none;color:inherit;padding:1.15rem;border:{{ $activeCase->case_id === 'CASE-NOSCAN-03A' ? '2px solid var(--foreground)' : '1px solid var(--border)' }};border-radius:6px;display:block;">
             <div style="display:flex;align-items:center;gap:0.65rem;margin-bottom:0.5rem;">
-                <img src="{{ asset('images/astronauts/astro-03.jpg') }}" alt="Kenji Sato" style="width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                <img src="{{ asset('images/astronauts/astro-03.jpg') }}?v=color2" alt="Kenji Sato" style="width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid var(--border);">
                 <div style="flex:1;min-width:0;">
                     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.35rem;">
                         <span style="font-size:0.95rem;font-weight:800;">

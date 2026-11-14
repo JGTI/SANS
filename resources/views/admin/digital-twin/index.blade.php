@@ -305,7 +305,7 @@
         @if($astronaut)
             <img src="{{ $astronaut->avatar_url }}"
                  alt="{{ $astronaut->name }}"
-                 style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+                 style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);">
         @endif
         <label for="astro-select" style="font-size:13px; font-weight:600; color:var(--muted-foreground);">Tripulante:</label>
         <select id="astro-select" class="form-control" style="max-width:280px; height:36px;" onchange="location.href='?astro=' + this.value">

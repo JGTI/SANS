@@ -134,7 +134,7 @@
         <div style="display:flex;align-items:center;gap:12px;">
             <img src="{{ $astronaut->avatar_url }}"
                  alt="{{ $astronaut->name }}"
-                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);filter:grayscale(100%) contrast(1.08);">
+                 style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);">
             <div style="font-size:12px;">
                 <div>
                     <strong><i class="fa fa-link"></i> {{ $isEn ? 'Direct Connection with Core Project (SANS Monitor):' : 'Relación Directa con el Proyecto Central (SANS Monitor):' }}</strong>
@@ -166,7 +166,7 @@
                style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:{{ $aItem->code === $astronaut->code ? '2px solid var(--foreground)' : '1px solid var(--border)' }};background:{{ $aItem->code === $astronaut->code ? 'var(--accent)' : 'transparent' }};">
                 <img src="{{ $aItem->avatar_url }}"
                      alt="{{ $aItem->name }}"
-                     style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--border);filter:grayscale(100%);">
+                     style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--border);">
                 <div>
                     <div style="font-size:12px;font-weight:800;">{{ $aItem->name }}</div>
                     <div style="font-size:11px;color:var(--muted-foreground);">{{ $aItem->code }} · {{ $aItem->mission_name }}</div>

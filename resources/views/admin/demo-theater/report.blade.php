@@ -208,7 +208,7 @@
     <div style="display:flex;align-items:center;gap:16px;background:var(--bg-subtle);border:1px solid var(--border);border-radius:6px;padding:12px 16px;margin-bottom:20px;">
         <img src="{{ $astronaut->avatar_url }}"
              alt="{{ $astronaut->name }}"
-             style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:2px solid #0f172a;filter:grayscale(100%) contrast(1.08);flex-shrink:0;">
+             style="width:64px;height:64px;border-radius:8px;object-fit:cover;border:2px solid #0f172a;flex-shrink:0;">
         <div class="meta-grid" style="margin:0;border:none;padding:0;background:transparent;flex:1;">
             <div class="meta-cell">
                 <span class="meta-label">{{ $isEn ? 'Subject / Crew' : 'Tripulante / Sujeto' }}</span>

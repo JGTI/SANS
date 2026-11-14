@@ -54,7 +54,7 @@
     <div style="display:flex; align-items:center; gap:18px;">
         <img src="{{ $astronaut->avatar_url }}"
              alt="{{ $astronaut->name }}"
-             style="width:72px; height:72px; border-radius:12px; object-fit:cover; border:2px solid var(--foreground); filter:grayscale(100%) contrast(1.08);">
+             style="width:72px; height:72px; border-radius:12px; object-fit:cover; border:2px solid var(--foreground);">
         <div>
             <div style="display:flex; gap:8px; align-items:center; margin-bottom:4px;">
                 <span class="crew-meta-badge">{{ $astronaut->code }}</span>
