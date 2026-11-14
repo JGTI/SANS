@@ -65,7 +65,7 @@ Contraseña universal para usuarios de prueba/demo: `SpaceVision2026!`
 1. Lee [`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md), [`docs/DEVELOPMENT_STATE.md`](docs/DEVELOPMENT_STATE.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`docs/DECISIONS.md`](docs/DECISIONS.md) y [`docs/TASK_BACKLOG.md`](docs/TASK_BACKLOG.md).
 2. Cualquier cambio debe mantener el 100% de las pruebas en verde:
    - `php artisan scientific:engine status` (debe reportar ONLINE en `:8001`).
-   - `php artisan scientific:engine test` (debe aprobar los **21 tests** de Pytest).
+   - `php artisan scientific:engine test` (debe aprobar los **22 tests** de Pytest).
    - `php artisan test` (debe aprobar los **75 tests / 353 aserciones** de PHPUnit).
 3. El siguiente paso de ingeniería es implementar progresivamente los ítems de la **Épica 14** en [`docs/TASK_BACKLOG.md`](docs/TASK_BACKLOG.md) siguiendo el contrato de datos y las 19 pruebas de aceptación (`AT-01` a `AT-19`) de [`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md).
 4. Mantén siempre la honestidad científica: distinguir observaciones reales, análogos terrestres ($-6^\circ$ HDT), simulaciones sintéticas (`is_simulated = true`) y pronósticos experimentales, sin emitir nunca un dictamen automático de aptitud.

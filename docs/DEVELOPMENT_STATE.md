@@ -8,7 +8,7 @@
 
 **Estado de la suite de pruebas (Baseline 100% Verde):**
 - **Laravel (PHPUnit):** **75 tests aprobados (353 aserciones)**
-- **Python Scientific Engine (Pytest):** **21 tests aprobados**
+- **Python Scientific Engine (Pytest):** **22 tests aprobados**
 - **Microservicio Python FastAPI:** **ONLINE (`http://127.0.0.1:8001`)**
 
 ---

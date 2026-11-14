@@ -10,7 +10,7 @@
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com/)
 [![Python](https://img.shields.io/badge/Python-3.14%20FastAPI-3776AB?style=flat&logo=python&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PHPUnit Tests](https://img.shields.io/badge/PHPUnit-75%20Passed%20(353%20assertions)-22c55e?style=flat&logo=php&logoColor=white)]()
-[![FastAPI Pytest](https://img.shields.io/badge/Pytest%20FastAPI-21%20Passed-22c55e?style=flat&logo=pytest&logoColor=white)]()
+[![FastAPI Pytest](https://img.shields.io/badge/Pytest%20FastAPI-22%20Passed-22c55e?style=flat&logo=pytest&logoColor=white)]()
 [![Event](https://img.shields.io/badge/NASA%20Space%20Apps-2026-38BDF8?style=flat&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
 
 ---
