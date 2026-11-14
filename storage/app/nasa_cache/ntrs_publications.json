@@ -1,0 +1,46 @@
+[
+  {
+    "id": "20200002341",
+    "title": "Risk of Spaceflight-Associated Neuro-ocular Syndrome (SANS): Human Research Program Evidence Report",
+    "authors": "Stenger, Michael B.; Tarver, William J.; Brunstetter, Tyson; Gibson, C. Robert; Laurie, Steven S.; Lee, Andrew G.; Macias, Brandon R.; Mader, Thomas H.",
+    "center": "Lyndon B. Johnson Space Center",
+    "year": 2021,
+    "abstract": "Comprehensive NASA Evidence Report synthesizing clinical ophthalmic data from long-duration International Space Station missions. Summarizes findings of optic disc edema, globe flattening, choroidal folds, hyperopic refractive shifts, and nerve fiber layer thickening. Outlines key knowledge gaps for deep-space Mars transit missions.",
+    "document_type": "NASA Technical Publication (TP)",
+    "url": "https://ntrs.nasa.gov/citations/20200002341",
+    "doi": "10.1016/j.ophtha.2020.09.021"
+  },
+  {
+    "id": "20180004910",
+    "title": "Optic Disc Edema and Posterior Globe Flattening in Long-Duration Spaceflight Crewmembers",
+    "authors": "Mader, Thomas H.; Gibson, C. Robert; Pass, Anastas F.; Lee, Andrew G.; Stenger, Michael B.",
+    "center": "Lyndon B. Johnson Space Center / NASA HRP",
+    "year": 2019,
+    "abstract": "First prospective longitudinal study documenting progressive hyperopic refractive shifts (+0.50D to +1.75D) and associated fundoscopic findings in astronauts during 6-month ISS expeditions. Concludes that cephalad fluid shifts elevate chronic venous pressure, influencing retrobulbar cerebrospinal fluid dynamics.",
+    "document_type": "Conference Paper / Journal Article",
+    "url": "https://ntrs.nasa.gov/citations/20180004910",
+    "doi": "10.1001/jamaophthalmol.2018.4219"
+  },
+  {
+    "id": "20220011504",
+    "title": "Venous Congestion and Cephalad Fluid Redistribution as Key Biomechanical Drivers of SANS",
+    "authors": "Macias, Brandon R.; Laurie, Steven S.; Greenwald, Scott H.; Martin, David S.; Stenger, Michael B.",
+    "center": "Lyndon B. Johnson Space Center",
+    "year": 2022,
+    "abstract": "Investigates jugular vein dimensions, central venous pressure, and intracranial venous sinus pressure in simulated microgravity and spaceflight. Demonstrates that loss of gravitational hydrostatic pressure gradients induces jugular stasis and impedes ophthalmic venous drainage.",
+    "document_type": "Technical Report",
+    "url": "https://ntrs.nasa.gov/citations/20220011504",
+    "doi": "10.1152/japplphysiol.00642.2021"
+  },
+  {
+    "id": "20240003180",
+    "title": "Countermeasure Strategies for Deep Space Exploration: Lower Body Negative Pressure (LBNP) and Artificial Gravity",
+    "authors": "Hargens, Alan R.; Petersen, Lonnie G.; Laurie, Steven S.",
+    "center": "Ames Research Center / Johnson Space Center",
+    "year": 2024,
+    "abstract": "Evaluation of mechanical countermeasures designed to sequester cephalad fluid shifts back toward the lower extremities during transit. Assesses efficacy of nocturnal fluid redistribution devices in mitigating optic disc swelling and axial globe shortening.",
+    "document_type": "Research Report",
+    "url": "https://ntrs.nasa.gov/citations/20240003180",
+    "doi": "10.1038/s41526-024-00382-w"
+  }
+]

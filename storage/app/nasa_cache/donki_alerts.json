@@ -1,0 +1,35 @@
+[
+  {
+    "messageIssueTime": "2026-11-08T14:32:00Z",
+    "messageType": "Coronal Mass Ejection (CME)",
+    "messageID": "2026-11-08-CME-001",
+    "speed": "820 km/s",
+    "halfAngle": "42 deg",
+    "estimatedImpact": "2026-11-10T18:00:00Z",
+    "target": "Earth / Lunar Orbital Trajectory (Artemis III)",
+    "summary": "Fast halo CME detected following M4.2 solar flare in Active Region AR3892. Lunar transit module dosimetry monitoring recommended.",
+    "scientific_disclaimer": "Telemetría ambiental de contexto aeroespacial. La radiación ionizante espacial constituye un riesgo biomédico sistémico (cataratas por radiación, daño oxidativo endotelial), pero no se asume una correlación causal directa con el aplanamiento de globo ni con el síndrome SANS sin dosimetría tisular específica."
+  },
+  {
+    "messageIssueTime": "2026-11-09T08:15:00Z",
+    "messageType": "Solar Flare (FLR)",
+    "messageID": "2026-11-09-FLR-002",
+    "speed": "N/A",
+    "halfAngle": "N/A",
+    "estimatedImpact": "Immediate (X-Ray Flux)",
+    "target": "Earth Magnetosphere / ISS Low Earth Orbit",
+    "summary": "Class M2.8 flare observed by GOES-18. High-frequency communication degradation on sunlit side. ISS crew shielding nominal.",
+    "scientific_disclaimer": "Telemetría ambiental de contexto aeroespacial. La radiación ionizante espacial constituye un riesgo biomédico sistémico (cataratas por radiación, daño oxidativo endotelial), pero no se asume una correlación causal directa con el aplanamiento de globo ni con el síndrome SANS sin dosimetría tisular específica."
+  },
+  {
+    "messageIssueTime": "2026-11-10T02:00:00Z",
+    "messageType": "Geomagnetic Storm (GST)",
+    "messageID": "2026-11-10-GST-001",
+    "speed": "650 km/s (Solar Wind)",
+    "halfAngle": "N/A",
+    "estimatedImpact": "2026-11-10T12:00:00Z",
+    "target": "Earth Auroral Oval / LEO Orbiters",
+    "summary": "Kp index reached 5 (G1 Minor Storm). Induced ionospheric currents monitored. Telemetry stations nominal.",
+    "scientific_disclaimer": "Telemetría ambiental de contexto aeroespacial. La radiación ionizante espacial constituye un riesgo biomédico sistémico (cataratas por radiación, daño oxidativo endotelial), pero no se asume una correlación causal directa con el aplanamiento de globo ni con el síndrome SANS sin dosimetría tisular específica."
+  }
+]

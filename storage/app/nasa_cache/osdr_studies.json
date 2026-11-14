@@ -1,0 +1,50 @@
+[
+  {
+    "accession": "OSD-137",
+    "title": "Microgravity-Induced Ocular Changes: Retinal and Choroidal Vascular Alterations in Rodents",
+    "mission": "Rodent Research-1 (RR-1 / ISS)",
+    "organism": "Mus musculus",
+    "tissue": "Retina, Choroid, Optic Nerve",
+    "assay": "RNA-Seq / Histopathology",
+    "release_date": "2021-08-15",
+    "description": "Longitudinal evaluation of microvascular and structural integrity of retinal and optic head tissues after 37 days aboard the International Space Station, highlighting venous engorgement and oxidative stress pathways.",
+    "dataset_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-137",
+    "relevance": "Direct animal model for cephalad fluid shift and choroidal vascular congestion in microgravity."
+  },
+  {
+    "accession": "OSD-370",
+    "title": "Multi-Omics Profiling of Ocular and Cephalic Tissues from Spaceflight Missions",
+    "mission": "Space Shuttle STS-135 / ISS Expeditions",
+    "organism": "Mus musculus / Human in-vitro",
+    "tissue": "Retinal Pigment Epithelium, Sclera",
+    "assay": "Transcriptomics & Proteomics",
+    "release_date": "2023-02-10",
+    "description": "Comparative transcriptomic and proteomic survey examining extracellular matrix remodeling in the posterior sclera and blood-retinal barrier disruption during spaceflight.",
+    "dataset_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-370",
+    "relevance": "Underpins molecular mechanisms of posterior globe flattening and biomechanical scleral stiffness."
+  },
+  {
+    "accession": "OSD-422",
+    "title": "Optic Nerve Sheath Diameter and Retinal Nerve Fiber Layer (RNFL) Thickness Biomarkers",
+    "mission": "NASA Human Research Program (HRP Analogs)",
+    "organism": "Homo sapiens",
+    "tissue": "Optic Nerve Sheath, Peripapillary Retina",
+    "assay": "Ultrasound, OCT, Biometry",
+    "release_date": "2024-05-22",
+    "description": "High-resolution optical coherence tomography (OCT) tracking of peripapillary retinal nerve fiber layer thickness in bed-rest analogs and long-duration spaceflight crews.",
+    "dataset_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-422",
+    "relevance": "Gold standard quantitative imaging reference for SANS Frisén staging and RNFL edema monitoring."
+  },
+  {
+    "accession": "OSD-514",
+    "title": "Endothelial Response to Simulated Microgravity and Elevated CO2 in Human Retinal Microvessels",
+    "mission": "Ground-based Analog / RWV",
+    "organism": "Homo sapiens (Primary Cells)",
+    "tissue": "Retinal Endothelium",
+    "assay": "Single-cell RNA-Seq",
+    "release_date": "2025-01-18",
+    "description": "Analysis of endothelial permeability and nitric oxide synthase expression under rotating wall vessel microgravity combined with ISS-representative ambient CO2 levels (0.4%).",
+    "dataset_url": "https://osdr.nasa.gov/bio/repo/data/studies/OSD-514",
+    "relevance": "Investigates environmental compounding factors (ambient spacecraft CO2) in intracranial fluid dynamics."
+  }
+]

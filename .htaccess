@@ -1,0 +1,71 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+    AddDefaultCharset UTF-8
+    DirectoryIndex index.php
+
+    # ---------------------------------------------------------------
+    # SECURITY: the whole Laravel project lives under public_html.
+    # Never expose framework/source/private directories directly.
+    # ---------------------------------------------------------------
+
+    RewriteRule ^(?:app|bootstrap|config|database|resources|routes|storage|tests|vendor|plantilla|node_modules)(?:/|$) - [F,L,NC]
+
+    RewriteRule ^(?:artisan|composer\.(?:json|lock)|package(?:-lock)?\.json|phpunit\.xml|vite\.config\.(?:js|ts)|README(?:\..*)?|CODEX\.md)$ - [F,L,NC]
+
+    # Block dotfiles/directories except ACME /.well-known/.
+    RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]
+    RewriteRule (^|/)\. - [F,L]
+
+    # Block sensitive file extensions anywhere.
+    <FilesMatch "(?i)(^\.env|\.env\.|\.log$|\.sql$|\.sqlite$|\.bak$|\.backup$|\.key$|\.pem$|\.crt$|\.ini$|\.dist$)">
+        Require all denied
+    </FilesMatch>
+
+    # Keep Authorization and XSRF headers available for Laravel on cPanel.
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Remove trailing slash when it is not a real directory.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)/$ /$1 [L,R=301,QSA]
+
+    # ---------------------------------------------------------------
+    # PUBLIC ASSETS
+    # Domain points to project root, but assets remain in /public.
+    # ---------------------------------------------------------------
+
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !^/public/ [NC]
+    RewriteRule ^(brand|build|vendor|plantilla_html|storage|assets|dist|plugins|lib|themes|video|img|images|image|css|js|fonts|font|favicons|uploads)/(.*)$ public/$1/$2 [L,NC]
+
+    # Serve public files requested directly by extension.
+    # robots.txt and sitemap.xml are handled dynamically by Laravel.
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} !^/public/ [NC]
+    RewriteCond %{REQUEST_URI} !^/(robots\.txt|sitemap\.xml)$ [NC]
+    RewriteRule ^(.*\.(?:pdf|mp3|svg|webp|avif|otf|woff|woff2|ttf|eot|mp4|webm|css|js|png|jpeg|jpg|json|gif|txt|xml|ico|map))$ public/$1 [L,NC]
+
+    # ---------------------------------------------------------------
+    # APPLICATION
+    # robots.txt, sitemap.xml and all Laravel routes reach root index.php.
+    # ---------------------------------------------------------------
+
+    RewriteCond %{REQUEST_URI} !^/public/ [NC]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
