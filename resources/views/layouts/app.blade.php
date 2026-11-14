@@ -36,24 +36,12 @@
 
         <div class="sidebar-scroll">
             <nav class="nav-section" aria-label="{{ $isEn ? 'Main SANS Flow' : 'Flujo Principal SANS' }}">
-                <div class="nav-label">{{ $isEn ? 'Main Hackathon Flow' : 'Flujo Principal Hackathon' }}</div>
+                <div class="nav-label">{{ $isEn ? 'Main Workspace' : 'Pantallas Principales' }}</div>
                 <ul class="nav-list">
                     <li>
-                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['seguimiento', 'simulador', 'escenarios']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
-                            <i class="fa fa-Sliders fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? '1. Predictor & Biomarkers' : '1. Predictor y Biomarcadores' }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && request('tab') === 'seguimiento' ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
-                            <i class="fa fa-calendar-check-o" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? '2. Timeline (+30 / +60 / +90 d)' : '2. Tiempo (+30 / +60 / +90 d)' }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.*') || request()->routeIs('admin.sans-monitor.*')) && in_array(request('tab'), ['escenarios', 'simulador']) ? 'active' : '' }}" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
-                            <i class="fa fa-cubes" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? '3. Scenarios (Stable/Worsens)' : '3. Escenarios (Estable/Empeora)' }}
+                        <a class="nav-link {{ request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*') ? 'active' : '' }}" href="{{ route('home') }}">
+                            <i class="fa fa-heartbeat" style="width:20px; text-align:center; font-size:15px;"></i>
+                            {{ $isEn ? 'SANS Monitor (3-Step Wizard)' : 'Predictor SANS (Wizard 3 Pasos)' }}
                         </a>
                     </li>
                     <li>
@@ -73,7 +61,7 @@
 
             <details style="padding: 0 0.75rem; margin-top: 0.5rem;">
                 <summary style="cursor:pointer; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted-foreground); padding:0.5rem 0.5rem; list-style:none; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border);">
-                    <span><i class="fa fa-folder-o"></i> {{ $isEn ? 'Support & Admin Modules' : 'Módulos de Apoyo y Admin' }}</span>
+                    <span><i class="fa fa-folder-o"></i> {{ $isEn ? 'Supporting Scientific Tools' : 'Herramientas Científicas de Apoyo' }}</span>
                     <i class="fa fa-angle-down"></i>
                 </summary>
 
@@ -103,28 +91,6 @@
                                 {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
                             </a>
                         </li>
-                        @can('users.manage')
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                                <i class="fa fa-users" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'Users' : 'Usuarios' }}
-                            </a>
-                        </li>
-                        @endcan
-                        @role('super-admin')
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('admin.api-keys*') ? 'active' : '' }}" href="{{ route('admin.api-keys.index') }}">
-                                <i class="fa fa-key" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'API Keys' : 'Claves de APIs' }}
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('admin.maintenance*') ? 'active' : '' }}" href="{{ route('admin.maintenance') }}">
-                                <i class="fa fa-wrench" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'Artisan Console' : 'Consola Artisan' }}
-                            </a>
-                        </li>
-                        @endrole
                     </ul>
                 </nav>
             </details>
@@ -132,11 +98,11 @@
 
         <div class="sidebar-user">
             @php
-                $currentUserName = auth()->user()?->name ?? ($isEn ? 'NASA Space Apps Judge' : 'Jurado NASA Space Apps');
-                $currentUserEmail = auth()->user()?->email ?? ($isEn ? 'Public Access · Zero Login Required' : 'Acceso Público · Sin Login');
+                $currentUserName = $isEn ? 'NASA Space Apps Judge' : 'Jurado NASA Space Apps';
+                $currentUserEmail = $isEn ? 'Public Mode · Zero Login' : 'Modo Público · Sin Login';
             @endphp
             <button class="user-button" id="user-menu-button" type="button" aria-expanded="false" aria-controls="user-menu">
-                <span class="avatar">{{ strtoupper(mb_substr($currentUserName, 0, 2)) }}</span>
+                <span class="avatar">NS</span>
                 <span class="user-copy">
                     <span class="user-name">{{ $currentUserName }}</span>
                     <span class="user-email">{{ $currentUserEmail }}</span>
@@ -158,11 +124,10 @@
             <button class="icon-btn mobile-menu" id="mobile-menu" type="button" aria-label="{{ $isEn ? 'Open menu' : 'Abrir menú' }}">
                 <i class="fa fa-bars" style="font-size:16px;"></i>
             </button>
-            <nav class="topnav" aria-label="{{ $isEn ? 'Main sections' : 'Secciones del dashboard' }}">
-                <a class="active" href="{{ route('home') }}">{{ $isEn ? 'SANS Predictor' : 'Predictor SANS' }}</a>
-                <a href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">{{ $isEn ? 'Timeline (+30/+60/+90d)' : 'Tiempo (+30/+60/+90d)' }}</a>
-                <a href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">{{ $isEn ? '3 Scenarios' : '3 Escenarios' }}</a>
-            </nav>
+            <div style="font-size:0.82rem;font-weight:700;color:var(--muted-foreground);display:flex;align-items:center;gap:0.5rem;">
+                <i class="fa fa-rocket"></i>
+                <span>{{ $isEn ? 'SPACE VISION · SANS Monitor — Public Evaluation Workstation' : 'SPACE VISION · SANS Monitor — Estación de Evaluación Pública' }}</span>
+            </div>
             <span class="topbar-spacer"></span>
 
             {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}

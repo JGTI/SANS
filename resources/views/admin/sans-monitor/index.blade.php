@@ -118,38 +118,101 @@
     </div>
 @endif
 
-{{-- SELECTOR RÁPIDO DE SUJETO Y NAVEGACIÓN DE LAS 3 PESTAÑAS CENTRALES --}}
-<div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
-    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;" role="tablist" aria-label="{{ $isEn ? '3 Main Tabs' : '3 Pestañas Principales' }}">
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}"
-           class="btn {{ $normalizedTab === 'biomarcadores' ? 'btn-primary' : 'btn-outline' }}" style="font-weight:700;padding:0.6rem 1.1rem;">
-            <i class="fa fa-heartbeat"></i> {{ $isEn ? '1. Initial Form & 6 Biomarkers' : '1. Formulario Inicial y 6 Biomarcadores' }}
-        </a>
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}"
-           class="btn {{ $normalizedTab === 'seguimiento' ? 'btn-primary' : 'btn-outline' }}" style="font-weight:700;padding:0.6rem 1.1rem;">
-            <i class="fa fa-calendar"></i> {{ $isEn ? '2. Before · During · After (+30, +60, +90 days)' : '2. Antes · Durante · Después (+30, +60, +90 días)' }}
-        </a>
-        <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}"
-           class="btn {{ $normalizedTab === 'escenarios' ? 'btn-primary' : 'btn-outline' }}" style="font-weight:700;padding:0.6rem 1.1rem;">
-            <i class="fa fa-sliders"></i> {{ $isEn ? '3. Scenario Models (Stable · Worsens · Unscanned)' : '3. Escenarios Modelos (Estable · Empeora · No se escanea)' }}
-        </a>
+{{-- BARRA COMPACTA DE SELECCIÓN DE EXPEDIENTE / OJO + WIZARD DE 3 PASOS EN LA MISMA PANTALLA --}}
+<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:0.65rem;flex-wrap:wrap;">
+        <span class="badge" style="border:1px solid var(--foreground);font-weight:800;padding:0.35rem 0.65rem;">
+            <i class="fa fa-sitemap"></i>
+            {{ $isEn ? '3-STEP INTERACTIVE WIZARD' : 'WIZARD INTERACTIVO DE 3 PASOS' }}
+        </span>
+        <span style="font-size:0.82rem;color:var(--muted-foreground);">
+            {{ $isEn
+                ? 'Single unified workspace: switch freely between tabs or follow the 3 steps sequentially.'
+                : 'Una sola pantalla unificada: cambia libremente de pestaña o avanza paso a paso en el wizard.' }}
+        </span>
     </div>
 
-    <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+    <form method="GET" action="{{ route('admin.sans-monitor.index') }}" style="display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin:0;">
         <input type="hidden" name="tab" value="{{ $activeTab }}">
-        <select name="case_id" class="form-control" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select subject' : 'Seleccionar expediente' }}">
+        <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
+            <i class="fa fa-user"></i> {{ $isEn ? 'Dossier:' : 'Expediente:' }}
+        </label>
+        <select name="case_id" class="form-control" style="width:auto;min-width:220px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select subject' : 'Seleccionar expediente' }}">
             @foreach($cases as $c)
                 <option value="{{ $c->case_id }}" {{ $c->case_id === $activeCase->case_id ? 'selected' : '' }}>
                     {{ $isEn ? 'Subject:' : 'Sujeto:' }} {{ $c->case_id }} ({{ $t($c->scenario_archetype) }})
                 </option>
             @endforeach
         </select>
-        <select name="eye" class="form-control" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
+        <label style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);margin:0;">
+            <i class="fa fa-eye"></i> {{ $isEn ? 'Eye:' : 'Ojo:' }}
+        </label>
+        <select name="eye" class="form-control" style="width:auto;min-width:170px;padding:0.4rem 0.65rem;height:auto;" onchange="this.form.submit()" aria-label="{{ $isEn ? 'Select eye' : 'Seleccionar ojo' }}">
             <option value="OD" {{ $selectedEye === 'OD' ? 'selected' : '' }}>{{ $isEn ? 'Right Eye (OD)' : 'Ojo Derecho (OD)' }}</option>
             <option value="OS" {{ $selectedEye === 'OS' ? 'selected' : '' }}>{{ $isEn ? 'Left Eye (OS)' : 'Ojo Izquierdo (OS)' }}</option>
             <option value="BILATERAL" {{ $selectedEye === 'BILATERAL' ? 'selected' : '' }}>{{ $isEn ? 'Bilateral (OD + OS)' : 'Bilateral (OD + OS)' }}</option>
         </select>
     </form>
+</div>
+
+{{-- NAVEGADOR VISUAL DEL WIZARD / TABS DE 3 PASOS --}}
+<div class="sans-grid-3" style="margin-bottom:1.25rem;" role="tablist" aria-label="{{ $isEn ? '3 Main Wizard Steps' : '3 Pasos Principales del Wizard' }}">
+    {{-- PASO 1 --}}
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}"
+       role="tab"
+       aria-selected="{{ $normalizedTab === 'biomarcadores' ? 'true' : 'false' }}"
+       style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'biomarcadores' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
+                {{ $isEn ? 'STEP 1 OF 3 · INTAKE & PREDICTOR' : 'PASO 1 DE 3 · INGRESO Y PREDICTOR' }}
+            </span>
+            <i class="fa {{ $normalizedTab === 'biomarcadores' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+        </div>
+        <div style="font-size:0.95rem;font-weight:800;">
+            <i class="fa fa-heartbeat"></i> {{ $isEn ? '1. Initial Form & 6 Biomarkers' : '1. Formulario Inicial y 6 Biomarcadores' }}
+        </div>
+        <div style="font-size:0.75rem;opacity:0.8;">
+            {{ $isEn ? 'Evaluate OCT, Axial Length, Hyperopia, Frisén, IOP & -6° HDT.' : 'Evalúa OCT, Longitud Axial, Hipermetropía, Frisén, PIO y -6° HDT.' }}
+        </div>
+    </a>
+
+    {{-- PASO 2 --}}
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}"
+       role="tab"
+       aria-selected="{{ $normalizedTab === 'seguimiento' ? 'true' : 'false' }}"
+       style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'seguimiento' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
+                {{ $isEn ? 'STEP 2 OF 3 · LONGITUDINAL CUTS' : 'PASO 2 DE 3 · CORTES EN EL TIEMPO' }}
+            </span>
+            <i class="fa {{ $normalizedTab === 'seguimiento' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+        </div>
+        <div style="font-size:0.95rem;font-weight:800;">
+            <i class="fa fa-calendar"></i> {{ $isEn ? '2. Before · During · After (+30, +60, +90 days)' : '2. Antes · Durante · Después (+30, +60, +90 días)' }}
+        </div>
+        <div style="font-size:0.75rem;opacity:0.8;">
+            {{ $isEn ? 'Track pre-flight baseline, in-flight shifts & post-flight recovery.' : 'Mide línea base pre-vuelo, cambios en misión y recuperación posvuelo.' }}
+        </div>
+    </a>
+
+    {{-- PASO 3 --}}
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}"
+       role="tab"
+       aria-selected="{{ $normalizedTab === 'escenarios' ? 'true' : 'false' }}"
+       style="text-decoration:none;padding:0.95rem 1.1rem;border-radius:8px;display:flex;flex-direction:column;gap:0.3rem;transition:all 0.15s ease;{{ $normalizedTab === 'escenarios' ? 'background:var(--foreground);color:var(--background);border:2px solid var(--foreground);' : 'background:var(--card);color:var(--foreground);border:1px solid var(--border);' }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.7rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.85;">
+                {{ $isEn ? 'STEP 3 OF 3 · REFERENCE ARCHETYPES' : 'PASO 3 DE 3 · ARQUETIPOS DE REFERENCIA' }}
+            </span>
+            <i class="fa {{ $normalizedTab === 'escenarios' ? 'fa-dot-circle-o' : 'fa-circle-o' }}"></i>
+        </div>
+        <div style="font-size:0.95rem;font-weight:800;">
+            <i class="fa fa-sliders"></i> {{ $isEn ? '3. Scenario Models (Stable · Worsens · Unscanned)' : '3. Escenarios Modelos (Estable · Empeora · No se escanea)' }}
+        </div>
+        <div style="font-size:0.75rem;opacity:0.8;">
+            {{ $isEn ? 'Compare the 3 canonical models & anatomical SVG schematics.' : 'Compara los 3 modelos canónicos y sus esquemas anatómicos SVG.' }}
+        </div>
+    </a>
 </div>
 
 {{-- Resumen compacto permanente por ojo --}}
@@ -698,6 +761,41 @@
     </div>
 </div>
 @endif
+
+{{-- PIE DE NAVEGACIÓN SECUENCIAL DEL WIZARD (ANTERIOR / SIGUIENTE PASO) --}}
+<div class="card" style="padding:0.85rem 1.15rem;margin-bottom:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+    <div style="font-size:0.8rem;color:var(--muted-foreground);">
+        <i class="fa fa-compass"></i>
+        @if($normalizedTab === 'biomarcadores')
+            <strong>{{ $isEn ? 'Current Step: 1 / 3 (Initial Form & 6 Biomarkers)' : 'Paso Actual: 1 / 3 (Formulario Inicial y 6 Biomarcadores)' }}</strong>
+        @elseif($normalizedTab === 'seguimiento')
+            <strong>{{ $isEn ? 'Current Step: 2 / 3 (Before · During · After +30/+60/+90d)' : 'Paso Actual: 2 / 3 (Antes · Durante · Después +30/+60/+90d)' }}</strong>
+        @else
+            <strong>{{ $isEn ? 'Current Step: 3 / 3 (3 Reference Scenario Models)' : 'Paso Actual: 3 / 3 (3 Escenarios Modelos de Referencia)' }}</strong>
+        @endif
+    </div>
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        @if($normalizedTab === 'seguimiento')
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}" class="btn btn-outline" style="font-weight:700;">
+                <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 1 (Biomarkers)' : 'Anterior: Paso 1 (Biomarcadores)' }}
+            </a>
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'escenarios'])) }}" class="btn btn-primary" style="font-weight:700;">
+                {{ $isEn ? 'Next: Step 3 (3 Scenario Models)' : 'Siguiente: Paso 3 (3 Escenarios)' }} <i class="fa fa-arrow-right"></i>
+            </a>
+        @elseif($normalizedTab === 'escenarios')
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" class="btn btn-outline" style="font-weight:700;">
+                <i class="fa fa-arrow-left"></i> {{ $isEn ? 'Previous: Step 2 (Timeline +30/+60/+90d)' : 'Anterior: Paso 2 (Tiempo +30/+60/+90d)' }}
+            </a>
+            <a href="{{ url('/digital-twin?mode=dual') }}" class="btn btn-primary" style="font-weight:700;">
+                <i class="fa fa-eye"></i> {{ $isEn ? 'Continue to 3D Eye + OCT Viewer' : 'Continuar al Visor 3D + OCT' }} <i class="fa fa-arrow-right"></i>
+            </a>
+        @else
+            <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'seguimiento'])) }}" class="btn btn-primary" style="font-weight:700;">
+                {{ $isEn ? 'Next: Step 2 (Timeline +30/+60/+90d)' : 'Siguiente: Paso 2 (Tiempo +30/+60/+90d)' }} <i class="fa fa-arrow-right"></i>
+            </a>
+        @endif
+    </div>
+</div>
 
 {{-- CAJONES DESPLEGABLES DE EVIDENCIA CIENTÍFICA NASA Y MATRIZ DEL JURADO (SIN RECARGAR LA VISTA PRINCIPAL) --}}
 <div class="sans-grid-2" style="margin-bottom:1.25rem;">
