@@ -187,8 +187,12 @@
             @yield('content')
         </main>
 
-        <footer class="admin-footer">
-            {{ config('app.name') }} · Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.
+        <footer class="admin-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <span>{{ config('app.name') }} · Nexus × NASA Space Apps Challenge · Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.</span>
+            <span style="display:inline-flex;align-items:center;gap:10px;">
+                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="height:18px;object-fit:contain;">
+                <img src="{{ request()->getBasePath() }}/images/space-apps-logo.png" alt="NASA Space Apps Challenge" style="height:18px;object-fit:contain;">
+            </span>
         </footer>
     </div>
 </div>

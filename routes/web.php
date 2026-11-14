@@ -23,7 +23,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome')->name('home');
+// Ruta Raíz: Abre directamente el proyecto (Predictor SANS de 3 Pestañas sin login ni landing intermedia)
+Route::get('/', [SansMonitorController::class, 'index'])->name('home');
 
 // Rutas Públicas de Demostración Directa (REGLA P0: Acceso inmediato sin requerir login para el jurado)
 Route::get('/demo', [SansMonitorController::class, 'index'])->name('public.demo');

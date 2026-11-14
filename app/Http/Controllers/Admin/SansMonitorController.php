@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\SansMonitor\SansMonitorEngine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class SansMonitorController extends Controller
 {
@@ -15,15 +17,17 @@ class SansMonitorController extends Controller
     ) {}
 
     /**
-     * Workspace unificado de 5 pestañas de SANS Monitor:
-     * 1. Ficha y protocolos
-     * 2. Seguimiento del ojo (+30, +60, +90)
-     * 3. Simulador temporal
-     * 4. Estudios y tendencias
-     * 5. Inclinación y seguimiento
+     * Workspace unificado de 3 pestañas principales de SANS Monitor:
+     * 1. Predictor de 6 Biomarcadores
+     * 2. Antes · Durante · Después (+30, +60, +90)
+     * 3. 3 Modelos de Escenario (Estable, Empeora, Sin escanear)
      */
     public function index(Request $request)
     {
+        if (! Schema::hasTable('sans_cases')) {
+            Artisan::call('migrate', ['--force' => true]);
+        }
+
         // Si la tabla está vacía (ej. en entorno de test RefreshDatabase), sembrar catálogo y casos base
         if (DB::table('sans_cases')->count() === 0) {
             app(\Database\Seeders\SansMonitorSeeder::class)->run();
