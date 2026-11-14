@@ -2,6 +2,10 @@
 
 @section('title', 'Predictor SANS — Biomarcadores, Línea de Tiempo (+30/+60/+90) y Escenarios')
 
+@push('styles')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@endpush
+
 @section('content')
 @php
     // Normalizar las 3 pestañas principales manteniendo compatibilidad con enlaces directos
@@ -267,6 +271,10 @@
                     @endforeach
                 </ul>
             </div>
+
+            <div style="position:relative;height:185px;width:100%;margin-top:0.85rem;">
+                <canvas id="biomarkerImpactChart"></canvas>
+            </div>
         </div>
 
         {{-- Formulario Inicial Compacto para Registrar Nueva Persona --}}
@@ -401,6 +409,17 @@
             </div>
         @endforeach
     </div>
+
+    {{-- Gráfica Longitudinal Chart.js: Antes -> Durante (10, 15, 30) -> Después (+30, +60 sin interpolar, +90) --}}
+    <div style="margin-top:1.25rem;padding:1rem;border:1px solid var(--border);border-radius:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+            <strong style="font-size:0.9rem;"><i class="fa fa-area-chart"></i> Curva de Espesor OCT (&mu;m): Antes &rarr; Durante (10, 15, 30) &rarr; Corte Posvuelo (+30, +60, +90 días)</strong>
+            <span style="font-size:0.75rem;color:var(--muted-foreground);">El corte +60 sin dato no se interpola</span>
+        </div>
+        <div style="position:relative;height:230px;width:100%;">
+            <canvas id="timelineCutChart"></canvas>
+        </div>
+    </div>
 </div>
 @endif
 
@@ -503,4 +522,84 @@
     </div>
 </div>
 @endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    const textColor = isDark ? '#f4f4f5' : '#09090b';
+    const gridColor = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(9,9,11,0.1)';
+
+    const bioCanvas = document.getElementById('biomarkerImpactChart');
+    if (bioCanvas && typeof Chart !== 'undefined') {
+        new Chart(bioCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['1. Espesor OCT', '2. Long. Axial', '3. Hipermetropía', '4. Edema Papilar', '5. PIO', '6. Análogo -6°'],
+                datasets: [{
+                    label: 'Peso en Señal Predictiva',
+                    data: [
+                        {{ $bp['biomarker_cards']['oct_thickness']['impact'] ?? 0 }},
+                        {{ $bp['biomarker_cards']['axial_length']['impact'] ?? 0 }},
+                        {{ $bp['biomarker_cards']['simulated_hyperopia']['impact'] ?? 0 }},
+                        {{ $bp['biomarker_cards']['papilledema']['impact'] ?? 0 }},
+                        {{ $bp['biomarker_cards']['iop']['impact'] ?? 0 }},
+                        {{ $bp['biomarker_cards']['hdt6_exposure']['impact'] ?? 0 }}
+                    ],
+                    backgroundColor: textColor,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
+                    y: { beginAtZero: true, max: 45, ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+
+    const timeCanvas = document.getElementById('timelineCutChart');
+    if (timeCanvas && typeof Chart !== 'undefined') {
+        new Chart(timeCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Antes (Basal)', 'Durante Día 10', 'Durante Día 15', 'Durante Día 30', 'Corte +30d', 'Corte +60d (Sin dato)', 'Corte +90d'],
+                datasets: [
+                    {
+                        label: 'Escenario en Progresión OD (µm)',
+                        data: [280, 288, 294, 306, 295, null, 285],
+                        borderColor: textColor,
+                        backgroundColor: textColor,
+                        borderWidth: 2.5,
+                        pointRadius: 4,
+                        spanGaps: false
+                    },
+                    {
+                        label: 'Escenario Estable (µm)',
+                        data: [278, 281, 283, 284, 281, 279, 278],
+                        borderColor: '#71717a',
+                        borderDash: [5, 4],
+                        borderWidth: 2,
+                        pointRadius: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: textColor, font: { size: 11 } } }
+                },
+                scales: {
+                    x: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor, font: { size: 11 } }, grid: { color: gridColor } }
+                }
+            }
+        });
+    }
+});
+</script>
 @endsection

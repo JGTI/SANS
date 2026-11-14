@@ -33,14 +33,37 @@
         <h1>SPACE VISION Mission Control Dashboard</h1>
         <p>Telemetría clínica, monitoreo neurooftalmológico y vigilancia longitudinal de <strong>SANS</strong> en microgravedad.</p>
     </div>
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
         <span class="mission-badge badge-{{ $alertColor }}">
             <span style="width:8px;height:8px;border-radius:50%;background:currentColor;"></span>
             ESTADO SANS: {{ $missionAlertLevel }}
         </span>
-        <a class="btn btn-primary" href="{{ route('admin.vision-lab.create') }}">
-            <i class="fa fa-plus" style="margin-right:4px;"></i>
-            Nueva Evaluación Oftalmológica
+        <a class="btn btn-primary" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
+            <i class="fa fa-heartbeat" style="margin-right:4px;"></i>
+            Ir al Predictor de 6 Biomarcadores (3 Pestañas)
+        </a>
+    </div>
+</div>
+
+{{-- Acceso Directo Destacado a las 3 Pestañas del Predictor SANS --}}
+<div class="card" style="padding:1.1rem 1.25rem;margin-bottom:20px;border:1px solid var(--foreground);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-foreground);">
+            <i class="fa fa-bolt"></i> FLUJO PRINCIPAL DEL PROYECTO (3 PESTAÑAS)
+        </div>
+        <div style="font-size:15px;font-weight:800;margin-top:2px;">
+            Predictor SANS por 6 Biomarcadores · Corte Antes/Durante/Después (+30, +60, +90 días) · 3 Escenarios Modelos
+        </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-primary" href="{{ route('admin.sans-monitor.index', ['tab' => 'biomarcadores']) }}">
+            <i class="fa fa-sliders"></i> 1. Biomarcadores
+        </a>
+        <a class="btn btn-outline" href="{{ route('admin.sans-monitor.index', ['tab' => 'seguimiento']) }}">
+            <i class="fa fa-calendar"></i> 2. Antes / Durante / Después (+30/+60/+90)
+        </a>
+        <a class="btn btn-outline" href="{{ route('admin.sans-monitor.index', ['tab' => 'escenarios']) }}">
+            <i class="fa fa-cubes"></i> 3. Escenarios (Estable / Empeora / Sin Escaneo)
         </a>
     </div>
 </div>

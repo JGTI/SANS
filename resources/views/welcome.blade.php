@@ -246,42 +246,30 @@
         </p>
 
         <div class="hero-actions">
-            <a class="btn-main" href="{{ auth()->check() ? route('admin.dashboard') : route('login') }}">
-                {{ auth()->check() ? 'Ingresar a Mission Control' : 'Acceder al Proyecto' }} &rarr;
+            <a class="btn-main" href="{{ auth()->check() ? route('admin.sans-monitor.index') : route('login') }}">
+                {{ auth()->check() ? 'Abrir Predictor SANS (3 Pestañas)' : 'Acceder al Predictor SANS' }} &rarr;
             </a>
             <a class="btn-secondary" href="{{ route('admin.demo-theater') }}">
                 <i class="fa fa-play-circle" style="margin-right:6px;"></i> Demo Theater (Pitch en 3 Minutos)
             </a>
-            <a class="btn-secondary" href="{{ route('admin.nasa-data') }}">
-                <i class="fa fa-globe" style="margin-right:6px;"></i> Explorar Repositorios NASA
+            <a class="btn-secondary" href="{{ route('admin.digital-twin', ['mode' => 'dual']) }}">
+                <i class="fa fa-cube" style="margin-right:6px;"></i> Visor 3D + Consola OCT
             </a>
         </div>
 
-        {{-- Sistemas Core de SPACE VISION --}}
+        {{-- Las 3 Pestañas Centrales del Predictor SANS --}}
         <div class="systems-grid">
             <div class="system-card">
-                <h3><i class="fa fa-eye" style="margin-right:8px; color:#38bdf8;"></i> Vision Lab & Calculador</h3>
-                <p>Registro refractivo con certificación de Equivalente Esférico ($SE = SPH + CYL/2$), transformación logMAR y seguimiento longitudinal de presión intraocular.</p>
+                <h3><i class="fa fa-heartbeat" style="margin-right:8px; color:#38bdf8;"></i> 1. Predictor de 6 Biomarcadores</h3>
+                <p>Formulario inicial que evalúa espesor medio por OCT, longitud axial del ojo, hipermetropía simulada (&Delta;SE), edema papilar (Frisén), presión intraocular (PIO) y exposición previa a inclinación cefálica de -6° en la Tierra.</p>
             </div>
             <div class="system-card">
-                <h3><i class="fa fa-cube" style="margin-right:8px; color:#38bdf8;"></i> Astronaut Digital Twin</h3>
-                <p>Visor anatómico sagital reactivo en SVG que modela la deformación por aplanamiento posterior y edema papilar de Frisén en microgravedad.</p>
+                <h3><i class="fa fa-calendar-check-o" style="margin-right:8px; color:#38bdf8;"></i> 2. Antes · Durante · Después (+30/+60/+90)</h3>
+                <p>Línea de tiempo longitudinal que mide el ojo antes del vuelo, durante la misión (días 10, 15, 30) y hace el corte posvuelo a los +30, +60 y +90 días.</p>
             </div>
             <div class="system-card">
-                <h3><i class="fa fa-globe" style="margin-right:8px; color:#38bdf8;"></i> NASA Data Observatory</h3>
-                <p>Conexión e indexación de datasets biomédicos de NASA OSDR, literatura clínica de NTRS y telemetría espacial de DONKI con caché offline blindado.</p>
-            </div>
-            <div class="system-card">
-                <h3><i class="fa fa-sliders" style="margin-right:8px; color:#38bdf8;"></i> Mission Simulator</h3>
-                <p>Simulador determinista de escenarios de vuelo acelerado (FD0 a FD180) con semillas reproducibles y detección explicable de banderas de riesgo.</p>
-            </div>
-            <div class="system-card">
-                <h3><i class="fa fa-file-text-o" style="margin-right:8px; color:#38bdf8;"></i> Expediente Oficial Imprimible</h3>
-                <p>Generación de reportes de vuelo con formato médico oficial de la NASA, compatible con impresión directa o exportación a PDF de alta resolución.</p>
-            </div>
-            <div class="system-card">
-                <h3><i class="fa fa-code" style="margin-right:8px; color:#38bdf8;"></i> API RESTful v1</h3>
-                <p>Endpoints abiertos para misiones, astronautas, exámenes oculares y calculador oftalmológico bajo <code>/api/space-vision/v1/</code>.</p>
+                <h3><i class="fa fa-cubes" style="margin-right:8px; color:#38bdf8;"></i> 3. Escenarios: Estable · Empeora · Sin Escaneo</h3>
+                <p>Comparación interactiva de los tres modelos fundamentales: un caso estable, un caso que empeora y un caso que no se escanea, junto con el visor anatómico 3D y OCT.</p>
             </div>
         </div>
 
