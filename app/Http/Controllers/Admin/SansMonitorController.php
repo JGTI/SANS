@@ -70,7 +70,7 @@ class SansMonitorController extends Controller
         $selectedCaseId = $request->query('case_id', 'CASE-PROG-02');
         $activeCase = $cases->firstWhere('case_id', $selectedCaseId) ?? $cases->first();
 
-        $activeTab = $request->query('tab', 'biomarcadores'); // biomarcadores, seguimiento, escenarios (soporta ficha, simulador, estudios, inclinacion)
+        $activeTab = $request->query('tab', 'hub'); // hub, biomarcadores, seguimiento, escenarios (soporta ficha, simulador, estudios, inclinacion)
         $selectedEye = strtoupper($request->query('eye', 'OD')); // OD, OS, BILATERAL
         $simEye = $selectedEye === 'BILATERAL' ? 'OD' : $selectedEye;
         $selectedDay = (int) $request->query('day', 30);

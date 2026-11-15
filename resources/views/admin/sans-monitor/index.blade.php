@@ -42,9 +42,11 @@
     $bp = $biomarkerPredictor;
 @endphp
 
-@section('title', $isEn
-    ? 'SANS Predictor — 6 Biomarkers, Timeline (+30/+60/+90d) & 3 Scenarios'
-    : 'Predictor SANS — Biomarcadores, Línea de Tiempo (+30/+60/+90) y Escenarios')
+@section('title', $activeTab === 'hub'
+    ? ($isEn ? 'SANS Mission Hub — Prevention & Medical Records' : 'Hub de Misión SANS — Prevención y Expedientes')
+    : ($isEn
+        ? 'SANS Predictor — 6 Biomarkers, Timeline (+30/+60/+90d) & 3 Scenarios'
+        : 'Predictor SANS — Biomarcadores, Línea de Tiempo (+30/+60/+90) y Escenarios'))
 
 @push('styles')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -52,7 +54,9 @@
 
 @section('content')
 <div id="sans-monitor-workspace">
-@if($activeTab === 'astronauta')
+@if($activeTab === 'hub')
+    @include('admin.sans-monitor.hub')
+@elseif($activeTab === 'astronauta')
     @include('admin.sans-monitor.astronaut')
 @else
 
