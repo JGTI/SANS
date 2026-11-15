@@ -54,37 +54,93 @@
     </header>
 
     <nav class="crew-tabs" aria-label="{{ $isEn ? 'Astronaut workspace' : 'Espacio del astronauta' }}">
-        <button type="button" class="crew-tab is-active" data-crew-tab="today"><i class="fa fa-sun-o"></i><span>{{ $isEn ? 'Today' : 'Hoy' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="log"><i class="fa fa-book"></i><span>{{ $isEn ? 'Logbook' : 'Bitácora' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="trends"><i class="fa fa-line-chart"></i><span>{{ $isEn ? 'Trends' : 'Tendencias' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="profile"><i class="fa fa-user-o"></i><span>{{ $isEn ? 'Profile' : 'Perfil' }}</span></button>
+        <button type="button" class="crew-tab is-active" data-crew-tab="today"><i class="fa fa-sun-o"></i><span>01 · {{ $isEn ? 'Today & 3D Eye' : 'Hoy y Ojo 3D' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="log"><i class="fa fa-book"></i><span>02 · {{ $isEn ? 'Logbook' : 'Bitácora' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="trends"><i class="fa fa-line-chart"></i><span>03 · {{ $isEn ? 'Trends' : 'Tendencias' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="profile"><i class="fa fa-user-o"></i><span>04 · {{ $isEn ? 'Profile' : 'Perfil' }}</span></button>
     </nav>
 
     <div class="crew-view is-active" data-crew-view="today">
-        <div class="crew-today-grid">
-            <article class="crew-primary-panel">
+        {{-- Quick-Locate Action Strip --}}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px;">
+            <button type="button" data-start-check style="text-align:left;background:#09090b;color:#ffffff;border:1px solid #09090b;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#a1a1aa;letter-spacing:0.06em;">WIZARD 1-BY-1</small><strong style="font-size:13px;">{{ $isEn ? 'Start Guided Check' : 'Iniciar Revisión' }}</strong></span>
+                <i class="fa fa-arrow-right"></i>
+            </button>
+            <button type="button" data-open-tab="log" style="text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">TIMELINE</small><strong style="font-size:13px;">{{ $isEn ? 'Mission Logbook' : 'Bitácora de Misión' }}</strong></span>
+                <i class="fa fa-book"></i>
+            </button>
+            <button type="button" data-open-tab="trends" style="text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">BIOMARKERS</small><strong style="font-size:13px;">{{ $isEn ? 'IOP & OCT Trends' : 'Tendencias PIO/OCT' }}</strong></span>
+                <i class="fa fa-line-chart"></i>
+            </button>
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="text-decoration:none;text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">DIGITAL TWIN</small><strong style="font-size:13px;">{{ $isEn ? 'Full 3D + OCT' : 'Visor 3D + OCT' }}</strong></span>
+                <i class="fa fa-cube"></i>
+            </a>
+        </div>
+
+        {{-- Above-the-fold: 3D Orbital Eye Monitor + Guided Check --}}
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:stretch;margin-bottom:16px;">
+            <article class="crew-primary-panel" style="margin:0;">
                 <div class="crew-panel-icon" aria-hidden="true"><i class="fa fa-eye"></i></div>
                 <p class="crew-eyebrow">{{ $isEn ? 'TODAY’S CHECK' : 'REVISIÓN DE HOY' }}</p>
                 <h2>{{ $isEn ? 'How are your eyes feeling?' : '¿Cómo se sienten tus ojos?' }}</h2>
-                <p>{{ $isEn ? 'We will record symptoms, six visual checks, eye pressure and the conditions around the measurement.' : 'Registraremos síntomas, seis pruebas visuales, presión ocular y las condiciones de la medición.' }}</p>
+                <p>{{ $isEn ? 'We will record symptoms, six visual checks (1-by-1 wizard), eye pressure and context.' : 'Registraremos síntomas, seis pruebas visuales (asistente 1 a 1), presión ocular y contexto.' }}</p>
                 <ul class="crew-check-list" aria-label="{{ $isEn ? 'Included activities' : 'Actividades incluidas' }}">
                     <li><i class="fa fa-check"></i> {{ $isEn ? 'Symptoms and wellbeing' : 'Síntomas y bienestar' }}</li>
-                    <li><i class="fa fa-check"></i> {{ $isEn ? 'Visual acuity, Amsler and contrast' : 'Agudeza visual, Amsler y contraste' }}</li>
+                    <li><i class="fa fa-check"></i> {{ $isEn ? '6-step visual wizard (Acuity, Amsler, Contrast)' : 'Asistente visual de 6 pasos (Agudeza, Amsler, Contraste)' }}</li>
                     <li><i class="fa fa-check"></i> {{ $isEn ? 'Eye pressure and physiological context' : 'Presión ocular y contexto fisiológico' }}</li>
                 </ul>
-                <button type="button" class="crew-primary-action" data-start-check>
+                <button type="button" class="crew-primary-action" style="background:#09090b;border-color:#09090b;" data-start-check>
                     {{ $isEn ? 'Start today’s check' : 'Comenzar revisión de hoy' }} <i class="fa fa-arrow-right"></i>
                 </button>
                 <p class="crew-action-note"><i class="fa fa-lock"></i> {{ $isEn ? 'Saved under your pseudonymous mission record.' : 'Se guarda en tu expediente de misión seudonimizado.' }}</p>
             </article>
 
-            <aside class="crew-side-panel">
+            {{-- Live 3D Orbital Microgravity Eye & Flight Log Telemetry Card (Monochrome) --}}
+            <div style="background:#09090b;border:1px solid #27272a;border-radius:12px;overflow:hidden;color:#ffffff;display:flex;flex-direction:column;justify-content:space-between;">
+                <div style="padding:10px 16px;background:#18181b;border-bottom:1px solid #27272a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:#ffffff;display:inline-block;"></span>
+                        <strong>{{ $isEn ? '3D Orbital Eye Telemetry & Fluid-Shift Monitor (ISS Flight Log)' : 'Monitor 3D Orbital de Fluido Cefálico y Globo Ocular (Bitácora ISS)' }}</strong>
+                    </div>
+                    <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}"
+                       style="color:#ffffff;font-weight:800;font-size:11.5px;text-decoration:underline;">
+                        {{ $isEn ? 'Open Full 3D + OCT →' : 'Abrir 3D + OCT →' }}
+                    </a>
+                </div>
+                <div id="crewThreeContainer" style="width:100%;height:230px;position:relative;cursor:grab;">
+                    <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,monospace;font-size:10.5px;background:rgba(9,9,11,0.85);padding:5px 9px;border-radius:6px;border:1px solid #3f3f46;color:#d4d4d8;pointer-events:none;">
+                        {{ $isEn ? 'Drag to inspect 3D eye · 0G Cephalic Shift' : 'Arrastra para rotar ojo 3D · Empuje cefálico 0G' }}
+                    </div>
+                </div>
+                <div style="padding:12px 16px;border-top:1px solid #27272a;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-family:ui-monospace,monospace;font-size:11.5px;background:#111113;">
+                    <div>
+                        <span style="display:block;color:#a1a1aa;font-size:10px;">{{ $isEn ? 'Fluid Shift' : 'Fluidos 0G' }}</span>
+                        <strong style="color:#ffffff;">~2,000 mL</strong>
+                    </div>
+                    <div>
+                        <span style="display:block;color:#a1a1aa;font-size:10px;">{{ $isEn ? 'Baseline OCT' : 'OCT Basal' }}</span>
+                        <strong>{{ $caseEvaluation['eyes']['OD']['baseline_trt'] !== null ? $caseEvaluation['eyes']['OD']['baseline_trt'].' µm' : ($isEn ? 'Unscanned' : 'Sin escaneo') }}</strong>
+                    </div>
+                    <div>
+                        <span style="display:block;color:#a1a1aa;font-size:10px;">{{ $isEn ? 'Max ΔTRT' : 'Máx ΔTRT' }}</span>
+                        <strong>{{ $caseEvaluation['eyes']['OD']['max_delta_trt'] !== null ? sprintf('%+d µm', $caseEvaluation['eyes']['OD']['max_delta_trt']) : ($isEn ? 'Unmeasured' : 'Sin medición') }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="crew-today-grid">
+            <aside class="crew-side-panel" style="grid-column:1 / -1;">
                 <div class="crew-side-heading">
                     <div>
-                        <p class="crew-eyebrow">{{ $isEn ? 'LAST CHECK' : 'ÚLTIMA REVISIÓN' }}</p>
-                        <h3>{{ $isEn ? 'No relevant change' : 'Sin cambios relevantes' }}</h3>
+                        <p class="crew-eyebrow">{{ $isEn ? 'LAST CHECK SUMMARY' : 'RESUMEN DE ÚLTIMA REVISIÓN' }}</p>
+                        <h3>{{ $isEn ? 'No relevant change · ' . $activeCase->case_id : 'Sin cambios relevantes · ' . $activeCase->case_id }}</h3>
                     </div>
-                    <span class="crew-state-ok"><i class="fa fa-check"></i></span>
+                    <span class="crew-state-ok" style="background:#09090b;color:#ffffff;"><i class="fa fa-check"></i></span>
                 </div>
                 <p>{{ $isEn ? 'Completed yesterday at 08:40. All captures passed the quality check.' : 'Completada ayer a las 08:40. Todas las capturas aprobaron el control de calidad.' }}</p>
                 <dl class="crew-last-values">
@@ -92,56 +148,8 @@
                     <div><dt>{{ $isEn ? 'Left eye pressure' : 'Presión ojo izquierdo' }}</dt><dd>15 mmHg</dd></div>
                     <div><dt>{{ $isEn ? 'Reported symptoms' : 'Síntomas reportados' }}</dt><dd>{{ $isEn ? 'None' : 'Ninguno' }}</dd></div>
                 </dl>
-                <button type="button" class="crew-text-action" data-open-tab="log">{{ $isEn ? 'See complete entry' : 'Ver registro completo' }} <i class="fa fa-angle-right"></i></button>
+                <button type="button" class="crew-text-action" data-open-tab="log">{{ $isEn ? 'See complete mission logbook' : 'Ver bitácora completa de misión' }} <i class="fa fa-angle-right"></i></button>
             </aside>
-        </div>
-
-        <div class="crew-guidance">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
-            <div><strong>{{ $isEn ? 'Before you begin' : 'Antes de comenzar' }}</strong><span>{{ $isEn ? 'Use the calibrated tablet stand, sit in the indicated position and have the rebound tonometer ready.' : 'Usa el soporte calibrado de la tableta, adopta la posición indicada y ten listo el tonómetro de rebote.' }}</span></div>
-        </div>
-
-        {{-- Live 3D Orbital Microgravity Eye & Flight Log Telemetry Card --}}
-        <div style="margin-top:18px;background:#05070d;border:1.5px solid #1e3a8a;border-radius:12px;overflow:hidden;color:#f8fafc;">
-            <div style="padding:10px 16px;background:#07173F;border-bottom:1px solid #1e3a8a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="width:8px;height:8px;border-radius:50%;background:#EAFE07;display:inline-block;"></span>
-                    <strong>{{ $isEn ? '3D Orbital Eye Telemetry & Fluid-Shift Monitor (ISS Flight Log)' : 'Monitor 3D Orbital de Fluido Cefálico y Globo Ocular (Bitácora ISS)' }}</strong>
-                </div>
-                <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]) }}"
-                   style="color:#EAFE07;font-weight:800;font-size:11.5px;text-decoration:none;">
-                    {{ $isEn ? 'Open Full 3D + OCT Console →' : 'Abrir Visor 3D + Consola OCT →' }}
-                </a>
-            </div>
-            <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,1fr);align-items:center;">
-                <div id="crewThreeContainer" style="width:100%;height:240px;position:relative;cursor:grab;">
-                    <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,monospace;font-size:10.5px;background:rgba(7,23,63,0.85);padding:5px 9px;border-radius:6px;border:1px solid #1e3a8a;color:#93c5fd;pointer-events:none;">
-                        {{ $isEn ? 'Drag to inspect 3D eye · 0G Cephalic Shift' : 'Arrastra para rotar ojo 3D · Empuje cefálico 0G' }}
-                    </div>
-                </div>
-                <div style="padding:16px 18px;border-left:1px solid #1e293b;display:flex;flex-direction:column;gap:10px;font-family:ui-monospace,monospace;font-size:12px;">
-                    <div style="color:#38bdf8;font-size:10.5px;font-weight:800;letter-spacing:0.06em;">
-                        {{ $isEn ? 'LIVE IN-FLIGHT LOGBOOK TELEMETRY' : 'TELEMETRÍA DE BITÁCORA EN ÓRBITA' }}
-                    </div>
-                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
-                        <span style="color:#94a3b8;">{{ $isEn ? 'Cephalic Fluid Shift' : 'Desplazamiento Fluidos' }}</span>
-                        <strong style="color:#EAFE07;">~2,000 mL (0G)</strong>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
-                        <span style="color:#94a3b8;">{{ $isEn ? 'Baseline OCT (OD)' : 'Línea Base OCT (OD)' }}</span>
-                        <strong>{{ $caseEvaluation['eyes']['OD']['baseline_trt'] !== null ? $caseEvaluation['eyes']['OD']['baseline_trt'].' µm' : ($isEn ? 'Unscanned' : 'Sin escaneo') }}</strong>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
-                        <span style="color:#94a3b8;">{{ $isEn ? 'Max ΔTRT Recorded' : 'Cambio Máx ΔTRT' }}</span>
-                        <strong style="color:{{ ($caseEvaluation['eyes']['OD']['max_delta_trt'] ?? 0) >= 20 ? '#f87171' : '#4ade80' }};">
-                            {{ $caseEvaluation['eyes']['OD']['max_delta_trt'] !== null ? sprintf('%+d µm', $caseEvaluation['eyes']['OD']['max_delta_trt']) : ($isEn ? 'Unmeasured' : 'Sin medición') }}
-                        </strong>
-                    </div>
-                    <div style="font-size:10.5px;color:#94a3b8;line-height:1.4;">
-                        {{ $isEn ? 'Every flight log check is timestamped and linked to your ground specialist dossier.' : 'Cada registro de bitácora se sella con tiempo de misión y se vincula a tu expediente en Tierra.' }}
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
