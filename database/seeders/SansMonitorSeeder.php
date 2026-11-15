@@ -1252,5 +1252,161 @@ class SansMonitorSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+
+        // === HIPER-POBLADO LONGITUDINAL DE BIOMARCADORES COMPLEMENTARIOS Y CONTEXTO PARA LOS 6 EXPEDIENTES ===
+        $extraCaseProfiles = [
+            'CASE-STABLE-01' => ['mission' => 'MSN-ISS-DEMO-01', 'iop_base' => 14.5, 'al_base' => 24.10, 'se_base' => 0.12, 'choroid_base' => 295.0, 'rnfl_base' => 97.0, 'frisen' => 0.0, 'delta_factor' => 0.25],
+            'CASE-PROG-02' => ['mission' => 'MSN-ISS-DEMO-02', 'iop_base' => 16.0, 'al_base' => 24.05, 'se_base' => 0.50, 'choroid_base' => 338.0, 'rnfl_base' => 112.0, 'frisen' => 1.0, 'delta_factor' => 1.0],
+            'CASE-ASO-05' => ['mission' => 'MSN-ISS-DEMO-05', 'iop_base' => 17.2, 'al_base' => 23.85, 'se_base' => 0.62, 'choroid_base' => 348.0, 'rnfl_base' => 118.0, 'frisen' => 1.0, 'delta_factor' => 1.15],
+            'CASE-NOSCAN-03A' => ['mission' => 'MSN-DEMO-03A', 'iop_base' => 16.0, 'al_base' => 24.00, 'se_base' => 0.00, 'choroid_base' => null, 'rnfl_base' => null, 'frisen' => 0.0, 'delta_factor' => 0.1],
+            'CASE-NORECENT-03B' => ['mission' => 'MSN-DEMO-03B', 'iop_base' => 15.2, 'al_base' => 24.15, 'se_base' => 0.25, 'choroid_base' => 305.0, 'rnfl_base' => 101.0, 'frisen' => 0.0, 'delta_factor' => 0.35],
+            'CASE-TILT-04' => ['mission' => 'MSN-ORB-04', 'iop_base' => 15.8, 'al_base' => 24.02, 'se_base' => 0.20, 'choroid_base' => 318.0, 'rnfl_base' => 103.0, 'frisen' => 0.0, 'delta_factor' => 0.5],
+        ];
+
+        $extraFlightDays = [5, 20, 25, 45, 60, 90, 120];
+        $bulkObservations = [];
+        $bulkContext = [];
+
+        foreach ($extraCaseProfiles as $cId => $prof) {
+            foreach ($extraFlightDays as $idx => $fd) {
+                $obsDate = now()->subDays(max(1, 130 - $fd))->toDateString();
+                $progression = ($idx + 1) * $prof['delta_factor'];
+
+                foreach (['OD', 'OS'] as $eye) {
+                    $eyeOffset = $eye === 'OS' ? -0.35 : 0.0;
+                    $bulkObservations[] = [
+                        'observation_id' => sprintf('OBS-BULK-%s-%s-FD%d-IOP', $cId, $eye, $fd),
+                        'case_id' => $cId,
+                        'mission_id' => $prof['mission'],
+                        'exposure_id' => null,
+                        'eye' => $eye,
+                        'observed_at' => $obsDate,
+                        'available_at' => $obsDate,
+                        'mission_day' => $fd,
+                        'available_day' => $fd,
+                        'days_post_end' => null,
+                        'visit_stage' => 'DURANTE',
+                        'metric_code' => 'IOP',
+                        'value' => round($prof['iop_base'] + ($progression * 0.4) + ($eyeOffset * 0.5), 1),
+                        'categorical_value' => null,
+                        'unit' => 'mmHg',
+                        'region' => 'GLOBAL',
+                        'modality' => 'TONOMETRIA',
+                        'status' => 'MEDIDO',
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+
+                    if ($cId !== 'CASE-NOSCAN-03A') {
+                        $bulkObservations[] = [
+                            'observation_id' => sprintf('OBS-BULK-%s-%s-FD%d-AL', $cId, $eye, $fd),
+                            'case_id' => $cId,
+                            'mission_id' => $prof['mission'],
+                            'exposure_id' => null,
+                            'eye' => $eye,
+                            'observed_at' => $obsDate,
+                            'available_at' => $obsDate,
+                            'mission_day' => $fd,
+                            'available_day' => $fd,
+                            'days_post_end' => null,
+                            'visit_stage' => 'DURANTE',
+                            'metric_code' => 'AXIAL_LENGTH',
+                            'value' => round($prof['al_base'] - ($progression * 0.02), 2),
+                            'categorical_value' => null,
+                            'unit' => 'mm',
+                            'region' => 'POLO_POSTERIOR',
+                            'modality' => 'BIOMETRIA_OPTICA',
+                            'status' => 'MEDIDO',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+
+                        $bulkObservations[] = [
+                            'observation_id' => sprintf('OBS-BULK-%s-%s-FD%d-SE', $cId, $eye, $fd),
+                            'case_id' => $cId,
+                            'mission_id' => $prof['mission'],
+                            'exposure_id' => null,
+                            'eye' => $eye,
+                            'observed_at' => $obsDate,
+                            'available_at' => $obsDate,
+                            'mission_day' => $fd,
+                            'available_day' => $fd,
+                            'days_post_end' => null,
+                            'visit_stage' => 'DURANTE',
+                            'metric_code' => 'SPHERICAL_EQ',
+                            'value' => round($prof['se_base'] + ($progression * 0.05), 2),
+                            'categorical_value' => null,
+                            'unit' => 'D',
+                            'region' => 'GLOBAL',
+                            'modality' => 'REFRACCION',
+                            'status' => 'MEDIDO',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+
+                        $bulkObservations[] = [
+                            'observation_id' => sprintf('OBS-BULK-%s-%s-FD%d-CHOR', $cId, $eye, $fd),
+                            'case_id' => $cId,
+                            'mission_id' => $prof['mission'],
+                            'exposure_id' => null,
+                            'eye' => $eye,
+                            'observed_at' => $obsDate,
+                            'available_at' => $obsDate,
+                            'mission_day' => $fd,
+                            'available_day' => $fd,
+                            'days_post_end' => null,
+                            'visit_stage' => 'DURANTE',
+                            'metric_code' => 'CHOROID_THICKNESS',
+                            'value' => round($prof['choroid_base'] + ($progression * 4.5), 1),
+                            'categorical_value' => null,
+                            'unit' => 'um',
+                            'region' => 'MACULAR',
+                            'modality' => 'OCT',
+                            'status' => 'MEDIDO',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                }
+            }
+
+            if ($cId !== 'CASE-PROG-02') {
+                $bulkContext[] = [
+                    'case_id' => $cId,
+                    'domain' => 'CARDIOVASCULAR',
+                    'variable_name' => 'Presión arterial braquial y FC en reposo',
+                    'value_or_category' => '116/72 mmHg · 62 bpm',
+                    'unit' => 'mmHg / bpm',
+                    'recorded_window' => 'FD30 · Módulo Habitable',
+                    'phase' => 'EN_VUELO',
+                    'method_or_posture' => 'Flotación libre en microgravedad',
+                    'source' => 'FICTICIO_DEMO',
+                    'availability_status' => 'DISPONIBLE',
+                    'research_note' => 'Contexto fisiológico de misión; no sustituye evaluación oftalmológica.',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                $bulkContext[] = [
+                    'case_id' => $cId,
+                    'domain' => 'AMBIENTAL',
+                    'variable_name' => 'CO2 ambiental de cabina (ppCO2)',
+                    'value_or_category' => '2.8',
+                    'unit' => 'mmHg',
+                    'recorded_window' => 'Promedio semanal FD20–FD30',
+                    'phase' => 'EN_VUELO',
+                    'method_or_posture' => 'Telemetría ambiental ISS',
+                    'source' => 'FICTICIO_DEMO',
+                    'availability_status' => 'DISPONIBLE',
+                    'research_note' => 'Registro ambiental continuo de referencia.',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        foreach (array_chunk($bulkObservations, 50) as $chunk) {
+            DB::table('sans_metric_observations')->insertOrIgnore($chunk);
+        }
+        DB::table('sans_context_records')->insertOrIgnore($bulkContext);
     }
 }
