@@ -85,6 +85,7 @@ def analyze_fundus_image(
     lum = 0.299 * r + 0.587 * g + 0.114 * b
 
     # 1. Segment circular fundus field of view
+    t_s1 = time.perf_counter()
     retina_mask = ndimage.binary_fill_holes(lum > 0.06)
     retina_mask = ndimage.binary_erosion(retina_mask, iterations=4)
     if retina_mask.sum() < 500:
@@ -94,8 +95,10 @@ def analyze_fundus_image(
     cy_fov = float(np.mean(yy[retina_mask]))
     cx_fov = float(np.mean(xx[retina_mask]))
     fov_radius = float(np.sqrt(retina_mask.sum() / np.pi))
+    ms_s1 = round((time.perf_counter() - t_s1) * 1000, 1)
 
     # 2. Optic Disc Localization via Gaussian-smoothed brightness + yellow-orange salience
+    t_s2 = time.perf_counter()
     disc_salience = (0.55 * r + 0.45 * g) * retina_mask
     smoothed = ndimage.gaussian_filter(disc_salience, sigma=14.0)
     # Restrict search within inner 75% of FOV to avoid edge artifacts
@@ -108,8 +111,10 @@ def analyze_fundus_image(
     rim_ring = (dist_from_disc >= 0.65 * disc_r) & (dist_from_disc <= 1.35 * disc_r) & retina_mask
     halo_ring = (dist_from_disc >= 1.05 * disc_r) & (dist_from_disc <= 2.35 * disc_r) & retina_mask
     periphery_ring = (dist_from_disc >= 2.6 * disc_r) & (dist_from_disc <= 4.2 * disc_r) & retina_mask
+    ms_s2 = round((time.perf_counter() - t_s2) * 1000, 1)
 
     # 3. Sobel Rim Gradient -> Disc Margin Sharpness
+    t_s3 = time.perf_counter()
     gx = ndimage.sobel(lum, axis=1)
     gy = ndimage.sobel(lum, axis=0)
     grad_mag = np.hypot(gx, gy)
@@ -117,15 +122,19 @@ def analyze_fundus_image(
     bg_grad = float(np.median(grad_mag[retina_mask])) + 1e-4
     sharpness_raw = rim_grad / (bg_grad * 7.5 + 0.18)
     disc_margin_sharpness = round(float(np.clip(sharpness_raw, 0.18, 0.96)), 2)
+    ms_s3 = round((time.perf_counter() - t_s3) * 1000, 1)
 
     # 4. Peripapillary Edema Halo Index (elevated pale/yellow scatter around disc)
+    t_s4 = time.perf_counter()
     halo_lum = float(np.mean(lum[halo_ring])) if halo_ring.any() else 0.3
     periph_lum = float(np.mean(lum[periphery_ring])) if periphery_ring.any() else 0.25
     halo_excess = (halo_lum - periph_lum) / (periph_lum + 0.12)
     peripapillary_halo = round(float(np.clip(0.22 + halo_excess * 0.95, 0.08, 0.94)), 2)
+    ms_s4 = round((time.perf_counter() - t_s4) * 1000, 1)
 
     # 5. Choroidal Folds Anisotropy (horizontal/oblique high-pass striae in papillomacular zone)
     # Green channel maximizes retinal vessel & choroidal fold contrast
+    t_s5 = time.perf_counter()
     g_hp = g - ndimage.gaussian_filter(g, sigma=4.5)
     gy_hp = np.abs(ndimage.sobel(g_hp, axis=0))
     gx_hp = np.abs(ndimage.sobel(g_hp, axis=1))
@@ -138,6 +147,15 @@ def analyze_fundus_image(
         folds_score = round(float(np.clip(anisotropy * 1.8 + ridge_energy * 2.2, 0.05, 0.95)), 2)
     else:
         folds_score = 0.12
+    ms_s5 = round((time.perf_counter() - t_s5) * 1000, 1)
+
+    stage_trace = [
+        {"step": 1, "lib": "Pillow + SciPy", "name": "Retinal FOV Mask", "ms": ms_s1, "detail": f"FOV radius={round(fov_radius, 1)}px, retina={int(retina_mask.sum()):,}px"},
+        {"step": 2, "lib": "SciPy Gaussian", "name": "Optic Disc Localization", "ms": ms_s2, "detail": f"Peak center=({int(disc_x)}, {int(disc_y)}), R={round(disc_r, 1)}px"},
+        {"step": 3, "lib": "SciPy Sobel", "name": "Rim Gradient Sharpness", "ms": ms_s3, "detail": f"rim_p85={round(rim_grad, 3)}, bg_med={round(bg_grad, 3)}, sharpness={int(disc_margin_sharpness*100)}%"},
+        {"step": 4, "lib": "NumPy Ring", "name": "Peripapillary Halo", "ms": ms_s4, "detail": f"halo_lum={round(halo_lum, 3)} vs periph={round(periph_lum, 3)} -> {int(peripapillary_halo*100)}%"},
+        {"step": 5, "lib": "SciPy Bandpass", "name": "Choroidal Folds", "ms": ms_s5, "detail": f"anisotropy_score={folds_score}, detected={bool(folds_score >= 0.25)}"},
+    ]
 
     # 6. Vessel Tortuosity / Venous Engorgement Proxy
     lap_g = np.abs(ndimage.laplace(ndimage.gaussian_filter(g, sigma=1.2)))
@@ -264,6 +282,7 @@ def analyze_fundus_image(
             "Peripapillary Halo Ring Photometry",
             "Bandpass Choroidal Folds Anisotropy",
         ],
+        "stage_trace": stage_trace,
         "iop_mmhg": round(iop_mmhg, 1),
         "iop_interpretation": {"en": iop_status_en, "es": iop_status_es},
         "frisen_grade_estimate": frisen_grade,

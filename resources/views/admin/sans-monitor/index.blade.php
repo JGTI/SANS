@@ -431,6 +431,10 @@
         document.getElementById('cvOriginalImg').src = activeCapture.src;
         document.getElementById('cvOriginalLabel').textContent = `${activeCapture.eye} · ${isEn ? 'Original Fundus' : 'Fondo Original'}`;
         document.getElementById('cvOriginalIop').textContent = `${activeCapture.iop.toFixed(1)} mmHg`;
+        ['cvEdgeImg', 'cvHeatmapImg', 'cvFoldsImg'].forEach(id => {
+            const img = document.getElementById(id);
+            if (img) { img.style.opacity = '0.28'; img.style.filter = 'blur(2px)'; }
+        });
         document.querySelectorAll('.sv-scan-laser').forEach(el => {
             el.style.display = 'block';
             el.animate([{ top: '14%' }, { top: '88%' }, { top: '14%' }], { duration: 900, iterations: 2 });
@@ -453,6 +457,10 @@
             if (data.cv_overlays?.disc_edge_map) document.getElementById('cvEdgeImg').src = data.cv_overlays.disc_edge_map;
             if (data.cv_overlays?.edema_heatmap) document.getElementById('cvHeatmapImg').src = data.cv_overlays.edema_heatmap;
             if (data.cv_overlays?.folds_ridge_map) document.getElementById('cvFoldsImg').src = data.cv_overlays.folds_ridge_map;
+            ['cvEdgeImg', 'cvHeatmapImg', 'cvFoldsImg'].forEach(id => {
+                const img = document.getElementById(id);
+                if (img) { img.style.opacity = '1'; img.style.filter = 'none'; }
+            });
 
             const tel = document.getElementById('fundusEngineTelemetry');
             if (tel) {
@@ -467,6 +475,12 @@
             const interp = isEn ? data.clinical_interpretation?.en : data.clinical_interpretation?.es;
             const iopNote = isEn ? data.iop_interpretation?.en : data.iop_interpretation?.es;
             const safety = isEn ? data.safety_notice?.en : data.safety_notice?.es;
+            const traceRows = (data.stage_trace || []).map(st => `
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11px;">
+                    <span><strong style="color:var(--foreground);">[${st.step}/5] ${st.name}</strong> <span style="color:var(--muted-foreground);">(${st.lib})</span></span>
+                    <span style="color:var(--muted-foreground);text-align:right;">${st.detail} · <strong style="color:var(--foreground);">${st.ms} ms</strong></span>
+                </div>
+            `).join('');
             box.innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px;font-family:ui-monospace,monospace;">
                     <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">FRISÉN GRADE</small><strong style="font-size:14px;color:var(--foreground);">Grade ${data.frisen_grade_estimate}</strong></div>
@@ -476,11 +490,16 @@
                     <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">VESSEL TORTUOSITY</small><strong style="font-size:14px;color:var(--foreground);">${Math.round((data.vessel_tortuosity_index || 0) * 100)}%</strong></div>
                     <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">TONOMETER IOP</small><strong style="font-size:14px;color:var(--foreground);">${data.iop_mmhg} mmHg</strong></div>
                 </div>
+                ${traceRows ? `<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden;">${traceRows}</div>` : ''}
                 <p style="margin:0 0 6px;color:var(--foreground);font-weight:700;">${interp}</p>
                 <p style="margin:0 0 6px;color:var(--muted-foreground);font-size:12px;"><strong>${isEn ? 'Tonometer IOP Correlation' : 'Correlación PIO Tonómetro'} (${data.iop_mmhg} mmHg):</strong> ${iopNote}</p>
                 <div style="font-size:11px;color:var(--muted-foreground);border-top:1px solid var(--border);padding-top:6px;">${safety}</div>
             `;
         } finally {
+            ['cvEdgeImg', 'cvHeatmapImg', 'cvFoldsImg'].forEach(id => {
+                const img = document.getElementById(id);
+                if (img) { img.style.opacity = '1'; img.style.filter = 'none'; }
+            });
             document.querySelectorAll('.sv-scan-laser').forEach(el => { el.style.display = 'none'; });
             btn.disabled = false;
             btn.innerHTML = `<i class="fa fa-crosshairs"></i> ${isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV'}`;
