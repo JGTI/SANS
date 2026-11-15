@@ -29,6 +29,7 @@
         'seguimiento', 'inclinacion' => 'seguimiento',
         'escenarios', 'simulador', 'estudios' => 'escenarios',
         'poblacion', 'cohortes', 'conclusion' => 'poblacion',
+        'team', 'equipo' => 'team',
         default => 'biomarcadores',
     };
     $sharedParams = [
@@ -277,11 +278,12 @@
     </a>
 </div>
 
+@if($normalizedTab !== 'team')
 <div style="display:flex;justify-content:flex-end;gap:0.5rem;flex-wrap:wrap;margin:-0.45rem 0 0.9rem;">
-    <a href="#project-team-section" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'team'])) }}" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-users"></i>
         <span>{{ $isEn ? 'Project Team (6 Members)' : 'Miembros del Proyecto (6)' }}</span>
-        <i class="fa fa-arrow-down" style="font-size:10px;opacity:0.7;"></i>
+        <i class="fa fa-arrow-right" style="font-size:10px;opacity:0.7;"></i>
     </a>
     <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-book"></i>
@@ -2131,7 +2133,9 @@ window.runCandidatePredictor = async function (e) {
         </div>
     </div>
 </details>
+@endif
 
+@if($normalizedTab === 'team')
 {{-- SECCIÓN OFICIAL DE MIEMBROS DEL PROYECTO (NASA SPACE APPS CHALLENGE 2026) --}}
 @php
     $teamMembers = [
@@ -2302,6 +2306,7 @@ window.runCandidatePredictor = async function (e) {
         @endforeach
     </div>
 </section>
+@endif
 
 <script>
 window.runNasaLiveSearch = async function (e) {

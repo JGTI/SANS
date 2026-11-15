@@ -33,7 +33,7 @@
             </a>
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
-                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['astronauta', 'poblacion'], true) ? 'active' : '' }}" href="{{ route('home') }}">
+                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['astronauta', 'poblacion', 'team', 'equipo'], true) ? 'active' : '' }}" href="{{ route('home') }}">
                     <i class="fa fa-flask"></i>
                     <span>{{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}</span>
                 </a>
@@ -49,7 +49,7 @@
                     <i class="fa fa-bar-chart"></i>
                     <span>{{ $isEn ? 'Population Dashboard' : 'Dashboard Poblacional' }}</span>
                 </a>
-                <a href="{{ route('home') }}#project-team-section">
+                <a class="{{ in_array(request('tab'), ['team', 'equipo'], true) ? 'active' : '' }}" href="{{ route('home', ['tab' => 'team']) }}">
                     <i class="fa fa-users"></i>
                     <span>{{ $isEn ? 'Team' : 'Equipo' }}</span>
                 </a>
