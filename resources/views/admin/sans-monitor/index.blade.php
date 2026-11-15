@@ -2187,9 +2187,11 @@ window.runCandidatePredictor = async function (e) {
         ],
         [
             'num' => 5,
-            'name' => 'Mónica Belem Pérez Vallejo',
-            'role_en' => 'Research Member',
-            'role_es' => 'Integrante del equipo',
+            'name' => 'Lic. Mónica Belem Pérez Vallejo',
+            'role_en' => 'Attorney at Law (LL.B.)',
+            'role_es' => 'Licenciada en Derecho',
+            'bio_en' => 'B.A. in Law (Licenciada en Derecho) · Regulatory Compliance & Space Health Governance',
+            'bio_es' => 'Licenciada en Derecho · Cumplimiento Normativo y Gobernanza en Salud Espacial',
             'is_leader' => false,
             'nasa_user' => '@monicapervall',
             'emails' => [
