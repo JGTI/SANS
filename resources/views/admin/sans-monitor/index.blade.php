@@ -2202,9 +2202,11 @@ window.runCandidatePredictor = async function (e) {
         ],
         [
             'num' => 6,
-            'name' => 'Alam Tinajero Palacios',
-            'role_en' => 'Engineering Member',
-            'role_es' => 'Integrante del equipo',
+            'name' => 'Dr. Alam Tinajero Palacios',
+            'role_en' => 'Ph.D. in Legal Sciences',
+            'role_es' => 'Dr. en Ciencias Jurídicas',
+            'bio_en' => 'Ph.D. in Legal Sciences (Doctor en Ciencias Jurídicas) · Space Law, Bioethics & Regulatory Framework',
+            'bio_es' => 'Doctor en Ciencias Jurídicas · Derecho Espacial, Bioética y Marco Regulatorio',
             'is_leader' => false,
             'nasa_user' => '@alamtpalacios',
             'emails' => [
