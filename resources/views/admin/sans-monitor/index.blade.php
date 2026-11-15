@@ -1043,162 +1043,249 @@
         </a>
     </div>
 
-    {{-- Vistas Esquemáticas Anatómicas del Escenario Activo --}}
+    {{-- Vistas Clínicas de Imagen Médica del Escenario Activo (MRI Sagital · Fundus Real · SD-OCT B-Scan) --}}
     @php
         $isWorsening = $activeCase->scenario_archetype === 'EMPEORA';
         $isUnscanned = $bp['inputs']['oct_trt_current_um'] === null;
         $frisenVal = $bp['inputs']['papilledema_frisen'] ?? null;
         $frisenHigh = ($frisenVal !== null && $frisenVal >= 2) || $isWorsening;
         $deltaTrt = $bp['delta_trt_um'] ?? 0;
-        $accentColor = $isWorsening ? '#f59e0b' : ($isUnscanned ? '#94a3b8' : '#22c55e');
+        $fundusImg = $isUnscanned
+            ? asset('images/sans/fundus/fundus-os-baseline.jpg')
+            : ($isWorsening ? asset('images/sans/fundus/fundus-edema.png') : asset('images/sans/fundus/fundus-normal.jpg'));
     @endphp
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
-        {{-- 1. Axial Length & Posterior Pole (Sagittal) --}}
+        {{-- 1. Axial Length & Posterior Pole (Sagittal Ocular MRI / B-Scan) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                 <span><i class="fa fa-circle-o"></i> {{ $isEn ? '1. Axial Length & Posterior Pole (Sagittal)' : '1. Longitud Axial y Polo Posterior (Sagital)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">{{ $isWorsening ? 'FLATTENING' : ($isUnscanned ? 'PENDING' : 'NOMINAL') }}</span>
             </h3>
-            <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#070d1a 0%,#09090b 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
-                <defs>
-                    <pattern id="gridSagittal" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.6"/>
-                    </pattern>
-                    <radialGradient id="vitreousGrad" cx="45%" cy="50%" r="55%">
-                        <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.16"/>
-                        <stop offset="100%" stop-color="#020617" stop-opacity="0.05"/>
-                    </radialGradient>
-                </defs>
-                <rect width="320" height="175" fill="url(#gridSagittal)"/>
-                {{-- Baseline reference globe (dashed) --}}
-                <ellipse cx="145" cy="90" rx="64" ry="54" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="3 3"/>
-                {{-- Optic nerve & CSF sheath (distended if worsening) --}}
-                <path d="M 196 {{ $isWorsening ? 70 : 75 }} L 278 {{ $isWorsening ? 66 : 73 }} L 278 {{ $isWorsening ? 114 : 107 }} L 196 {{ $isWorsening ? 110 : 105 }} Z"
-                      fill="{{ $isWorsening ? 'rgba(56,189,248,0.18)' : 'rgba(148,163,184,0.12)' }}"
-                      stroke="{{ $isWorsening ? '#38bdf8' : '#64748b' }}" stroke-width="1.3"/>
-                <line x1="198" y1="90" x2="276" y2="90" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2"/>
-                {{-- Sclera / Choroid / Retina shell --}}
-                <ellipse cx="145" cy="90" rx="{{ $isWorsening ? 55 : 64 }}" ry="54" fill="url(#vitreousGrad)" stroke="#e2e8f0" stroke-width="2"/>
-                <ellipse cx="145" cy="90" rx="{{ $isWorsening ? 51 : 60 }}" ry="50" fill="none" stroke="{{ $accentColor }}" stroke-width="1.2" stroke-opacity="0.85"/>
-                {{-- Cornea & Lens (anterior left) --}}
-                <path d="M 85 68 Q 66 90 85 112" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.8"/>
-                <ellipse cx="97" cy="90" rx="7" ry="18" fill="rgba(226,232,240,0.2)" stroke="#cbd5e1" stroke-width="1.2"/>
-                {{-- Optical / Axial measurement axis --}}
-                <line x1="72" y1="90" x2="{{ $isWorsening ? 200 : 209 }}" y2="90" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="4 3"/>
-                <circle cx="{{ $isWorsening ? 198 : 207 }}" cy="90" r="3" fill="{{ $accentColor }}"/>
-                @if($isWorsening)
-                    {{-- Posterior flattening vector arrows --}}
-                    <line x1="226" y1="78" x2="205" y2="78" stroke="#f59e0b" stroke-width="1.6"/>
-                    <polygon points="205,78 211,75 211,81" fill="#f59e0b"/>
-                    <line x1="226" y1="102" x2="205" y2="102" stroke="#f59e0b" stroke-width="1.6"/>
-                    <polygon points="205,102 211,99 211,105" fill="#f59e0b"/>
-                @endif
-                {{-- Telemetry HUD --}}
-                <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'AXIAL LENGTH' : 'LONGITUD AXIAL' }} · {{ $activeCase->case_id }}</text>
-                <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'Simulated hyperopia:' : 'Hipermetropía simulada:' }} <tspan fill="{{ $accentColor }}" font-weight="700">+{{ $bp['inputs']['hyperopia_sim_d'] }} D</tspan></text>
-                <text x="236" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">AL {{ $bp['inputs']['axial_length_mm'] ?? '23.8' }}mm</text>
-            </svg>
+            <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#030712;border:1px solid #1e293b;">
+                <canvas id="scenarioSagittalCanvas" width="440" height="220" style="width:100%;height:100%;display:block;"></canvas>
+                <div style="position:absolute;top:8px;left:10px;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:700;color:#e2e8f0;background:rgba(2,6,23,0.72);padding:2px 7px;border-radius:4px;border:1px solid rgba(148,163,184,0.22);">
+                    {{ $isEn ? 'AXIAL LENGTH' : 'LONGITUD AXIAL' }} · {{ $activeCase->case_id }}
+                </div>
+                <div style="position:absolute;bottom:8px;left:10px;right:10px;display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.66rem;color:#cbd5e1;background:rgba(2,6,23,0.72);padding:3px 8px;border-radius:4px;">
+                    <span>{{ $isEn ? 'Simulated hyperopia:' : 'Hipermetropía simulada:' }} <strong style="color:{{ $isWorsening ? '#fbbf24' : '#4ade80' }};">+{{ $bp['inputs']['hyperopia_sim_d'] }} D</strong></span>
+                    <span>AL {{ $bp['inputs']['axial_length_mm'] ?? '23.8' }} mm</span>
+                </div>
+            </div>
         </div>
 
-        {{-- 2. Papilledema & Optic Disc (Fundus) --}}
+        {{-- 2. Papilledema & Optic Disc (Real Clinical Fundus Photo + Reticle HUD) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                 <span><i class="fa fa-dot-circle-o"></i> {{ $isEn ? '2. Papilledema & Optic Disc (Fundus)' : '2. Edema Papilar y Disco Óptico (Fondo)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">FRISÉN {{ $frisenVal ?? 'N/E' }}</span>
             </h3>
-            <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#09090b 0%,#120806 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
-                <defs>
-                    <radialGradient id="fundusField" cx="52%" cy="52%" r="50%">
-                        <stop offset="0%" stop-color="#7c2d12" stop-opacity="0.58"/>
-                        <stop offset="65%" stop-color="#431407" stop-opacity="0.35"/>
-                        <stop offset="100%" stop-color="#09090b" stop-opacity="0"/>
-                    </radialGradient>
-                    <radialGradient id="edemaHalo" cx="50%" cy="50%" r="50%">
-                        <stop offset="30%" stop-color="{{ $frisenHigh ? '#f59e0b' : '#22c55e' }}" stop-opacity="{{ $frisenHigh ? '0.62' : '0.22' }}"/>
-                        <stop offset="100%" stop-color="{{ $frisenHigh ? '#ef4444' : '#22c55e' }}" stop-opacity="0"/>
-                    </radialGradient>
-                </defs>
-                <circle cx="160" cy="90" r="64" fill="url(#fundusField)" stroke="#334155" stroke-width="1.2"/>
-                {{-- Macular fovea --}}
-                <circle cx="122" cy="92" r="4" fill="#1c0a04" stroke="#78350f" stroke-width="0.8"/>
-                {{-- Peripapillary Edema Halo --}}
-                <circle cx="186" cy="90" r="{{ $frisenHigh ? 30 : 18 }}" fill="url(#edemaHalo)"/>
-                {{-- Choroidal folds if worsening --}}
-                @if($frisenHigh)
-                    <path d="M 136 74 Q 152 80 156 90 Q 152 100 136 106" fill="none" stroke="#EAFE07" stroke-width="1" stroke-opacity="0.55" stroke-dasharray="3 2"/>
-                    <path d="M 143 68 Q 160 76 164 90 Q 160 104 143 112" fill="none" stroke="#EAFE07" stroke-width="0.9" stroke-opacity="0.45" stroke-dasharray="3 2"/>
-                @endif
-                {{-- Retinal vascular arcade --}}
-                <path d="M 186 86 Q 166 56 120 48" fill="none" stroke="#ef4444" stroke-width="{{ $frisenHigh ? 2.1 : 1.5 }}" stroke-opacity="0.85"/>
-                <path d="M 186 94 Q 164 124 118 130" fill="none" stroke="#ef4444" stroke-width="{{ $frisenHigh ? 2.1 : 1.5 }}" stroke-opacity="0.85"/>
-                <path d="M 188 86 Q 204 58 220 46" fill="none" stroke="#dc2626" stroke-width="1.3" stroke-opacity="0.75"/>
-                <path d="M 188 94 Q 204 120 218 134" fill="none" stroke="#dc2626" stroke-width="1.3" stroke-opacity="0.75"/>
-                {{-- Optic Nerve Head & Cup --}}
-                <circle cx="186" cy="90" r="{{ $frisenHigh ? 17 : 13 }}" fill="rgba(253,224,71,0.16)" stroke="{{ $frisenHigh ? '#f59e0b' : '#fde047' }}" stroke-width="1.8" stroke-dasharray="{{ $frisenHigh ? '3 2' : 'none' }}"/>
-                <circle cx="186" cy="90" r="6" fill="rgba(254,240,138,0.35)" stroke="#fef08a" stroke-width="1"/>
-                {{-- Telemetry HUD --}}
-                <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $frisenVal ?? 'N/E' }})</text>
-                <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'IOP:' : 'PIO:' }} <tspan fill="#f8fafc" font-weight="700">{{ $bp['inputs']['iop_mmhg'] }} mmHg</tspan></text>
-                <text x="234" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">{{ $frisenHigh ? 'HALO + FOLDS' : 'SHARP RIM' }}</text>
-            </svg>
+            <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#050507;border:1px solid #1e293b;display:flex;align-items:center;justify-content:center;">
+                <img src="{{ $fundusImg }}" alt="Retinal Fundus" style="width:100%;height:100%;object-fit:cover;filter:{{ $isUnscanned ? 'grayscale(0.75) brightness(0.45)' : 'contrast(1.08) saturate(1.05)' }};">
+                <div style="position:absolute;inset:0;background:radial-gradient(circle at center, transparent 48%, rgba(2,6,23,0.78) 92%);pointer-events:none;"></div>
+                <div style="position:absolute;top:8px;left:10px;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:700;color:#f8fafc;background:rgba(2,6,23,0.75);padding:2px 7px;border-radius:4px;border:1px solid rgba(148,163,184,0.22);">
+                    {{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $frisenVal ?? 'N/E' }})
+                </div>
+                <div style="position:absolute;bottom:8px;left:10px;right:10px;display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.66rem;color:#e2e8f0;background:rgba(2,6,23,0.75);padding:3px 8px;border-radius:4px;">
+                    <span>{{ $isEn ? 'IOP:' : 'PIO:' }} <strong>{{ $bp['inputs']['iop_mmhg'] }} mmHg</strong></span>
+                    <span style="color:{{ $frisenHigh ? '#fbbf24' : '#4ade80' }};font-weight:700;">{{ $frisenHigh ? 'HALO + FOLDS' : ($isUnscanned ? 'BASELINE ONLY' : 'SHARP RIM') }}</span>
+                </div>
+            </div>
         </div>
 
-        {{-- 3. Mean OCT Thickness (Retinal Layers B-Scan) --}}
+        {{-- 3. Mean OCT Thickness (Procedural SD-OCT B-Scan) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
                 <span><i class="fa fa-align-justify"></i> {{ $isEn ? '3. Mean OCT Thickness (Retinal Layers)' : '3. Espesor Medio por OCT (Capas)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">SD-OCT</span>
             </h3>
             @if($isUnscanned)
-                <div style="height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.45rem;background:linear-gradient(180deg,#050a14 0%,#09090b 100%);color:#e2e8f0;padding:1rem;text-align:center;font-size:0.8rem;border-radius:8px;border:1px dashed #475569;">
+                <div style="height:184px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.45rem;background:linear-gradient(180deg,#050a14 0%,#09090b 100%);color:#e2e8f0;padding:1rem;text-align:center;font-size:0.8rem;border-radius:8px;border:1px dashed #475569;">
                     <span style="font-family:ui-monospace,monospace;font-size:0.7rem;color:#94a3b8;letter-spacing:0.06em;">SD-OCT B-SCAN · UNMEASURED</span>
                     <span>{{ $isEn
                         ? 'Scenario "Unscanned": OCT not evaluable (Never drawn as normal nor classified as stable).'
                         : 'Escenario «No se escanea»: OCT no evaluable (No se dibuja como normal ni se clasifica como estable).' }}</span>
                 </div>
             @else
-                @php
-                    $peakY = $deltaTrt >= 20 ? 36 : ($deltaTrt >= 10 ? 48 : 58);
-                @endphp
-                <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#050a14 0%,#09090b 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
-                    <defs>
-                        <linearGradient id="rnflFill" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}" stop-opacity="0.32"/>
-                            <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.04"/>
-                        </linearGradient>
-                    </defs>
-                    {{-- Calibrated µm depth lines --}}
-                    <line x1="34" y1="45" x2="306" y2="45" stroke="#1e293b" stroke-width="0.8"/>
-                    <line x1="34" y1="75" x2="306" y2="75" stroke="#1e293b" stroke-width="0.8"/>
-                    <line x1="34" y1="105" x2="306" y2="105" stroke="#1e293b" stroke-width="0.8"/>
-                    <line x1="34" y1="132" x2="306" y2="132" stroke="#1e293b" stroke-width="0.8"/>
-                    <text x="6" y="48" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">400</text>
-                    <text x="6" y="78" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">300</text>
-                    <text x="6" y="108" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">200</text>
-                    <text x="6" y="135" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">RPE</text>
-                    {{-- Choroid under RPE --}}
-                    <rect x="34" y="128" width="272" height="16" fill="rgba(245,158,11,0.08)"/>
-                    {{-- Retinal thickness shaded area --}}
-                    <path d="M 34 72 Q 170 {{ $peakY }} 306 72 L 306 126 Q 170 126 34 126 Z" fill="url(#rnflFill)"/>
-                    {{-- Baseline reference contour (dashed) --}}
-                    <path d="M 34 72 Q 170 62 306 72" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4 3"/>
-                    {{-- OPL / INL mid-retinal layer --}}
-                    <path d="M 34 96 Q 170 {{ $peakY + 46 }} 306 96" fill="none" stroke="#38bdf8" stroke-width="1.1" stroke-opacity="0.55"/>
-                    {{-- RPE / Bruch's membrane --}}
-                    <path d="M 34 126 Q 170 126 306 126" fill="none" stroke="#f59e0b" stroke-width="2"/>
-                    {{-- ILM / RNFL upper contour --}}
-                    <path d="M 34 72 Q 170 {{ $peakY }} 306 72" fill="none" stroke="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}" stroke-width="2.2"/>
-                    {{-- ΔTRT Caliper --}}
-                    <line x1="170" y1="{{ $peakY + 14 }}" x2="170" y2="124" stroke="#f8fafc" stroke-width="1" stroke-dasharray="2 2"/>
-                    <circle cx="170" cy="{{ $peakY + 14 }}" r="2.5" fill="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}"/>
-                    {{-- Telemetry HUD --}}
-                    <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'OCT THICKNESS:' : 'ESPESOR OCT:' }} {{ $bp['inputs']['oct_trt_current_um'] }} µm</text>
-                    <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'Change vs baseline:' : 'Cambio vs basal:' }} <tspan fill="{{ $isWorsening ? '#EAFE07' : '#22c55e' }}" font-weight="700">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }}</tspan></text>
-                    <text x="242" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">RNFL · RPE</text>
-                </svg>
+                <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#030712;border:1px solid #1e293b;">
+                    <canvas id="scenarioOctCanvas" width="440" height="220" style="width:100%;height:100%;display:block;"></canvas>
+                    <div style="position:absolute;top:8px;left:10px;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:700;color:#f8fafc;background:rgba(2,6,23,0.75);padding:2px 7px;border-radius:4px;border:1px solid rgba(148,163,184,0.22);">
+                        {{ $isEn ? 'OCT THICKNESS:' : 'ESPESOR OCT:' }} {{ $bp['inputs']['oct_trt_current_um'] }} µm
+                    </div>
+                    <div style="position:absolute;bottom:8px;left:10px;right:10px;display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.66rem;color:#cbd5e1;background:rgba(2,6,23,0.75);padding:3px 8px;border-radius:4px;">
+                        <span>{{ $isEn ? 'Change vs baseline:' : 'Cambio vs basal:' }} <strong style="color:{{ $isWorsening ? '#EAFE07' : '#4ade80' }};">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }}</strong></span>
+                        <span>ILM · RNFL · RPE</span>
+                    </div>
+                </div>
             @endif
         </div>
     </div>
+
+    <script>
+    (function () {
+        const isWorsening = @json($isWorsening);
+        const deltaTrt = @json((float) ($deltaTrt ?? 0));
+
+        // 1. Sagittal Ocular MRI / B-Scan Renderer
+        const sagCanvas = document.getElementById('scenarioSagittalCanvas');
+        if (sagCanvas) {
+            const ctx = sagCanvas.getContext('2d');
+            const w = sagCanvas.width, h = sagCanvas.height;
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, w, h);
+
+            // Subtle MRI noise grain
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const d = imgData.data;
+            for (let i = 0; i < d.length; i += 4) {
+                const n = (Math.random() * 14) | 0;
+                d[i] += n; d[i+1] += n + 2; d[i+2] += n + 6;
+            }
+            ctx.putImageData(imgData, 0, 0);
+
+            // Orbital fat & extraocular muscles (posterior)
+            const orbGrad = ctx.createRadialGradient(210, 110, 40, 210, 110, 175);
+            orbGrad.addColorStop(0, 'rgba(30, 58, 138, 0.28)');
+            orbGrad.addColorStop(1, 'rgba(2, 6, 23, 0)');
+            ctx.fillStyle = orbGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Optic nerve & CSF sheath
+            const sheathH = isWorsening ? 26 : 16;
+            const nerveGrad = ctx.createLinearGradient(255, 110 - sheathH, 255, 110 + sheathH);
+            nerveGrad.addColorStop(0, isWorsening ? 'rgba(56,189,248,0.55)' : 'rgba(148,163,184,0.28)');
+            nerveGrad.addColorStop(0.3, 'rgba(226,232,240,0.65)');
+            nerveGrad.addColorStop(0.5, 'rgba(100,116,139,0.75)');
+            nerveGrad.addColorStop(0.7, 'rgba(226,232,240,0.65)');
+            nerveGrad.addColorStop(1, isWorsening ? 'rgba(56,189,248,0.55)' : 'rgba(148,163,184,0.28)');
+            ctx.fillStyle = nerveGrad;
+            ctx.beginPath();
+            ctx.moveTo(255, 110 - sheathH);
+            ctx.lineTo(395, 110 - sheathH - 4);
+            ctx.lineTo(395, 110 + sheathH + 4);
+            ctx.lineTo(255, 110 + sheathH);
+            ctx.closePath();
+            ctx.fill();
+
+            // Globe vitreous cavity with realistic T2-MRI radial glow
+            const rx = isWorsening ? 68 : 78;
+            const ry = 72;
+            const cx = 195, cy = 110;
+            const vitGrad = ctx.createRadialGradient(cx - 14, cy - 12, 8, cx, cy, rx + 8);
+            vitGrad.addColorStop(0, 'rgba(56, 189, 248, 0.34)');
+            vitGrad.addColorStop(0.75, 'rgba(14, 165, 233, 0.16)');
+            vitGrad.addColorStop(0.94, 'rgba(226, 232, 240, 0.85)');
+            vitGrad.addColorStop(1, 'rgba(148, 163, 184, 0.15)');
+
+            ctx.fillStyle = vitGrad;
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Anterior cornea + crystalline lens
+            ctx.fillStyle = 'rgba(186, 230, 253, 0.25)';
+            ctx.strokeStyle = 'rgba(224, 242, 254, 0.85)';
+            ctx.lineWidth = 2.2;
+            ctx.beginPath();
+            ctx.moveTo(cx - rx + 8, cy - 34);
+            ctx.quadraticCurveTo(cx - rx - 22, cy, cx - rx + 8, cy + 34);
+            ctx.stroke();
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(241, 245, 249, 0.32)';
+            ctx.beginPath();
+            ctx.ellipse(cx - rx + 22, cy, 10, 26, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Posterior flattening marker when worsening
+            if (isWorsening) {
+                ctx.strokeStyle = 'rgba(251, 191, 36, 0.9)';
+                ctx.lineWidth = 1.8;
+                ctx.setLineDash([4, 3]);
+                ctx.beginPath();
+                ctx.ellipse(cx, cy, 78, ry, 0, -0.7, 0.7);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        // 2. Procedural Spectral-Domain OCT B-Scan Renderer
+        const octCanvas = document.getElementById('scenarioOctCanvas');
+        if (octCanvas) {
+            const ctx = octCanvas.getContext('2d');
+            const w = octCanvas.width, h = octCanvas.height;
+            ctx.fillStyle = '#04070d';
+            ctx.fillRect(0, 0, w, h);
+
+            // Authentic SD-OCT speckle noise across B-Scan
+            const img = ctx.createImageData(w, h);
+            const data = img.data;
+            const elevation = Math.min(34, Math.max(4, deltaTrt * 0.95));
+
+            for (let x = 0; x < w; x++) {
+                const nx = (x - w * 0.5) / (w * 0.32);
+                const gaussian = Math.exp(-nx * nx);
+                // Normal has a subtle foveal dip; elevated SANS has thickening dome
+                const ilmY = isWorsening
+                    ? 98 - elevation * gaussian
+                    : 88 + 14 * Math.exp(-Math.pow((x - w * 0.5) / 26, 2)) - elevation * 0.3 * gaussian;
+                const rnflBottom = ilmY + (isWorsening ? 16 + elevation * 0.28 * gaussian : 10);
+                const oplY = rnflBottom + 24;
+                const ezY = 148;
+                const rpeY = 158;
+
+                for (let y = 0; y < h; y++) {
+                    const idx = (y * w + x) * 4;
+                    let intensity = 8 + Math.random() * 10;
+
+                    if (y >= ilmY && y <= rpeY + 26) {
+                        const speckle = 0.55 + Math.random() * 0.9;
+                        if (Math.abs(y - ilmY) < 2.4) {
+                            intensity = 225 * speckle; // ILM hyper-reflective
+                        } else if (y > ilmY && y < rnflBottom) {
+                            intensity = (isWorsening ? 175 : 135) * speckle; // RNFL
+                        } else if (y >= rnflBottom && y < oplY) {
+                            intensity = 68 * speckle; // GCL/IPL
+                        } else if (Math.abs(y - oplY) < 4) {
+                            intensity = 115 * speckle; // OPL
+                        } else if (y > oplY && y < ezY) {
+                            intensity = 38 * speckle; // ONL hyporeflective
+                        } else if (Math.abs(y - ezY) < 2.2) {
+                            intensity = 175 * speckle; // Ellipsoid Zone
+                        } else if (Math.abs(y - rpeY) < 3.5) {
+                            intensity = 240 * speckle; // RPE / Bruch
+                        } else if (y > rpeY) {
+                            // Choroid vessels
+                            const vessel = Math.sin(x * 0.14 + y * 0.25) > 0.45 ? 0.35 : 0.85;
+                            intensity = 82 * speckle * vessel * Math.max(0, 1 - (y - rpeY) / 34);
+                        }
+                    }
+
+                    const v = Math.min(255, Math.max(0, intensity | 0));
+                    // Subtle warm-cyan clinical OCT tint
+                    data[idx] = v;
+                    data[idx + 1] = Math.min(255, (v * 0.96) | 0);
+                    data[idx + 2] = Math.min(255, (v * 0.88) | 0);
+                    data[idx + 3] = 255;
+                }
+            }
+            ctx.putImageData(img, 0, 0);
+
+            // Overlay clean ILM/RPE reference lines
+            ctx.strokeStyle = isWorsening ? 'rgba(234, 254, 7, 0.85)' : 'rgba(34, 211, 238, 0.8)';
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            for (let x = 20; x < w - 20; x += 4) {
+                const nx = (x - w * 0.5) / (w * 0.32);
+                const gaussian = Math.exp(-nx * nx);
+                const y = isWorsening
+                    ? 98 - elevation * gaussian
+                    : 88 + 14 * Math.exp(-Math.pow((x - w * 0.5) / 26, 2)) - elevation * 0.3 * gaussian;
+                if (x === 20) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    })();
+    </script>
 </div>
 </div>
 
