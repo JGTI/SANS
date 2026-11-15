@@ -991,7 +991,8 @@ details.collapsible-card > summary::-webkit-details-marker {
     --crew-positive: #16a34a;
     --crew-attention: #d97706;
     --crew-border: var(--border);
-    max-width: 1180px;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     color: var(--crew-ink);
 }

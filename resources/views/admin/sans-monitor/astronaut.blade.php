@@ -182,7 +182,7 @@
         </div>
 
         <style>
-            .sv-logbook-list { display:flex; flex-direction:column; gap:12px; max-width:920px; }
+            .sv-logbook-list { display:flex; flex-direction:column; gap:12px; width:100%; }
             .sv-log-card { display:grid; grid-template-columns:120px 38px minmax(0,1fr); gap:16px; align-items:start; background:#ffffff; border:1px solid #e4e4e7; border-radius:10px; padding:16px 18px; transition:border-color .15s ease; }
             .sv-log-card:hover { border-color:#09090b; }
             .sv-log-time { font-family:ui-monospace,monospace; text-align:right; padding-top:2px; }
@@ -341,9 +341,9 @@
         </div>
     </div>
 
-    <div class="crew-check-flow" data-check-flow hidden aria-live="polite" style="max-width:1180px;width:100%;">
+    <div class="crew-check-flow" data-check-flow hidden aria-live="polite" style="max-width:100%;width:100%;">
         <style>
-            .crew-check-flow { max-width:1180px !important; width:100%; }
+            .crew-check-flow { max-width:100% !important; width:100%; }
             .crew-check-flow .crew-step { max-width:100% !important; }
             .crew-sci-banner { background:#09090b; color:#ffffff; border:1px solid #27272a; border-radius:10px; padding:10px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-family:ui-monospace,monospace; font-size:11.5px; }
             .crew-check-flow .crew-guided-test { border:1px solid #d4d4d8; border-radius:14px; overflow:hidden; background:#ffffff; box-shadow:0 8px 24px rgba(9,9,11,0.06); }
