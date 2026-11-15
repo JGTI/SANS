@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#000000">
     <title>Iniciar sesión | {{ config('app.name') }}</title>
-    <link rel="icon" type="image/png" href="{{ request()->getBasePath() }}/images/nexus-logo.png">
+    <link rel="icon" type="image/png" href="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png">
     <script>
         const savedTheme = localStorage.getItem('nexus-space-theme');
         document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
@@ -19,7 +19,7 @@
     <section class="auth-visual" aria-label="Presentación de {{ config('app.name') }}">
         <a class="auth-brand" href="{{ route('home') }}">
             <span class="auth-brand-mark" aria-hidden="true">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width: 24px; height: 24px; object-fit: contain; display: block;">
+                <img src="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png" alt="SPACE VISION" style="width: 24px; height: 24px; object-fit: contain; display: block;">
             </span>
             {{ config('app.name') }}
         </a>
@@ -36,7 +36,7 @@
         <div class="auth-card">
             <a class="auth-mobile-brand" href="{{ route('home') }}">
                 <span class="auth-brand-mark" aria-hidden="true" style="background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.08);">
-                    <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width: 24px; height: 24px; object-fit: contain; display: block;">
+                    <img src="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png" alt="SPACE VISION" style="width: 24px; height: 24px; object-fit: contain; display: block;">
                 </span>
                 {{ config('app.name') }}
             </a>

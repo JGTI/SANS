@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#09090b">
     <title>@yield('title', 'Dashboard') | {{ config('app.name') }}</title>
-    <link rel="icon" type="image/png" href="{{ request()->getBasePath() }}/images/nexus-logo.png">
+    <link rel="icon" type="image/png" href="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png">
     <script>
         const savedTheme = localStorage.getItem('nexus-space-theme');
         document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
@@ -25,7 +25,7 @@
     <div class="admin-main">
         <header class="topbar">
             <a href="{{ route('home') }}" class="topbar-brand">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" class="nexus-logo-adaptive" style="width:22px;height:22px;object-fit:contain;">
+                <img src="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png" alt="SPACE VISION" style="width:26px;height:26px;object-fit:contain;">
                 <span class="topbar-brand-text">
                     <strong>SPACE VISION</strong>
                     <small>SANS MONITOR · ISS-01</small>
