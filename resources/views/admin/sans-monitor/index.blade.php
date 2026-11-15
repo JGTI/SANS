@@ -966,7 +966,10 @@
 
 <script>
 window.runCandidatePredictor = async function (e) {
-    if (e) e.preventDefault();
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     const btn = document.getElementById('candidate-predict-btn');
     const out = document.getElementById('candidate-predict-output');
     if (!out) return false;
@@ -991,6 +994,9 @@ window.runCandidatePredictor = async function (e) {
                 baseline_trt_um: {{ (float) ($bp['inputs']['oct_trt_baseline_um'] ?? 280) }},
             }),
         });
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
+        }
         const d = await res.json();
         const isEn = @json($isEn);
         const dc = d.domain_contributions || {};
@@ -1013,6 +1019,8 @@ window.runCandidatePredictor = async function (e) {
         `;
     } catch (err) {
         console.error(err);
+        out.style.display = 'block';
+        out.innerHTML = `<span style="color:#dc2626;font-weight:700;">Error: ${err.message || 'Predictor unavailable'}</span>`;
     } finally {
         if (btn) { btn.disabled = false; btn.innerHTML = orig; }
     }
@@ -2032,9 +2040,13 @@ window.runNasaLiveSearch = async function (e) {
     }, true);
 
     document.addEventListener('submit', function (e) {
+        if (e.defaultPrevented) return;
         const workspace = document.getElementById('sans-monitor-workspace');
         if (!workspace || !workspace.contains(e.target)) return;
         const form = e.target.closest('form');
+        if (form && (form.id === 'candidate-predict-form' || form.id === 'nasa-live-search-form')) {
+            return;
+        }
         if (form && (form.method || 'GET').toUpperCase() === 'GET') {
             e.preventDefault();
             const formData = new FormData(form);
