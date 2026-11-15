@@ -3,22 +3,34 @@
 @endphp
 
 <section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
-    {{-- Orbital Flight Logbook Telemetry Strip (NASA Deep-Space Blue — matches Page 1) --}}
-    <div style="background:linear-gradient(135deg,#07173F 0%,#0042A6 100%);color:#ffffff;border:1px solid #2E96F5;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;box-shadow:0 4px 14px rgba(0,66,166,0.18);">
-        <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-            <span style="background:#ffffff;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
-                <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
+    {{-- Orbital Flight Logbook Telemetry Strip + Prominent Crew Roster Selector --}}
+    <div style="background:linear-gradient(135deg,#07173F 0%,#0042A6 100%);color:#ffffff;border:1px solid #2E96F5;border-radius:10px;padding:0.75rem 1rem;margin-bottom:0.85rem;box-shadow:0 4px 14px rgba(0,66,166,0.18);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;margin-bottom:0.65rem;">
+            <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+                <span style="background:#ffffff;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
+                    <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
+                </span>
+                <span style="color:#bfdbfe;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
+                <span style="color:#bfdbfe;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
+                <span style="color:#bfdbfe;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
+            </div>
+            <span style="font-size:0.68rem;color:#e0f2fe;font-weight:700;">
+                <i class="fa fa-users"></i> {{ $isEn ? 'SELECT CREW ASTRONAUT:' : 'SELECCIONAR ASTRONAUTA:' }}
             </span>
-            <span style="color:#bfdbfe;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
-            <span style="color:#bfdbfe;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
-            <span style="color:#bfdbfe;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
         </div>
-        <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.45rem;">
             @foreach($cases as $cItem)
-                @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
+                @php
+                    $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id);
+                    $isCurrentAstro = $cItem->case_id === $activeCase->case_id;
+                @endphp
                 <a href="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}"
-                   style="padding:0.2rem 0.55rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : 'rgba(147,197,253,0.45)' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : 'rgba(7,23,63,0.55)' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#07173F' : '#e0f2fe' }};">
-                    {{ $cMeta['name'] }}
+                   style="display:flex;align-items:center;gap:0.55rem;padding:0.42rem 0.6rem;border-radius:8px;text-decoration:none;border:1.5px solid {{ $isCurrentAstro ? '#ffffff' : 'rgba(147,197,253,0.38)' }};background:{{ $isCurrentAstro ? '#ffffff' : 'rgba(7,23,63,0.52)' }};color:{{ $isCurrentAstro ? '#07173F' : '#f0f9ff' }};transition:transform .12s ease;">
+                    <img src="{{ $cMeta['avatar'] }}" alt="{{ $cMeta['name'] }}" style="width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1px solid {{ $isCurrentAstro ? '#0042A6' : 'rgba(255,255,255,0.3)' }};">
+                    <span style="min-width:0;line-height:1.15;">
+                        <strong style="display:block;font-size:0.74rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $cMeta['name'] }}</strong>
+                        <small style="display:block;font-family:ui-monospace,monospace;font-size:0.62rem;opacity:{{ $isCurrentAstro ? '0.85' : '0.78' }};">{{ $cItem->case_id }}</small>
+                    </span>
                 </a>
             @endforeach
         </div>
@@ -34,10 +46,10 @@
             </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <label for="crewAstronautSelect" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:0.78rem;font-weight:700;color:var(--foreground);">
-                <i class="fa fa-user-circle"></i>
+            <label for="crewAstronautSelect" style="display:flex;align-items:center;gap:7px;background:var(--crew-sky);border:2px solid var(--crew-primary);border-radius:9px;padding:6px 12px;font-size:0.82rem;font-weight:800;color:var(--foreground);">
+                <i class="fa fa-user-circle" style="color:var(--crew-primary);"></i>
                 <span>{{ $isEn ? 'Astronaut:' : 'Astronauta:' }}</span>
-                <select id="crewAstronautSelect" aria-label="{{ $isEn ? 'Switch astronaut' : 'Cambiar de astronauta' }}" onchange="if(this.value) window.location.href=this.value;" style="border:none;background:transparent;font-weight:800;color:var(--foreground);cursor:pointer;outline:none;font-size:0.78rem;">
+                <select id="crewAstronautSelect" aria-label="{{ $isEn ? 'Switch astronaut' : 'Cambiar de astronauta' }}" onchange="if(this.value) window.location.href=this.value;" style="border:none;background:transparent;font-weight:800;color:var(--foreground);cursor:pointer;outline:none;font-size:0.82rem;">
                     @foreach($cases as $cItem)
                         @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
                         <option value="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}" {{ $cItem->case_id === $activeCase->case_id ? 'selected' : '' }}>
