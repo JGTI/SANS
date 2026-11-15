@@ -58,36 +58,101 @@
 @else
 
 @if($normalizedTab !== 'team')
-{{-- CABECERA CIENTÍFICA COMPACTA (SIN PAJA PROMOCIONAL) --}}
-<div class="card" style="padding:1.1rem 1.35rem;margin-bottom:1rem;border:1.5px solid var(--space-blue);">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
-        <div>
-            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.25rem;">
-                <span class="interactive-pill" style="background:#07173F;color:#EAFE07;border-color:#07173F;font-size:0.68rem;">
-                    <i class="fa fa-flask"></i>
-                    {{ $isEn ? 'FOR GROUND SCIENTISTS & CLINICAL INVESTIGATORS' : 'MÓDULO EXCLUSIVO PARA CIENTÍFICOS E INVESTIGADORES EN TIERRA' }}
-                </span>
-                <span style="font-size:0.74rem;color:var(--muted-foreground);font-weight:600;">
-                    {{ $isEn ? 'Source:' : 'Fuente:' }} <code>{{ $activeCase->source_type }}</code>
-                </span>
-            </div>
-            <h1 style="font-size:1.3rem;font-weight:800;margin:0;">
-                {{ $isEn
-                    ? 'SANS Biomarker Predictor & Longitudinal Follow-up (+30 / +60 / +90 Days)'
-                    : 'Predictor SANS por Biomarcadores y Seguimiento Longitudinal (+30 / +60 / +90 Días)' }}
-            </h1>
+@php
+    $activeCrewMeta = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
+    $headerBadgeClass = match($caseEvaluation['case_operational_code']) {
+        'LISTO_PARA_REVISION' => 'status-badge-ready',
+        'PRIORIZAR_REVISION' => 'status-badge-prioritize',
+        default => 'status-badge-missing',
+    };
+@endphp
+<style>
+    .sans-hero-banner {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        margin-bottom: 1rem;
+        display: grid;
+        grid-template-columns: 1.35fr 1fr;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1.55rem 1.65rem;
+        background: linear-gradient(112deg, #07173F 0%, #0e2a63 58%, #eaf2ff 58.15%, #f4f8ff 100%);
+    }
+    html[data-theme="dark"] .sans-hero-banner {
+        background: linear-gradient(112deg, #07173F 0%, #0d2554 58%, #0f172a 58.15%, #111827 100%);
+    }
+    .sans-hero-case-card {
+        background: var(--card);
+        color: var(--foreground);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.05rem 1.15rem;
+        box-shadow: 0 12px 28px rgba(2, 6, 23, 0.14);
+    }
+    html[data-theme="dark"] .sans-hero-case-card {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+    }
+    @media (max-width: 960px) {
+        .sans-hero-banner {
+            grid-template-columns: 1fr;
+            background: linear-gradient(165deg, #07173F 0%, #0d2554 62%, var(--muted) 62.15%, var(--muted) 100%);
+            padding: 1.2rem;
+        }
+        html[data-theme="dark"] .sans-hero-banner {
+            background: linear-gradient(165deg, #07173F 0%, #0d2554 62%, #0f172a 62.15%, #111827 100%);
+        }
+    }
+</style>
+
+{{-- PORTADA EDITORIAL ADAPTADA A MODO CLARO Y NOCTURNO --}}
+<section class="sans-hero-banner" aria-label="SPACE VISION SANS Monitor">
+    <div style="min-width:0;padding-right:0.5rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;letter-spacing:0.08em;color:#93c5fd;text-transform:uppercase;">
+                SPACE VISION / SANS MONITOR
+            </span>
+            <span class="interactive-pill" style="background:rgba(234,254,7,0.14);color:#EAFE07;border-color:rgba(234,254,7,0.45);font-size:0.66rem;">
+                <i class="fa fa-flask"></i>
+                {{ $isEn ? 'FOR GROUND SCIENTISTS & CLINICAL INVESTIGATORS' : 'MÓDULO PARA CIENTÍFICOS E INVESTIGADORES' }}
+            </span>
+            <span style="font-size:0.72rem;color:#cbd5e1;font-weight:600;">
+                {{ $isEn ? 'Source:' : 'Fuente:' }} <code style="color:#EAFE07;">{{ $activeCase->source_type }}</code>
+            </span>
         </div>
 
-        @php
-            $headerBadgeClass = match($caseEvaluation['case_operational_code']) {
-                'LISTO_PARA_REVISION' => 'status-badge-ready',
-                'PRIORIZAR_REVISION' => 'status-badge-prioritize',
-                default => 'status-badge-missing',
-            };
-        @endphp
-        <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
-            <div style="padding:0.4rem 0.75rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
-                <div style="font-size:0.64rem;text-transform:uppercase;color:var(--muted-foreground);">
+        <h1 style="font-size:clamp(1.85rem,3vw,2.5rem);font-weight:900;margin:0;color:#ffffff;letter-spacing:-0.025em;line-height:1.08;">
+            SPACE VISION
+        </h1>
+        <div style="font-size:clamp(0.95rem,1.35vw,1.1rem);font-weight:700;color:#dbeafe;margin:0.35rem 0 0.45rem;line-height:1.3;">
+            {{ $isEn
+                ? 'SANS Biomarker Predictor & Longitudinal Follow-up (+30 / +60 / +90 Days)'
+                : 'Predictor SANS por Biomarcadores y Seguimiento Longitudinal (+30 / +60 / +90 Días)' }}
+        </div>
+        <p style="margin:0;font-size:0.82rem;color:rgba(226,232,240,0.88);line-height:1.45;max-width:58ch;">
+            {{ $isEn
+                ? 'Traceable ocular review across pre-flight baseline, in-flight exposure, and +30/+60/+90 day post-flight controls.'
+                : 'Revisión ocular trazable entre línea base previa, exposición en vuelo y controles post-vuelo a +30/+60/+90 días.' }}
+        </p>
+    </div>
+
+    <div class="sans-hero-case-card">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem;">
+            <img src="{{ $activeCrewMeta['avatar'] }}"
+                 alt="{{ $activeCrewMeta['name'] }}"
+                 style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:2px solid var(--space-blue);flex-shrink:0;">
+            <div style="min-width:0;">
+                <div style="font-size:0.98rem;font-weight:800;line-height:1.2;">{{ $activeCrewMeta['name'] }}</div>
+                <div style="font-size:0.73rem;color:var(--muted-foreground);margin-top:2px;">
+                    {{ $activeCase->case_id }} · {{ $activeCrewMeta['role'] }}
+                </div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0.5rem;margin-bottom:0.85rem;">
+            <div style="padding:0.45rem 0.65rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:3px;">
                     {{ $isEn ? 'Operational State' : 'Estado Operativo' }} ({{ $activeCase->case_id }})
                 </div>
                 <span class="{{ $headerBadgeClass }}">
@@ -95,21 +160,24 @@
                     {{ $t($caseEvaluation['case_operational_text']) }}
                 </span>
             </div>
-            <div style="padding:0.4rem 0.75rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
-                <div style="font-size:0.64rem;text-transform:uppercase;color:var(--muted-foreground);">
+            <div style="padding:0.45rem 0.65rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--muted-foreground);margin-bottom:3px;">
                     {{ $isEn ? 'Fitness Verdict' : 'Dictamen de Aptitud' }}
                 </div>
-                <div style="font-size:0.86rem;font-weight:700;">{{ $t($caseEvaluation['fitness_display']) }}</div>
+                <div style="font-size:0.82rem;font-weight:700;">{{ $t($caseEvaluation['fitness_display']) }}</div>
             </div>
-            <a href="{{ route('public.astronaut') }}" class="btn btn-outline" style="padding:0.5rem 0.8rem;font-size:0.8rem;">
+        </div>
+
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <a href="{{ route('public.astronaut') }}" class="btn btn-outline" style="flex:1;justify-content:center;padding:0.48rem 0.75rem;font-size:0.78rem;">
                 <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut View' : 'Vista Astronauta' }}
             </a>
-            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]) }}" class="btn btn-primary" style="padding:0.5rem 0.9rem;font-size:0.8rem;">
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]) }}" class="btn btn-primary" style="flex:1;justify-content:center;padding:0.48rem 0.75rem;font-size:0.78rem;">
                 <i class="fa fa-cube"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
             </a>
         </div>
     </div>
-</div>
+</section>
 
 @if(session('status'))
     <div class="card" style="padding:0.85rem 1rem;margin-bottom:1rem;border-left:4px solid var(--space-blue);">
@@ -118,9 +186,6 @@
 @endif
 
 {{-- BARRA COMPACTA DE SUJETO Y OJO (SIN CONTROLES DUPLICADOS NI TEXTO DE RELLENO) --}}
-@php
-    $activeCrewMeta = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
-@endphp
 <div class="card" style="padding:0.8rem 1rem;margin-bottom:0.9rem;border:1.5px solid var(--interactive-border);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.6rem;">
         <div style="display:flex;align-items:center;gap:0.65rem;">
