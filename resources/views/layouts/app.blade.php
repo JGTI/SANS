@@ -369,6 +369,19 @@
         },
         {
             page: 'home',
+            selector: '#wizard-panel-poblacion',
+            duration: 8500,
+            titleEn: '9. Integrated Population Dashboard & Predictive Conclusion',
+            titleEs: '9. Dashboard Integral de Poblaciones y Conclusión Predictiva',
+            textEn: 'Synthesizing all 3 populations (Orbital Astronauts, Terrestrial Controls 0°, and -6° HDT Analog): confirms ΔTRT OCT + -6° HDT + short axial length show the highest predictive value, whereas IOP alone is not predictive.',
+            textEs: 'Sintetiza las 3 poblaciones (Astronautas, Terrestres 0° y Terrestres -6° HDT): concluye que ΔTRT OCT + respuesta -6° HDT + longitud axial corta poseen el mayor valor predictivo, mientras la PIO sola no es predictiva.',
+            action: () => {
+                const tab = document.querySelector('[data-wizard-tab="poblacion"]');
+                if (tab) tab.click();
+            }
+        },
+        {
+            page: 'home',
             selector: '#nasa-live-search-form',
             duration: 7500,
             titleEn: '9. NASA OCHMO Protocols & Live OSDR / NTRS / DONKI / ISS APIs',

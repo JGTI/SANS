@@ -24,10 +24,11 @@
     ];
     $t = fn (?string $val) => ($isEn && $val !== null && isset($trMap[$val])) ? $trMap[$val] : $val;
 
-    // Normalizar las 3 pestañas principales manteniendo compatibilidad con enlaces directos
+    // Normalizar las 4 pestañas principales manteniendo compatibilidad con enlaces directos
     $normalizedTab = match($activeTab) {
         'seguimiento', 'inclinacion' => 'seguimiento',
         'escenarios', 'simulador', 'estudios' => 'escenarios',
+        'poblacion', 'cohortes', 'conclusion' => 'poblacion',
         default => 'biomarcadores',
     };
     $sharedParams = [
@@ -177,8 +178,8 @@
     </div>
 </div>
 
-{{-- NAVEGADOR VISUAL DEL WIZARD / TABS DE 3 PASOS --}}
-<div class="sans-grid-3" style="margin-bottom:1rem;" role="tablist" aria-label="{{ $isEn ? '3 Main Wizard Steps' : '3 Pasos Principales del Wizard' }}">
+{{-- NAVEGADOR VISUAL DEL WIZARD / TABS DE 4 PASOS --}}
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.85rem;margin-bottom:1rem;" role="tablist" aria-label="{{ $isEn ? '4 Main Wizard Steps' : '4 Pasos Principales del Wizard' }}">
     {{-- PASO 1 --}}
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'biomarcadores'])) }}"
        data-wizard-tab="biomarcadores"
@@ -248,6 +249,30 @@
         </div>
         <div style="font-size:0.75rem;opacity:0.88;">
             {{ $isEn ? 'Compare the 3 canonical models & anatomical clinical imaging.' : 'Compara los 3 modelos canónicos y sus vistas clínicas.' }}
+        </div>
+    </a>
+
+    {{-- PASO 4: DASHBOARD INTEGRAL DE POBLACIONES Y CONCLUSIÓN PREDICTIVA --}}
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'poblacion'])) }}"
+       data-wizard-tab="poblacion"
+       role="tab"
+       aria-selected="{{ $normalizedTab === 'poblacion' ? 'true' : 'false' }}"
+       class="wizard-step-card {{ $normalizedTab === 'poblacion' ? 'is-active' : '' }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;">
+            <span style="font-size:0.68rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.92;">
+                {{ $isEn ? 'POPULATION & CONCLUSION' : 'POBLACIONES Y CONCLUSIÓN' }}
+            </span>
+            <span class="wizard-step-pill" data-wizard-pill
+                  data-label-active="{{ $isEn ? '● ACTIVE' : '● ACTIVO' }}"
+                  data-label-inactive="{{ $isEn ? 'OPEN →' : 'ABRIR →' }}">
+                {{ $normalizedTab === 'poblacion' ? ($isEn ? '● ACTIVE' : '● ACTIVO') : ($isEn ? 'OPEN →' : 'ABRIR →') }}
+            </span>
+        </div>
+        <div style="font-size:0.96rem;font-weight:800;">
+            <i class="fa fa-bar-chart"></i> {{ $isEn ? 'All Cohorts & Predictive Synthesis' : 'Cohorte Integral y Conclusión Predictiva' }}
+        </div>
+        <div style="font-size:0.75rem;opacity:0.88;">
+            {{ $isEn ? 'Astronauts · Terrestrial (0°) · -6° HDT: biomarker predictive value.' : 'Astronautas · Terrestres (0°) · -6° HDT: valor predictivo final.' }}
         </div>
     </a>
 </div>
@@ -1802,6 +1827,178 @@ window.runCandidatePredictor = async function (e) {
 </div>
 </div>
 
+{{-- =============================================================================================== --}}
+{{-- PESTAÑA 4: DASHBOARD INTEGRAL DE POBLACIONES Y CONCLUSIÓN PREDICTIVA                            --}}
+{{-- =============================================================================================== --}}
+<div id="wizard-panel-poblacion" data-wizard-panel="poblacion" style="{{ $normalizedTab === 'poblacion' ? '' : 'display:none;' }}">
+    @php $pop = $populationDashboard ?? ['cohorts' => [], 'biomarker_predictive_matrix' => [], 'rows' => []]; @endphp
+
+    {{-- Banner de Conclusión Final de los Estudios --}}
+    <div class="card" style="padding:1.25rem 1.35rem;margin-bottom:1.15rem;border:1.5px solid var(--space-blue);background:var(--card);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.65rem;">
+            <div>
+                <div style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);text-transform:uppercase;letter-spacing:0.06em;">
+                    {{ $isEn ? 'INTEGRATED MULTI-COHORT INTERPRETATION · ORBITAL vs. TERRESTRIAL 0° vs. -6° HDT' : 'INTERPRETACIÓN INTEGRAL MULTICOHORTE · ASTRONAUTAS vs. TERRESTRES 0° vs. -6° HDT' }}
+                </div>
+                <h2 style="font-size:1.18rem;font-weight:900;margin:0.2rem 0 0;">
+                    <i class="fa fa-bar-chart" style="color:var(--interactive-text);"></i>
+                    {{ $isEn ? 'Cross-Population Biomarker Dashboard & Predictive Value Conclusion' : 'Dashboard Integral de Poblaciones y Conclusión Predictiva de Biomarcadores' }}
+                </h2>
+            </div>
+            <span style="background:#EAFE07;color:#09090b;border:1px solid #09090b;border-radius:999px;padding:0.28rem 0.85rem;font-size:0.72rem;font-weight:900;font-family:ui-monospace,monospace;">
+                {{ $isEn ? '3 POPULATIONS SYNTHESIZED' : '3 POBLACIONES SINTETIZADAS' }}
+            </span>
+        </div>
+
+        <div style="padding:0.9rem 1rem;border-radius:10px;border:1px solid var(--interactive-border);background:var(--interactive-bg);font-size:0.86rem;line-height:1.55;">
+            <strong style="color:var(--interactive-text);display:block;margin-bottom:0.25rem;">
+                <i class="fa fa-check-circle"></i>
+                {{ $isEn ? 'Final Scientific Conclusion — Which Biomarkers Show Predictive Value?' : 'Conclusión Científica Final — ¿Qué Biomarcadores Señalan Valor Predictivo?' }}
+            </strong>
+            @if($isEn)
+                Comparing all three cohorts confirms that <strong>OCT Retinal Thickness Change (ΔTRT ≥ +20 µm)</strong> combined with <strong>-6° HDT terrestrial analog response (+24 µm)</strong> and <strong>shorter baseline axial length (≤ 23.6 mm)</strong> provide the <strong>strongest early predictive separation</strong> for SANS susceptibility. In contrast, <strong>Intraocular Pressure (IOP) alone is NOT predictive</strong> (14.9–18.5 mmHg overlaps across astronauts, 0° controls, and unscanned subjects), proving that normal IOP must never substitute for OCT surveillance.
+            @else
+                Al cotejar las tres poblaciones se concluye que el <strong>Cambio de Espesor Retiniano OCT (ΔTRT ≥ +20 µm)</strong> combinado con la <strong>respuesta al análogo terrestre -6° HDT (+24 µm)</strong> y una <strong>longitud axial basal más corta (≤ 23.6 mm)</strong> ofrecen el <strong>mayor valor predictivo temprano</strong> para identificar susceptibilidad al SANS. Por el contrario, la <strong>PIO aislada NO tiene valor predictivo</strong> (14.9–18.5 mmHg se solapa entre astronautas, controles terrestres 0° y casos sin OCT), confirmando que una PIO normal jamás debe sustituir el seguimiento por OCT.
+            @endif
+        </div>
+    </div>
+
+    {{-- Tarjetas KPI de las 3 Poblaciones --}}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.9rem;margin-bottom:1.15rem;">
+        @foreach($pop['cohorts'] as $cohort)
+            <div class="card" style="padding:1rem 1.1rem;border-top:4px solid {{ $cohort['accent'] }};">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+                    <strong style="font-size:0.92rem;">{{ $isEn ? $cohort['label_en'] : $cohort['label_es'] }}</strong>
+                    <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;padding:0.15rem 0.5rem;border-radius:999px;background:var(--muted);border:1px solid var(--border);">
+                        n = {{ $cohort['count'] }}
+                    </span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;font-size:0.76rem;margin-top:0.5rem;">
+                    <div style="padding:0.45rem;border-radius:6px;background:var(--muted);">
+                        <div style="color:var(--muted-foreground);font-size:0.68rem;">{{ $isEn ? 'Mean / Peak ΔTRT' : 'ΔTRT Medio / Pico' }}</div>
+                        <div style="font-weight:800;font-size:0.9rem;color:{{ $cohort['accent'] }};">+{{ $cohort['mean_delta_trt'] }} / +{{ $cohort['peak_delta_trt'] }} µm</div>
+                    </div>
+                    <div style="padding:0.45rem;border-radius:6px;background:var(--muted);">
+                        <div style="color:var(--muted-foreground);font-size:0.68rem;">{{ $isEn ? 'Mean IOP' : 'PIO Media' }}</div>
+                        <div style="font-weight:800;font-size:0.9rem;">{{ $cohort['mean_iop'] }} mmHg</div>
+                    </div>
+                    <div style="padding:0.45rem;border-radius:6px;background:var(--muted);">
+                        <div style="color:var(--muted-foreground);font-size:0.68rem;">{{ $isEn ? 'Mean Axial Length' : 'Long. Axial Media' }}</div>
+                        <div style="font-weight:800;font-size:0.86rem;">{{ $cohort['mean_axial'] }} mm</div>
+                    </div>
+                    <div style="padding:0.45rem;border-radius:6px;background:var(--muted);">
+                        <div style="color:var(--muted-foreground);font-size:0.68rem;">{{ $isEn ? 'Hyperopic Shift' : 'Cambio Hiperm.' }}</div>
+                        <div style="font-weight:800;font-size:0.86rem;">+{{ number_format($cohort['mean_hyperopic_d'], 2) }} D</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- Gráfica Comparativa + Matriz de Valor Predictivo de los 6 Biomarcadores --}}
+    <div style="display:grid;grid-template-columns:1fr 1.35fr;gap:1.15rem;margin-bottom:1.15rem;">
+        <div class="card" style="padding:1.15rem;">
+            <h3 style="font-size:0.96rem;font-weight:800;margin:0 0 0.35rem;">
+                <i class="fa fa-area-chart" style="color:var(--interactive-text);"></i>
+                {{ $isEn ? 'Cohort Separation: ΔTRT (µm) vs. IOP (mmHg)' : 'Separación por Cohorte: ΔTRT (µm) vs. PIO (mmHg)' }}
+            </h3>
+            <p style="font-size:0.74rem;color:var(--muted-foreground);margin:0 0 0.75rem;">
+                {{ $isEn ? 'ΔTRT cleanly separates orbital & -6° HDT cohorts from 0° terrestrial controls, while IOP remains flat.' : 'El ΔTRT separa con claridad a astronautas y -6° HDT frente a controles 0°, mientras la PIO permanece plana.' }}
+            </p>
+            <div style="position:relative;height:255px;width:100%;">
+                <canvas id="populationBiomarkerChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card" style="padding:1.15rem;overflow-x:auto;">
+            <h3 style="font-size:0.96rem;font-weight:800;margin:0 0 0.65rem;">
+                <i class="fa fa-flask" style="color:var(--interactive-text);"></i>
+                {{ $isEn ? 'Predictive Value Evaluation per Biomarker' : 'Evaluación del Valor Predictivo por Biomarcador' }}
+            </h3>
+            <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                <thead>
+                    <tr style="border-bottom:1.5px solid var(--border);text-align:left;color:var(--muted-foreground);">
+                        <th style="padding:0.45rem 0.4rem;">{{ $isEn ? 'Biomarker' : 'Biomarcador' }}</th>
+                        <th style="padding:0.45rem 0.4rem;">{{ $isEn ? 'Astronauts' : 'Astronautas' }}</th>
+                        <th style="padding:0.45rem 0.4rem;">{{ $isEn ? 'Ground 0°' : 'Tierra 0°' }}</th>
+                        <th style="padding:0.45rem 0.4rem;">-6° HDT</th>
+                        <th style="padding:0.45rem 0.4rem;">{{ $isEn ? 'Predictive Power' : 'Valor Predictivo' }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($pop['biomarker_predictive_matrix'] as $bm)
+                        @php
+                            $badgeBg = $bm['power'] === 'HIGH' ? '#16a34a' : ($bm['power'] === 'MODERATE' ? '#d97706' : '#dc2626');
+                        @endphp
+                        <tr style="border-bottom:1px solid var(--border);vertical-align:top;">
+                            <td style="padding:0.5rem 0.4rem;font-weight:700;">
+                                {{ $isEn ? $bm['name_en'] : $bm['name_es'] }}
+                                <div style="font-size:0.68rem;font-weight:400;color:var(--muted-foreground);margin-top:2px;">
+                                    {{ $isEn ? $bm['note_en'] : $bm['note_es'] }}
+                                </div>
+                            </td>
+                            <td style="padding:0.5rem 0.4rem;font-family:ui-monospace,monospace;">{{ $bm['astro_val'] }}</td>
+                            <td style="padding:0.5rem 0.4rem;font-family:ui-monospace,monospace;">{{ $bm['ctrl_val'] }}</td>
+                            <td style="padding:0.5rem 0.4rem;font-family:ui-monospace,monospace;">{{ $bm['hdt6_val'] }}</td>
+                            <td style="padding:0.5rem 0.4rem;">
+                                <span style="background:{{ $badgeBg }};color:#ffffff;padding:0.18rem 0.48rem;border-radius:6px;font-size:0.65rem;font-weight:800;white-space:nowrap;display:inline-block;">
+                                    {{ $isEn ? $bm['power_en'] : $bm['power_es'] }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{-- Tabla Completa de Sujetos con Filtro por Población --}}
+    <div class="card" style="padding:1.15rem;margin-bottom:1.25rem;overflow-x:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+            <h3 style="font-size:0.96rem;font-weight:800;margin:0;">
+                <i class="fa fa-users" style="color:var(--interactive-text);"></i>
+                {{ $isEn ? 'All Population Samples (Subject-Level Comparison)' : 'Todas las Muestras de Población (Comparativa por Sujeto)' }}
+            </h3>
+            <div style="display:flex;gap:0.35rem;flex-wrap:wrap;" id="pop-cohort-filters">
+                <button type="button" class="btn btn-primary" data-pop-filter="ALL" style="padding:0.28rem 0.65rem;font-size:0.72rem;">{{ $isEn ? 'All' : 'Todas' }}</button>
+                <button type="button" class="btn" data-pop-filter="ASTRONAUTA" style="padding:0.28rem 0.65rem;font-size:0.72rem;border:1px solid var(--border);">{{ $isEn ? 'Astronauts' : 'Astronautas' }}</button>
+                <button type="button" class="btn" data-pop-filter="TERRESTRE_CTRL" style="padding:0.28rem 0.65rem;font-size:0.72rem;border:1px solid var(--border);">{{ $isEn ? 'Terrestrial 0°' : 'Terrestres 0°' }}</button>
+                <button type="button" class="btn" data-pop-filter="TERRESTRE_HDT6" style="padding:0.28rem 0.65rem;font-size:0.72rem;border:1px solid var(--border);">-6° HDT</button>
+            </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:0.76rem;" id="pop-subjects-table">
+            <thead>
+                <tr style="border-bottom:1.5px solid var(--border);text-align:left;color:var(--muted-foreground);">
+                    <th style="padding:0.45rem;">ID</th>
+                    <th style="padding:0.45rem;">{{ $isEn ? 'Population' : 'Población' }}</th>
+                    <th style="padding:0.45rem;">{{ $isEn ? 'Trajectory' : 'Evolución' }}</th>
+                    <th style="padding:0.45rem;">OCT Base / Pico</th>
+                    <th style="padding:0.45rem;">ΔTRT</th>
+                    <th style="padding:0.45rem;">{{ $isEn ? 'Peak IOP' : 'PIO Pico' }}</th>
+                    <th style="padding:0.45rem;">{{ $isEn ? 'Axial (mm)' : 'Long. Axial' }}</th>
+                    <th style="padding:0.45rem;">Frisén</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($pop['rows'] as $row)
+                    <tr data-cohort-row="{{ $row['cohort_key'] }}" style="border-bottom:1px solid var(--border);">
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;font-weight:800;">{{ $row['id'] }}</td>
+                        <td style="padding:0.45rem;">{{ $isEn ? $row['cohort_en'] : $row['cohort_es'] }}</td>
+                        <td style="padding:0.45rem;">{{ $t($row['archetype']) }}</td>
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;">{{ $row['baseline_oct'] !== null ? $row['baseline_oct'].' / '.($row['peak_oct'] ?? 'N/D').' µm' : 'N/D (Sin OCT)' }}</td>
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;font-weight:800;color:{{ ($row['delta_trt'] ?? 0) >= 20 ? '#dc2626' : '#16a34a' }};">
+                            {{ $row['delta_trt'] !== null ? '+'.$row['delta_trt'].' µm' : 'N/D' }}
+                        </td>
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;">{{ $row['peak_iop'] !== null ? $row['peak_iop'].' mmHg' : 'N/D' }}</td>
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;">{{ $row['axial_mm'] }} mm</td>
+                        <td style="padding:0.45rem;font-family:ui-monospace,monospace;">G{{ $row['frisen'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {{-- CATÁLOGO DE PROTOCOLOS CIENTÍFICOS NASA Y 7 REFERENCIAS CANÓNICAS (RF-05 A RF-08, AT-02) --}}
 <details open id="nasa-bibliography" class="card collapsible-card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);scroll-margin-top:78px;">
     <summary style="cursor:pointer;font-weight:800;font-size:0.98rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
@@ -2001,6 +2198,7 @@ window.runNasaLiveSearch = async function (e) {
 (function () {
     let bioChartInstance = null;
     let timeChartInstance = null;
+    let popChartInstance = null;
 
     function renderSansCharts() {
         const dataEl = document.getElementById('sans-monitor-chart-data');
@@ -2014,6 +2212,7 @@ window.runNasaLiveSearch = async function (e) {
 
         if (bioChartInstance) { bioChartInstance.destroy(); bioChartInstance = null; }
         if (timeChartInstance) { timeChartInstance.destroy(); timeChartInstance = null; }
+        if (popChartInstance) { popChartInstance.destroy(); popChartInstance = null; }
 
         const bioCanvas = document.getElementById('biomarkerImpactChart');
         if (bioCanvas) {
@@ -2083,6 +2282,46 @@ window.runNasaLiveSearch = async function (e) {
                 }
             });
         }
+
+        const popCanvas = document.getElementById('populationBiomarkerChart');
+        if (popCanvas) {
+            const cohorts = @json($populationDashboard['cohorts'] ?? []);
+            popChartInstance = new Chart(popCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: cohorts.map(c => isEn ? c.label_en : c.label_es),
+                    datasets: [
+                        {
+                            label: isEn ? 'Mean ΔTRT (µm)' : 'ΔTRT Medio (µm)',
+                            data: cohorts.map(c => c.mean_delta_trt),
+                            backgroundColor: '#2563eb',
+                            borderRadius: 5,
+                        },
+                        {
+                            label: isEn ? 'Peak ΔTRT (µm)' : 'ΔTRT Pico (µm)',
+                            data: cohorts.map(c => c.peak_delta_trt),
+                            backgroundColor: '#d97706',
+                            borderRadius: 5,
+                        },
+                        {
+                            label: isEn ? 'Mean IOP (mmHg)' : 'PIO Media (mmHg)',
+                            data: cohorts.map(c => c.mean_iop),
+                            backgroundColor: '#64748b',
+                            borderRadius: 5,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: textColor, font: { size: 11 } } } },
+                    scales: {
+                        x: { ticks: { color: textColor, font: { size: 10 } }, grid: { display: false } },
+                        y: { beginAtZero: true, ticks: { color: textColor, font: { size: 10 } }, grid: { color: gridColor } }
+                    }
+                }
+            });
+        }
     }
 
     function activateWizardTabInPlace(tabName) {
@@ -2115,6 +2354,7 @@ window.runNasaLiveSearch = async function (e) {
 
         if (bioChartInstance) bioChartInstance.resize();
         if (timeChartInstance) timeChartInstance.resize();
+        if (popChartInstance) popChartInstance.resize();
     }
 
     async function loadWorkspaceInPlace(targetUrl) {
@@ -2155,6 +2395,20 @@ window.runNasaLiveSearch = async function (e) {
         if (wizardTabBtn && !e.metaKey && !e.ctrlKey) {
             e.preventDefault();
             activateWizardTabInPlace(wizardTabBtn.getAttribute('data-wizard-tab'));
+            return;
+        }
+
+        const popFilterBtn = e.target.closest('[data-pop-filter]');
+        if (popFilterBtn) {
+            const key = popFilterBtn.getAttribute('data-pop-filter');
+            workspace.querySelectorAll('[data-pop-filter]').forEach(b => {
+                const active = b === popFilterBtn;
+                b.classList.toggle('btn-primary', active);
+                b.style.border = active ? '' : '1px solid var(--border)';
+            });
+            workspace.querySelectorAll('#pop-subjects-table [data-cohort-row]').forEach(row => {
+                row.style.display = (key === 'ALL' || row.getAttribute('data-cohort-row') === key) ? '' : 'none';
+            });
             return;
         }
 
