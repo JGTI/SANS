@@ -29,6 +29,7 @@
         'seguimiento', 'inclinacion' => 'seguimiento',
         'escenarios', 'simulador', 'estudios' => 'escenarios',
         'poblacion', 'cohortes', 'conclusion' => 'poblacion',
+        'team', 'equipo' => 'team',
         default => 'biomarcadores',
     };
     $sharedParams = [
@@ -60,6 +61,7 @@
     @include('admin.sans-monitor.astronaut')
 @else
 
+@if($normalizedTab !== 'team')
 {{-- CABECERA CIENTÍFICA COMPACTA (SIN PAJA PROMOCIONAL) --}}
 <div class="card" style="padding:1.1rem 1.35rem;margin-bottom:1rem;border:1.5px solid var(--space-blue);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
@@ -281,7 +283,12 @@
     </a>
 </div>
 
-<div style="display:flex;justify-content:flex-end;margin:-0.45rem 0 0.9rem;">
+<div style="display:flex;justify-content:flex-end;gap:0.5rem;flex-wrap:wrap;margin:-0.45rem 0 0.9rem;">
+    <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'team'])) }}" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
+        <i class="fa fa-users"></i>
+        <span>{{ $isEn ? 'Project Team (6 Members)' : 'Miembros del Proyecto (6)' }}</span>
+        <i class="fa fa-arrow-right" style="font-size:10px;opacity:0.7;"></i>
+    </a>
     <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-book"></i>
         <span>{{ $isEn ? 'NASA Protocols & Scientific Bibliography (7 References)' : 'Protocolos NASA y Bibliografía Científica (7 Referencias)' }}</span>
@@ -2130,6 +2137,198 @@ window.runCandidatePredictor = async function (e) {
         </div>
     </div>
 </details>
+@endif
+
+@if($normalizedTab === 'team')
+{{-- SECCIÓN OFICIAL DE MIEMBROS DEL PROYECTO (NASA SPACE APPS CHALLENGE 2026) --}}
+@php
+    $teamMembers = [
+        [
+            'name' => 'Dra. Gloria Margarita Pérez Vallejo',
+            'role_en' => 'Clinical Optometry & Visual Rehab',
+            'role_es' => 'Optometría Clínica y Rehabilitación Visual',
+            'bio_en' => 'B.Sc. in Optometry & Visual Rehabilitation · Specialist in Clinical Optometry, Vision Therapy & Strabismus · Federal Prof. License No. 13911122 · 8th Semester General Medicine Student',
+            'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
+            'is_leader' => false,
+            'nasa_user' => '@gloriapervall',
+            'website' => 'https://visualrehabcenter.com/',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
+            ],
+            'photos' => ['gloria.jpg', 'gloria.jpeg', 'gloria.png'],
+            'photo_style' => 'transform:scale(1.38);transform-origin:center 20%;',
+            'initials' => 'GM',
+        ],
+        [
+            'name' => 'Lic. Victoria Isabel Pérez Vallejo',
+            'role_en' => 'International Relations',
+            'role_es' => 'Lic. en Relaciones Internacionales',
+            'bio_en' => 'Institutional liaison, strategic communication & project coordination',
+            'bio_es' => 'Vinculación institucional, comunicación estratégica y coordinación de proyectos',
+            'is_leader' => false,
+            'nasa_user' => '@victoriaisabelpervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'victoriavallejo@visualrehabcenter.com'],
+            ],
+            'photos' => ['victoria.jpeg', 'victoria.jpg', 'victoria.png'],
+            'initials' => 'VI',
+        ],
+        [
+            'name' => 'Lic. Mónica Belem Pérez Vallejo',
+            'role_en' => 'Attorney at Law (LL.B.)',
+            'role_es' => 'Licenciada en Derecho',
+            'bio_en' => 'Legal advisory, regulatory compliance & data privacy governance',
+            'bio_es' => 'Asesoría jurídica, cumplimiento normativo y protección de datos',
+            'is_leader' => false,
+            'nasa_user' => '@monicapervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'monicavallejo@nexusdigitaldb.com'],
+            ],
+            'photos' => ['monica.jpeg', 'monica.jpg', 'monica.png'],
+            'initials' => 'MB',
+        ],
+        [
+            'name' => 'Ing. José Guadalupe García Espinosa',
+            'role_en' => 'Computer Systems Engineer',
+            'role_es' => 'Ingeniero en Sistemas Computacionales',
+            'bio_en' => 'Software architecture, web platforms, databases & data integration',
+            'bio_es' => 'Arquitectura de software, plataformas web, bases de datos e integración de datos',
+            'is_leader' => false,
+            'nasa_user' => '@gitti',
+            'website' => 'https://nexusdigitaldb.com/',
+            'emails' => [
+                ['label_en' => 'Space Apps Challenge', 'label_es' => 'Space Apps Challenge', 'email' => 'github.jgge@gmail.com'],
+                ['label_en' => 'Personal', 'label_es' => 'Personal', 'email' => 'josegarcia@nexusdigitaldb.com'],
+            ],
+            'photos' => ['jose.jpg', 'jose.jpeg', 'jose.png'],
+            'initials' => 'JG',
+        ],
+        [
+            'name' => 'Dr. Alam Tinajero Palacios',
+            'role_en' => 'Ph.D. in Legal Sciences',
+            'role_es' => 'Dr. en Ciencias Jurídicas',
+            'bio_en' => 'Legal research, bioethics & regulatory framework analysis',
+            'bio_es' => 'Investigación jurídica, bioética y análisis del marco normativo',
+            'is_leader' => false,
+            'nasa_user' => '@alamtpalacios',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'alampalacios@nexusdititaldb.com'],
+            ],
+            'photos' => ['Alam.jpeg', 'alam.jpeg', 'alam.jpg'],
+            'initials' => 'AT',
+        ],
+        [
+            'name' => 'Miguel Ángel García Espinosa',
+            'role_en' => 'Software Engineering',
+            'role_es' => 'Ingeniería de Software',
+            'bio_en' => 'Full-stack development, backend services & algorithmic data processing',
+            'bio_es' => 'Desarrollo full-stack, servicios backend y procesamiento algorítmico de datos',
+            'is_leader' => false,
+            'nasa_user' => '@gitmiguelti',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'miguelgarcia@nexusdigitaldb.com'],
+            ],
+            'photos' => ['miguel angel.jpeg', 'miguel.jpeg', 'miguel.jpg'],
+            'photo_style' => 'transform:scale(1.65);transform-origin:center 20%;',
+            'initials' => 'MA',
+        ],
+    ];
+@endphp
+<section id="project-team-section" class="card" style="padding:1.5rem 1.5rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);">
+    <div style="margin-bottom:1.25rem;">
+        <h2 style="font-size:1.35rem;font-weight:700;margin:0;letter-spacing:-0.01em;">
+            {{ $isEn ? 'Our Team' : 'Nuestro Equipo' }}
+        </h2>
+    </div>
+
+    <style>
+        .team-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+        @media (max-width: 1180px) {
+            .team-grid-6 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 720px) {
+            .team-grid-6 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 480px) {
+            .team-grid-6 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="team-grid-6">
+        @foreach($teamMembers as $member)
+            @php
+                $photoFile = null;
+                foreach ($member['photos'] as $candidate) {
+                    if (file_exists(public_path('images/users/' . $candidate))) {
+                        $photoFile = $candidate;
+                        break;
+                    }
+                }
+                $photoUrl = $photoFile ? request()->getBasePath() . '/images/users/' . rawurlencode($photoFile) : null;
+            @endphp
+            <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.55rem;padding:0.9rem 0.65rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
+                @if($photoUrl)
+                    <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
+                        <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
+                             style="width:100%;height:100%;object-fit:cover;display:block;{{ $member['photo_style'] ?? '' }}">
+                    </div>
+                @else
+                    <div style="width:84px;height:84px;border-radius:50%;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.25rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
+                        {{ $member['initials'] }}
+                    </div>
+                @endif
+
+                <div style="min-width:0;width:100%;">
+                    <h3 style="font-size:0.9rem;font-weight:800;margin:0;line-height:1.25;">
+                        {{ $member['name'] }}
+                    </h3>
+
+                    <div style="display:flex;justify-content:center;align-items:center;gap:0.4rem;flex-wrap:wrap;margin:0.35rem 0 0.45rem;">
+                        <span style="background:var(--card);color:var(--foreground);border:1px solid var(--border);font-size:0.66rem;font-weight:700;padding:0.14rem 0.55rem;border-radius:999px;">
+                            {{ $isEn ? $member['role_en'] : $member['role_es'] }}
+                        </span>
+                        <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);">
+                            {{ $member['nasa_user'] }}
+                        </span>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:3px;font-size:0.72rem;color:var(--muted-foreground);">
+                        @if(!empty($member['bio_es']) || !empty($member['bio_en']))
+                            <div style="color:var(--foreground);line-height:1.35;margin-bottom:4px;font-weight:500;">
+                                {{ $isEn ? ($member['bio_en'] ?? $member['bio_es']) : ($member['bio_es'] ?? $member['bio_en']) }}
+                            </div>
+                        @endif
+                        @foreach($member['emails'] as $em)
+                            <div style="word-break:break-all;">
+                                <strong style="color:var(--foreground);">{{ $isEn ? $em['label_en'] : $em['label_es'] }}:</strong>
+                                <a href="mailto:{{ $em['email'] }}" style="color:var(--interactive-text);text-decoration:none;">{{ $em['email'] }}</a>
+                            </div>
+                        @endforeach
+                        @if(!empty($member['website']))
+                            <div style="word-break:break-all;">
+                                <strong style="color:var(--foreground);">{{ $isEn ? 'Website' : 'Sitio web' }}:</strong>
+                                <a href="{{ $member['website'] }}" target="_blank" rel="noopener noreferrer" style="color:var(--interactive-text);text-decoration:none;">
+                                    {{ $member['website'] }} <i class="fa fa-external-link" style="font-size:0.65rem;"></i>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </article>
+        @endforeach
+    </div>
+</section>
+@endif
 
 <script>
 window.runNasaLiveSearch = async function (e) {
