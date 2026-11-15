@@ -24,41 +24,49 @@
 <div class="admin-shell">
     <div class="admin-main">
         <header class="topbar">
-
-            <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--foreground);font-weight:800;font-size:0.86rem;padding-right:0.5rem;border-right:1px solid var(--border);">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:20px;height:20px;object-fit:contain;">
-                <span>SPACE VISION</span>
+            <a href="{{ route('home') }}" class="topbar-brand">
+                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:22px;height:22px;object-fit:contain;">
+                <span class="topbar-brand-text">
+                    <strong>SPACE VISION</strong>
+                    <small>SANS MONITOR · ISS-01</small>
+                </span>
             </a>
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
                 <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
-                    <i class="fa fa-flask"></i> {{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}
+                    <span class="topnav-idx">01</span>
+                    <i class="fa fa-flask"></i>
+                    <span>{{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}</span>
                 </a>
                 <a class="{{ request()->routeIs('public.astronaut') || request('tab') === 'astronauta' ? 'active' : '' }}" href="{{ route('public.astronaut') }}">
-                    <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut Check' : 'Vista Astronauta' }}
+                    <span class="topnav-idx">02</span>
+                    <i class="fa fa-user-md"></i>
+                    <span>{{ $isEn ? 'Astronaut Check' : 'Vista Astronauta' }}</span>
                 </a>
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
-                    <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
+                    <span class="topnav-idx">03</span>
+                    <i class="fa fa-eye"></i>
+                    <span>{{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}</span>
                 </a>
             </nav>
 
             <span class="topbar-spacer"></span>
 
-            {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}
-            <div style="display:inline-flex;align-items:center;border:1.5px solid var(--interactive-border);border-radius:7px;overflow:hidden;font-size:0.76rem;font-weight:700;" role="group" aria-label="Language Selector">
-                <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ $isEn ? '#0042A6' : 'var(--interactive-bg)' }};color:{{ $isEn ? '#ffffff' : 'var(--interactive-text)' }};">
-                    <i class="fa fa-globe"></i> EN
-                </a>
-                <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}"
-                   style="padding:0.35rem 0.65rem;text-decoration:none;background:{{ !$isEn ? '#0042A6' : 'var(--interactive-bg)' }};color:{{ !$isEn ? '#ffffff' : 'var(--interactive-text)' }};border-left:1px solid var(--interactive-border);">
-                    ES
-                </a>
-            </div>
+            <div class="topbar-tools">
+                {{-- SELECTOR MULTILENGUAJE (INGLÉS PRINCIPAL / ESPAÑOL) --}}
+                <div class="lang-switcher" role="group" aria-label="Language Selector">
+                    <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="{{ $isEn ? 'is-active' : '' }}">
+                        <i class="fa fa-globe"></i> EN
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}" class="{{ !$isEn ? 'is-active' : '' }}">
+                        ES
+                    </a>
+                </div>
 
-            <button class="icon-btn" id="theme-toggle" type="button" aria-label="{{ $isEn ? 'Toggle theme' : 'Cambiar tema' }}">
-                <i class="fa fa-moon-o" style="font-size:16px;"></i>
-            </button>
+                <button class="icon-btn" id="theme-toggle" type="button" aria-label="{{ $isEn ? 'Toggle theme' : 'Cambiar tema' }}">
+                    <i class="fa fa-moon-o" style="font-size:15px;"></i>
+                </button>
+            </div>
         </header>
 
         <main class="main-content" id="main-content">
