@@ -1140,8 +1140,7 @@
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">FRISÉN {{ $frisenVal ?? 'N/E' }}</span>
             </h3>
             <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#050507;border:1px solid #1e293b;display:flex;align-items:center;justify-content:center;">
-                <img src="{{ $fundusImg }}" alt="Retinal Fundus" style="width:100%;height:100%;object-fit:cover;filter:{{ $isUnscanned ? 'grayscale(0.75) brightness(0.45)' : 'contrast(1.08) saturate(1.05)' }};">
-                <div style="position:absolute;inset:0;background:radial-gradient(circle at center, transparent 48%, rgba(2,6,23,0.78) 92%);pointer-events:none;"></div>
+                <canvas id="scenarioFundusCanvas" width="440" height="220" style="width:100%;height:100%;display:block;"></canvas>
                 <div style="position:absolute;top:8px;left:10px;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:700;color:#f8fafc;background:rgba(2,6,23,0.75);padding:2px 7px;border-radius:4px;border:1px solid rgba(148,163,184,0.22);">
                     {{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $frisenVal ?? 'N/E' }})
                 </div>
@@ -1183,7 +1182,113 @@
     <script>
     (function () {
         const isWorsening = @json($isWorsening);
+        const isUnscanned = @json($isUnscanned);
+        const frisenHigh = @json($frisenHigh);
         const deltaTrt = @json((float) ($deltaTrt ?? 0));
+
+        // 0. Procedural Ophthalmoscope Retinal Fundus & Optic Disc Renderer (Zero static images)
+        const funCanvas = document.getElementById('scenarioFundusCanvas');
+        if (funCanvas) {
+            const ctx = funCanvas.getContext('2d');
+            const w = funCanvas.width, h = funCanvas.height;
+            ctx.fillStyle = '#030407';
+            ctx.fillRect(0, 0, w, h);
+
+            const cx = w * 0.5, cy = h * 0.5, radius = 98;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.clip();
+
+            // Choroidal / retinal pigment background
+            const bg = ctx.createRadialGradient(cx + 26, cy, 8, cx, cy, radius);
+            if (isUnscanned) {
+                bg.addColorStop(0, '#334155');
+                bg.addColorStop(0.65, '#1e293b');
+                bg.addColorStop(1, '#09090b');
+            } else {
+                bg.addColorStop(0, '#d97706');
+                bg.addColorStop(0.32, '#9a3412');
+                bg.addColorStop(0.78, '#451208');
+                bg.addColorStop(1, '#120503');
+            }
+            ctx.fillStyle = bg;
+            ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+            // Subtle RPE micro-texture
+            const img = ctx.getImageData(cx - radius, cy - radius, radius * 2, radius * 2);
+            const p = img.data;
+            for (let i = 0; i < p.length; i += 4) {
+                const j = ((Math.random() - 0.5) * 18) | 0;
+                p[i] = Math.max(0, Math.min(255, p[i] + j));
+                p[i + 1] = Math.max(0, Math.min(255, p[i + 1] + (j * 0.7) | 0));
+            }
+            ctx.putImageData(img, cx - radius, cy - radius);
+
+            // Macular fovea (temporal left of disc)
+            const mac = ctx.createRadialGradient(cx - 32, cy + 4, 2, cx - 32, cy + 4, 22);
+            mac.addColorStop(0, 'rgba(15, 5, 2, 0.72)');
+            mac.addColorStop(1, 'rgba(15, 5, 2, 0)');
+            ctx.fillStyle = mac;
+            ctx.beginPath();
+            ctx.arc(cx - 32, cy + 4, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Optic Nerve Head (nasal right) + Peripapillary Edema Halo
+            const discX = cx + 30, discY = cy;
+            if (frisenHigh && !isUnscanned) {
+                const halo = ctx.createRadialGradient(discX, discY, 10, discX, discY, 36);
+                halo.addColorStop(0, 'rgba(254, 240, 138, 0.85)');
+                halo.addColorStop(0.45, 'rgba(251, 191, 36, 0.42)');
+                halo.addColorStop(1, 'rgba(239, 68, 68, 0)');
+                ctx.fillStyle = halo;
+                ctx.beginPath();
+                ctx.arc(discX, discY, 36, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Choroidal folds between disc and macula
+                ctx.strokeStyle = 'rgba(254, 240, 138, 0.24)';
+                ctx.lineWidth = 1.2;
+                for (let k = -3; k <= 3; k++) {
+                    ctx.beginPath();
+                    ctx.moveTo(discX - 55, discY + k * 7);
+                    ctx.quadraticCurveTo(discX - 32, discY + k * 6 - 3, discX - 14, discY + k * 5);
+                    ctx.stroke();
+                }
+            }
+
+            // Optic disc & physiological cup
+            const discGrad = ctx.createRadialGradient(discX, discY, 3, discX, discY, frisenHigh ? 20 : 15);
+            discGrad.addColorStop(0, isUnscanned ? '#94a3b8' : '#fef9c3');
+            discGrad.addColorStop(0.65, isUnscanned ? '#64748b' : '#fde047');
+            discGrad.addColorStop(1, isUnscanned ? 'rgba(100,116,139,0)' : 'rgba(234,88,12,0.15)');
+            ctx.fillStyle = discGrad;
+            ctx.beginPath();
+            ctx.arc(discX, discY, frisenHigh ? 20 : 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Branching retinal vascular arcades
+            const drawVessel = (x0, y0, cx1, cy1, x1, y1, width, color) => {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = width;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(x0, y0);
+                ctx.quadraticCurveTo(cx1, cy1, x1, y1);
+                ctx.stroke();
+            };
+            const vCol = isUnscanned ? 'rgba(148,163,184,0.45)' : 'rgba(127, 29, 29, 0.88)';
+            const aCol = isUnscanned ? 'rgba(203,213,225,0.4)' : 'rgba(185, 28, 28, 0.78)';
+            const vw = frisenHigh ? 2.6 : 1.9;
+            drawVessel(discX, discY - 3, discX - 18, discY - 46, discX - 88, discY - 36, vw, vCol);
+            drawVessel(discX, discY + 3, discX - 18, discY + 46, discX - 88, discY + 38, vw, vCol);
+            drawVessel(discX + 2, discY - 4, discX + 22, discY - 38, discX + 54, discY - 64, 1.5, aCol);
+            drawVessel(discX + 2, discY + 4, discX + 22, discY + 38, discX + 54, discY + 64, 1.5, aCol);
+            drawVessel(discX - 24, discY - 32, discX - 48, discY - 22, discX - 66, discY - 12, 1.1, aCol);
+            drawVessel(discX - 24, discY + 32, discX - 48, discY + 22, discX - 66, discY + 14, 1.1, aCol);
+
+            ctx.restore();
+        }
 
         // 1. Sagittal Ocular MRI / B-Scan Renderer
         const sagCanvas = document.getElementById('scenarioSagittalCanvas');
