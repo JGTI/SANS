@@ -531,7 +531,11 @@
     });
     document.getElementById('sv-demo-stop')?.addEventListener('click', () => stopDemo(true));
 
-    if (sessionStorage.getItem('sv_demo_active') === '1') {
+    const forceDemoLink = window.location.pathname.endsWith('/demo') || new URLSearchParams(window.location.search).get('demo') === '1';
+    if (forceDemoLink) {
+        sessionStorage.removeItem('sv_demo_dismissed');
+        setTimeout(() => runStep(0), 500);
+    } else if (sessionStorage.getItem('sv_demo_active') === '1') {
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
         setTimeout(() => runStep(savedIdx), 350);
     } else if (sessionStorage.getItem('sv_demo_dismissed') !== '1') {
