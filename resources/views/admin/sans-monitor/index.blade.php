@@ -2240,7 +2240,7 @@ window.runCandidatePredictor = async function (e) {
         </span>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.85rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
         @foreach($teamMembers as $member)
             @php
                 $photoFile = null;
@@ -2252,41 +2252,33 @@ window.runCandidatePredictor = async function (e) {
                 }
                 $photoUrl = $photoFile ? request()->getBasePath() . '/images/users/' . rawurlencode($photoFile) : null;
             @endphp
-            <article style="display:flex;gap:0.85rem;align-items:flex-start;padding:0.9rem;border:1px solid {{ $member['is_leader'] ? 'var(--space-blue)' : 'var(--border)' }};border-radius:10px;background:var(--muted);">
+            <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.65rem;padding:1.1rem 0.95rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
                 @if($photoUrl)
                     <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
-                         style="width:68px;height:68px;border-radius:12px;object-fit:cover;border:2px solid {{ $member['is_leader'] ? '#EAFE07' : 'var(--border)' }};flex-shrink:0;background:var(--card);">
+                         style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
                 @else
-                    <div style="width:68px;height:68px;border-radius:12px;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.15rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
+                    <div style="width:96px;height:96px;border-radius:50%;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.35rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
                         {{ $member['initials'] }}
                     </div>
                 @endif
 
-                <div style="min-width:0;flex:1;">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.4rem;flex-wrap:wrap;">
-                        <h3 style="font-size:0.88rem;font-weight:800;margin:0;line-height:1.25;">
-                            {{ $member['name'] }}
-                        </h3>
-                    </div>
+                <div style="min-width:0;width:100%;">
+                    <h3 style="font-size:0.9rem;font-weight:800;margin:0;line-height:1.25;">
+                        {{ $member['name'] }}
+                    </h3>
 
-                    <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;margin:0.3rem 0 0.45rem;">
-                        @if($member['is_leader'])
-                            <span style="background:#EAFE07;color:#09090b;border:1px solid #09090b;font-size:0.65rem;font-weight:900;padding:0.12rem 0.5rem;border-radius:999px;">
-                                {{ $isEn ? $member['role_en'] : $member['role_es'] }}
-                            </span>
-                        @else
-                            <span style="background:var(--card);color:var(--foreground);border:1px solid var(--border);font-size:0.65rem;font-weight:700;padding:0.12rem 0.5rem;border-radius:999px;">
-                                {{ $isEn ? $member['role_en'] : $member['role_es'] }}
-                            </span>
-                        @endif
+                    <div style="display:flex;justify-content:center;align-items:center;gap:0.4rem;flex-wrap:wrap;margin:0.35rem 0 0.45rem;">
+                        <span style="background:var(--card);color:var(--foreground);border:1px solid var(--border);font-size:0.66rem;font-weight:700;padding:0.14rem 0.55rem;border-radius:999px;">
+                            {{ $isEn ? $member['role_en'] : $member['role_es'] }}
+                        </span>
                         <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);">
-                            NASA: {{ $member['nasa_user'] }}
+                            {{ $member['nasa_user'] }}
                         </span>
                     </div>
 
-                    <div style="display:flex;flex-direction:column;gap:2px;font-size:0.72rem;color:var(--muted-foreground);">
+                    <div style="display:flex;flex-direction:column;gap:3px;font-size:0.72rem;color:var(--muted-foreground);">
                         @if(!empty($member['bio_es']) || !empty($member['bio_en']))
-                            <div style="color:var(--foreground);line-height:1.35;margin-bottom:3px;font-weight:600;">
+                            <div style="color:var(--foreground);line-height:1.35;margin-bottom:4px;font-weight:500;">
                                 {{ $isEn ? ($member['bio_en'] ?? $member['bio_es']) : ($member['bio_es'] ?? $member['bio_en']) }}
                             </div>
                         @endif

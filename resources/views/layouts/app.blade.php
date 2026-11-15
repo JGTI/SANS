@@ -49,6 +49,10 @@
                     <i class="fa fa-bar-chart"></i>
                     <span>{{ $isEn ? 'Population Dashboard' : 'Dashboard Poblacional' }}</span>
                 </a>
+                <a href="{{ route('home') }}#project-team-section">
+                    <i class="fa fa-users"></i>
+                    <span>{{ $isEn ? 'Team' : 'Equipo' }}</span>
+                </a>
             </nav>
 
             <span class="topbar-spacer"></span>
