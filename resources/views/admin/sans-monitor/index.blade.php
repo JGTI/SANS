@@ -2143,6 +2143,7 @@ window.runCandidatePredictor = async function (e) {
             'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
             'is_leader' => false,
             'nasa_user' => '@gloriapervall',
+            'website' => 'https://visualrehabcenter.com/',
             'emails' => [
                 ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
             ],
@@ -2157,6 +2158,7 @@ window.runCandidatePredictor = async function (e) {
             'bio_es' => 'Ingeniero en Sistemas Computacionales · Arquitectura del Proyecto y Cómputo Científico',
             'is_leader' => false,
             'nasa_user' => '@gitti',
+            'website' => 'https://nexusdigitaldb.com/',
             'emails' => [
                 ['label_en' => 'NASA Email', 'label_es' => 'Correo NASA', 'email' => 'github.jgge@gmail.com'],
                 ['label_en' => 'Personal', 'label_es' => 'Personal', 'email' => 'josegarcia@nexusdigitaldb.com'],
@@ -2294,6 +2296,14 @@ window.runCandidatePredictor = async function (e) {
                                 <a href="mailto:{{ $em['email'] }}" style="color:var(--interactive-text);text-decoration:none;">{{ $em['email'] }}</a>
                             </div>
                         @endforeach
+                        @if(!empty($member['website']))
+                            <div style="word-break:break-all;">
+                                <strong style="color:var(--foreground);">{{ $isEn ? 'Website' : 'Sitio web' }}:</strong>
+                                <a href="{{ $member['website'] }}" target="_blank" rel="noopener noreferrer" style="color:var(--interactive-text);text-decoration:none;">
+                                    {{ $member['website'] }} <i class="fa fa-external-link" style="font-size:0.65rem;"></i>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </article>
