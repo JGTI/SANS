@@ -714,6 +714,66 @@
             </div>
         </div>
 
+        {{-- Matriz Predictiva de Susceptibilidad en 4 Perfiles (SANS+ vs SANS- para Futuros Candidatos) --}}
+        @php
+            $isSusceptible = $activeCase->scenario_archetype === 'EMPEORA';
+            $isMissingOct = ($bp['inputs']['oct_trt_current_um'] ?? null) === null;
+            $matchLabel = $isMissingOct
+                ? ($isEn ? 'Insufficient Data (Missing OCT)' : 'Datos Insuficientes (Sin OCT)')
+                : ($isSusceptible
+                    ? ($isEn ? 'High Similarity to SANS+ Cohort' : 'Alta Similitud con Cohorte SANS+')
+                    : ($isEn ? 'Aligned with SANS- Resilient Cohort' : 'Alineado con Cohorte Resiliente SANS-'));
+            $matchColor = $isMissingOct ? '#64748b' : ($isSusceptible ? '#d97706' : '#16a34a');
+        @endphp
+        <div class="card" style="padding:1rem;margin-bottom:0.85rem;border:1px solid var(--border);background:var(--card);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+                <div>
+                    <div style="font-family:ui-monospace,monospace;font-size:0.68rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.05em;">
+                        {{ $isEn ? '4-DOMAIN PREDICTIVE SUSCEPTIBILITY MODEL · SANS+ VS. SANS- COHORTS' : 'MODELO PREDICTIVO DE SUSCEPTIBILIDAD EN 4 PERFILES · COHORTES SANS+ VS. SANS-' }}
+                    </div>
+                    <h3 style="font-size:0.95rem;font-weight:800;margin:0.2rem 0 0;">
+                        {{ $isEn
+                            ? 'Pre-Flight & In-Flight Susceptibility Pattern Matching for Future Spaceflight Candidates'
+                            : 'Identificación de Patrones de Susceptibilidad al SANS para Futuros Candidatos a Misiones Espaciales' }}
+                    </h3>
+                </div>
+                <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;padding:0.25rem 0.65rem;border-radius:6px;background:var(--muted);border:1.5px solid {{ $matchColor }};color:{{ $matchColor }};">
+                    {{ $matchLabel }}
+                </span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0.65rem;font-size:0.76rem;">
+                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-arrows-h"></i> {{ $isEn ? 'Biometric Profile' : 'Perfil Biométrico' }}</div>
+                    <div style="color:var(--muted-foreground);line-height:1.4;">
+                        {{ $isEn ? 'Active AL:' : 'Long. Axial:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['axial_length_mm'] ?? '23.8' }} mm</strong><br>
+                        {{ $isEn ? 'SANS+ pattern: shorter/flattened globe + -6° HDT shift' : 'Patrón SANS+: globo más corto/aplanado + respuesta -6° HDT' }}
+                    </div>
+                </div>
+                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-eye"></i> {{ $isEn ? 'Ophthalmological Profile' : 'Perfil Oftalmológico' }}</div>
+                    <div style="color:var(--muted-foreground);line-height:1.4;">
+                        {{ $isEn ? 'ΔTRT / Frisén:' : 'ΔTRT / Frisén:' }} <strong style="color:var(--foreground);">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }} · G{{ $bp['inputs']['papilledema_frisen'] ?? 'N/E' }}</strong><br>
+                        {{ $isEn ? 'SANS+ pattern: ΔTRT ≥ +20 µm, +0.75 D, choroidal folds' : 'Patrón SANS+: ΔTRT ≥ +20 µm, +0.75 D, pliegues coroideos' }}
+                    </div>
+                </div>
+                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-sitemap"></i> {{ $isEn ? 'Neurological Profile' : 'Perfil Neurológico' }}</div>
+                    <div style="color:var(--muted-foreground);line-height:1.4;">
+                        {{ $isEn ? 'IOP / Translaminar:' : 'PIO / Translaminar:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['iop_mmhg'] }} mmHg</strong><br>
+                        {{ $isEn ? 'SANS+ pattern: optic nerve sheath distension & CSF cephalic shift' : 'Patrón SANS+: distensión de vaina óptica y flujo cefálico de LCR' }}
+                    </div>
+                </div>
+                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-flask"></i> {{ $isEn ? 'Metabolic & Cofactors' : 'Perfil Metabólico y Cofactores' }}</div>
+                    <div style="color:var(--muted-foreground);line-height:1.4;">
+                        {{ $isEn ? '1-Carbon / B-Vitamins / CO₂' : 'Metabolismo 1-C / Vit. B / CO₂' }}<br>
+                        {{ $isEn ? 'Zwart et al. (NASA): MTRR/SHMT1 polymorphisms + low folate/B12' : 'Zwart et al. (NASA): polimorfismos MTRR/SHMT1 + folato/B12 bajos' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {{-- Formulario Inicial Compacto para Registrar Nueva Persona --}}
         <details class="card collapsible-card" style="padding:1rem;">
             <summary style="cursor:pointer;font-weight:700;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
