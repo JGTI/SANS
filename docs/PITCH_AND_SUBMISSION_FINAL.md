@@ -153,12 +153,12 @@ Muchas gracias.
 - **NASA Open Science Integrations:** Live OSDR datasets, NTRS technical reports, DONKI space weather context, and ISS orbital telemetry.
 
 ### 4. Multidisciplinary Project Team
-- **Dra. Gloria Margarita Pérez Vallejo** — Clinical Optometry & Visual Rehabilitation (Specialist in Clinical Optometry, Vision Therapy & Strabismus; Federal Prof. License No. 13911122; 8th Semester General Medicine Student) — https://visualrehabcenter.com/
-- **Lic. Victoria Isabel Pérez Vallejo** — International Relations
-- **Lic. Mónica Belem Pérez Vallejo** — Attorney at Law (LL.B.)
-- **Ing. José Guadalupe García Espinosa** — Computer Systems Engineer — https://nexusdigitaldb.com/
-- **Dr. Alam Tinajero Palacios** — Ph.D. in Legal Sciences
-- **Miguel Ángel García Espinosa** — Software Engineering
+- **Dra. Gloria Margarita Pérez Vallejo** — Clinical Optometry & Visual Rehabilitation · *Universidad Autónoma de Querétaro (UAQ) · Universidad Autónoma de Durango (UAD)* (Specialist in Clinical Optometry, Vision Therapy & Strabismus; Federal Prof. License No. 13911122; 8th Semester General Medicine Student) — https://visualrehabcenter.com/
+- **Lic. Victoria Isabel Pérez Vallejo** — International Relations · *Universidad Iberoamericana (IBERO)*
+- **Lic. Mónica Belem Pérez Vallejo** — Attorney at Law (LL.B.) · *Universidad Autónoma de Querétaro (UAQ)*
+- **Ing. José Guadalupe García Espinosa** — Computer Systems Engineer · *Universidad Politécnica de Querétaro (UPQ)* — https://nexusdigitaldb.com/
+- **Dr. Alam Tinajero Palacios** — Ph.D. in Legal Sciences · *Universidad Autónoma de Querétaro (UAQ)*
+- **Miguel Ángel García Espinosa** — Software Engineering · *Universidad Politécnica de Santa Rosa Jáuregui (UPSRJ)*
 
 ### 5. Automated Verification Baseline
 - `php artisan scientific:engine status` → **ONLINE** (`http://127.0.0.1:8001`, Python `3.14.4`)

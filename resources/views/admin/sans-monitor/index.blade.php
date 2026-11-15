@@ -2407,6 +2407,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Dra. Gloria Margarita Pérez Vallejo',
             'role_en' => 'Clinical Optometry & Visual Rehab',
             'role_es' => 'Optometría Clínica y Rehabilitación Visual',
+            'university_en' => 'Universidad Autónoma de Querétaro (UAQ) · Universidad Autónoma de Durango (UAD)',
+            'university_es' => 'Universidad Autónoma de Querétaro (UAQ) · Universidad Autónoma de Durango (UAD)',
             'bio_en' => 'B.Sc. in Optometry & Visual Rehabilitation · Specialist in Clinical Optometry, Vision Therapy & Strabismus · Federal Prof. License No. 13911122 · 8th Semester General Medicine Student',
             'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
             'is_leader' => false,
@@ -2423,6 +2425,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Lic. Victoria Isabel Pérez Vallejo',
             'role_en' => 'International Relations',
             'role_es' => 'Lic. en Relaciones Internacionales',
+            'university_en' => 'Universidad Iberoamericana (IBERO)',
+            'university_es' => 'Universidad Iberoamericana (IBERO)',
             'bio_en' => 'Institutional liaison, strategic communication & project coordination',
             'bio_es' => 'Vinculación institucional, comunicación estratégica y coordinación de proyectos',
             'is_leader' => false,
@@ -2437,6 +2441,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Lic. Mónica Belem Pérez Vallejo',
             'role_en' => 'Attorney at Law (LL.B.)',
             'role_es' => 'Licenciada en Derecho',
+            'university_en' => 'Universidad Autónoma de Querétaro (UAQ)',
+            'university_es' => 'Universidad Autónoma de Querétaro (UAQ)',
             'bio_en' => 'Legal advisory, regulatory compliance & data privacy governance',
             'bio_es' => 'Asesoría jurídica, cumplimiento normativo y protección de datos',
             'is_leader' => false,
@@ -2451,6 +2457,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Ing. José Guadalupe García Espinosa',
             'role_en' => 'Computer Systems Engineer',
             'role_es' => 'Ingeniero en Sistemas Computacionales',
+            'university_en' => 'Universidad Politécnica de Querétaro (UPQ)',
+            'university_es' => 'Universidad Politécnica de Querétaro (UPQ)',
             'bio_en' => 'Software architecture, web platforms, databases & data integration',
             'bio_es' => 'Arquitectura de software, plataformas web, bases de datos e integración de datos',
             'is_leader' => false,
@@ -2467,6 +2475,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Dr. Alam Tinajero Palacios',
             'role_en' => 'Ph.D. in Legal Sciences',
             'role_es' => 'Dr. en Ciencias Jurídicas',
+            'university_en' => 'Universidad Autónoma de Querétaro (UAQ)',
+            'university_es' => 'Universidad Autónoma de Querétaro (UAQ)',
             'bio_en' => 'Legal research, bioethics & regulatory framework analysis',
             'bio_es' => 'Investigación jurídica, bioética y análisis del marco normativo',
             'is_leader' => false,
@@ -2481,6 +2491,8 @@ window.runCandidatePredictor = async function (e) {
             'name' => 'Miguel Ángel García Espinosa',
             'role_en' => 'Software Engineering',
             'role_es' => 'Ingeniería de Software',
+            'university_en' => 'Universidad Politécnica de Santa Rosa Jáuregui (UPSRJ)',
+            'university_es' => 'Universidad Politécnica de Santa Rosa Jáuregui (UPSRJ)',
             'bio_en' => 'Full-stack development, backend services & algorithmic data processing',
             'bio_es' => 'Desarrollo full-stack, servicios backend y procesamiento algorítmico de datos',
             'is_leader' => false,
@@ -2603,6 +2615,12 @@ window.runCandidatePredictor = async function (e) {
                     </div>
 
                     <div style="display:flex;flex-direction:column;gap:3px;font-size:0.72rem;color:var(--muted-foreground);">
+                        @if(!empty($member['university_es']) || !empty($member['university_en']))
+                            <div style="display:inline-flex;align-items:center;justify-content:center;gap:4px;color:var(--interactive-text);font-weight:700;font-size:0.7rem;line-height:1.3;margin-bottom:3px;">
+                                <i class="fa fa-university" aria-hidden="true" style="font-size:0.68rem;"></i>
+                                <span>{{ $isEn ? ($member['university_en'] ?? $member['university_es']) : ($member['university_es'] ?? $member['university_en']) }}</span>
+                            </div>
+                        @endif
                         @if(!empty($member['bio_es']) || !empty($member['bio_en']))
                             <div style="color:var(--foreground);line-height:1.35;margin-bottom:4px;font-weight:500;">
                                 {{ $isEn ? ($member['bio_en'] ?? $member['bio_es']) : ($member['bio_es'] ?? $member['bio_en']) }}
