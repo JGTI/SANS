@@ -477,7 +477,7 @@
         clearSpotlight();
         sessionStorage.removeItem('sv_demo_active');
         sessionStorage.removeItem('sv_demo_step');
-        if (dismiss) sessionStorage.setItem('sv_demo_dismissed', '1');
+        if (dismiss) sessionStorage.setItem('sv_demo_v2_dismissed', '1');
         if (player) player.style.display = 'none';
     }
 
@@ -542,7 +542,9 @@
     }
 
     launchBtn?.addEventListener('click', () => {
-        sessionStorage.removeItem('sv_demo_dismissed');
+        sessionStorage.removeItem('sv_demo_v2_dismissed');
+        if (welcomeModal) welcomeModal.style.display = 'none';
+        clearInterval(welcomeCountdownTimer);
         paused = false;
         if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         runStep(0);
@@ -562,27 +564,50 @@
     document.getElementById('sv-demo-stop')?.addEventListener('click', () => stopDemo(true));
 
     const welcomeModal = document.getElementById('sv-demo-welcome-modal');
-    document.getElementById('sv-welcome-start-btn')?.addEventListener('click', () => {
+    const welcomeStartBtn = document.getElementById('sv-welcome-start-btn');
+    let welcomeCountdownTimer = null;
+
+    function startDemoFromWelcome() {
+        clearInterval(welcomeCountdownTimer);
         if (welcomeModal) welcomeModal.style.display = 'none';
-        sessionStorage.removeItem('sv_demo_dismissed');
+        sessionStorage.removeItem('sv_demo_v2_dismissed');
         paused = false;
         if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         runStep(0);
-    });
+    }
+
+    welcomeStartBtn?.addEventListener('click', startDemoFromWelcome);
     document.getElementById('sv-welcome-skip-btn')?.addEventListener('click', () => {
+        clearInterval(welcomeCountdownTimer);
         if (welcomeModal) welcomeModal.style.display = 'none';
-        sessionStorage.setItem('sv_demo_dismissed', '1');
+        sessionStorage.setItem('sv_demo_v2_dismissed', '1');
     });
 
     const forceDemoLink = window.location.pathname.endsWith('/demo') || new URLSearchParams(window.location.search).get('demo') === '1';
     if (forceDemoLink) {
-        sessionStorage.removeItem('sv_demo_dismissed');
+        sessionStorage.removeItem('sv_demo_v2_dismissed');
         setTimeout(() => runStep(0), 500);
     } else if (sessionStorage.getItem('sv_demo_active') === '1') {
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
         setTimeout(() => runStep(savedIdx), 350);
-    } else if (sessionStorage.getItem('sv_demo_dismissed') !== '1') {
-        if (welcomeModal) welcomeModal.style.display = 'flex';
+    } else if (sessionStorage.getItem('sv_demo_v2_dismissed') !== '1') {
+        if (welcomeModal) {
+            welcomeModal.style.display = 'flex';
+            let sec = 3;
+            const labelSpan = welcomeStartBtn?.querySelector('span');
+            const baseLabel = isEn ? 'ACTIVATE AUTOMATIC DEMO' : 'ACTIVAR DEMO AUTOMÁTICO';
+            if (labelSpan) labelSpan.textContent = `${baseLabel} (${sec}s)`;
+            welcomeCountdownTimer = setInterval(() => {
+                sec--;
+                if (sec <= 0) {
+                    startDemoFromWelcome();
+                } else if (labelSpan) {
+                    labelSpan.textContent = `${baseLabel} (${sec}s)`;
+                }
+            }, 1000);
+        } else {
+            setTimeout(() => runStep(0), 650);
+        }
     }
 })();
 </script>
