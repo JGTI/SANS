@@ -315,10 +315,34 @@
             <span id="fundusActiveIopBadge" style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:5px 11px;border-radius:6px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);font-weight:700;">
                 {{ $isEn ? 'Tonometer IOP:' : 'PIO Tonómetro:' }} {{ $orbitalTransmission['iop_od'] }} / {{ $orbitalTransmission['iop_os'] }} mmHg
             </span>
+            <label style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.52rem 0.9rem;font-size:0.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin:0;">
+                <i class="fa fa-upload"></i> {{ $isEn ? 'Upload Photo' : 'Subir Foto' }}
+                <input type="file" id="cvUploadFileInput" accept="image/*" hidden>
+            </label>
+            <button type="button" id="btnOpenCvCamera" style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.52rem 0.9rem;font-size:0.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                <i class="fa fa-camera"></i> {{ $isEn ? 'Camera' : 'Activar Cámara' }}
+            </button>
             <button type="button" id="btnRunFundusScanner" style="background:var(--space-neon);color:#09090b;border:1px solid #c7d900;border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="fa fa-crosshairs"></i> {{ $isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV' }}
             </button>
         </div>
+    </div>
+
+    {{-- Panel inline de cámara en vivo (getUserMedia) --}}
+    <div id="cvCameraBox" style="display:none;margin-bottom:1rem;padding:0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.55rem;gap:0.5rem;flex-wrap:wrap;">
+            <strong style="font-size:0.8rem;"><i class="fa fa-video-camera"></i> {{ $isEn ? 'Live Camera Capture → Python CV' : 'Captura de Cámara en Vivo → Python CV' }}</strong>
+            <div style="display:flex;gap:0.45rem;">
+                <button type="button" id="btnCaptureCvFrame" style="background:var(--space-neon);color:#09090b;border:1px solid #09090b;border-radius:6px;padding:0.35rem 0.85rem;font-size:0.75rem;font-weight:800;cursor:pointer;">
+                    <i class="fa fa-camera"></i> {{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}
+                </button>
+                <button type="button" id="btnCloseCvCamera" style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.7rem;font-size:0.75rem;font-weight:700;cursor:pointer;">
+                    {{ $isEn ? 'Close' : 'Cerrar' }}
+                </button>
+            </div>
+        </div>
+        <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;max-height:240px;border-radius:6px;background:#09090b;object-fit:contain;display:block;"></video>
+        <div id="cvCameraError" style="display:none;margin-top:0.45rem;font-size:0.75rem;color:#ef4444;font-weight:600;"></div>
     </div>
 
     {{-- Galería longitudinal multi-foto (captura en vivo + archivo de misión) --}}
@@ -451,6 +475,7 @@
                     iop_mmhg: activeCapture.iop,
                     demo_preset: activeCapture.preset,
                     image_filename: activeCapture.filename,
+                    image_data_url: activeCapture.image_data_url || null,
                 })
             });
             const data = await res.json();
@@ -520,9 +545,78 @@
                 preset: thumb.dataset.preset,
                 filename: thumb.dataset.filename,
                 src: thumb.dataset.src,
+                image_data_url: null,
             };
             runFundusScan();
         });
+    });
+
+    const uploadInput = document.getElementById('cvUploadFileInput');
+    uploadInput?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            activeCapture = {
+                ...activeCapture,
+                filename: file.name,
+                src: reader.result,
+                image_data_url: reader.result,
+            };
+            runFundusScan();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    const camBox = document.getElementById('cvCameraBox');
+    const camVideo = document.getElementById('cvCameraVideo');
+    const camErr = document.getElementById('cvCameraError');
+    let camStream = null;
+
+    function stopCvCamera() {
+        if (camStream) {
+            camStream.getTracks().forEach(t => t.stop());
+            camStream = null;
+        }
+        if (camVideo) camVideo.srcObject = null;
+        if (camBox) camBox.style.display = 'none';
+    }
+
+    document.getElementById('btnOpenCvCamera')?.addEventListener('click', async () => {
+        if (!camBox || !camVideo) return;
+        camBox.style.display = 'block';
+        if (camErr) { camErr.style.display = 'none'; camErr.textContent = ''; }
+        try {
+            if (!navigator.mediaDevices?.getUserMedia) {
+                throw new Error(isEn ? 'Camera API requires HTTPS or localhost.' : 'La API de cámara requiere HTTPS o localhost.');
+            }
+            camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            camVideo.srcObject = camStream;
+        } catch (err) {
+            if (camErr) {
+                camErr.style.display = 'block';
+                camErr.textContent = err?.message || (isEn ? 'Unable to access camera.' : 'No se pudo acceder a la cámara.');
+            }
+        }
+    });
+
+    document.getElementById('btnCloseCvCamera')?.addEventListener('click', stopCvCamera);
+
+    document.getElementById('btnCaptureCvFrame')?.addEventListener('click', () => {
+        if (!camVideo || !camVideo.videoWidth) return;
+        const c = document.createElement('canvas');
+        c.width = camVideo.videoWidth;
+        c.height = camVideo.videoHeight;
+        c.getContext('2d').drawImage(camVideo, 0, 0, c.width, c.height);
+        const dataUrl = c.toDataURL('image/png');
+        stopCvCamera();
+        activeCapture = {
+            ...activeCapture,
+            filename: 'camera-capture.png',
+            src: dataUrl,
+            image_data_url: dataUrl,
+        };
+        runFundusScan();
     });
 
     btn.addEventListener('click', runFundusScan);
