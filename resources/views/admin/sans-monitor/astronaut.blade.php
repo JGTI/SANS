@@ -132,26 +132,103 @@
     </div>
 
     <div class="crew-view" data-crew-view="log" hidden>
-        <div class="crew-page-heading">
-            <div><p class="crew-eyebrow">{{ $isEn ? 'PERSONAL RECORD' : 'REGISTRO PERSONAL' }}</p><h2>{{ $isEn ? 'Mission logbook' : 'Bitácora de misión' }}</h2></div>
-            <button type="button" class="crew-secondary-action" data-start-check><i class="fa fa-plus"></i> {{ $isEn ? 'New entry' : 'Nueva entrada' }}</button>
+        <div class="crew-page-heading" style="border-bottom:1px solid #e4e4e7;padding-bottom:14px;margin-bottom:18px;">
+            <div>
+                <p class="crew-eyebrow" style="color:#52525b;font-family:ui-monospace,monospace;letter-spacing:0.08em;">{{ $isEn ? 'PERSONAL FLIGHT RECORD · ' . $activeCase->case_id : 'REGISTRO PERSONAL DE VUELO · ' . $activeCase->case_id }}</p>
+                <h2 style="color:#09090b;">{{ $isEn ? 'Mission logbook' : 'Bitácora de misión' }}</h2>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" class="crew-secondary-action" style="border-color:#d4d4d8;color:#09090b;background:#ffffff;text-decoration:none;">
+                    <i class="fa fa-cube"></i> {{ $isEn ? 'Open 3D + OCT' : 'Abrir 3D + OCT' }}
+                </a>
+                <button type="button" class="crew-primary-action" style="background:#09090b;color:#ffffff;border-color:#09090b;" data-start-check>
+                    <i class="fa fa-plus"></i> {{ $isEn ? 'New entry' : 'Nueva entrada' }}
+                </button>
+            </div>
         </div>
-        <div class="crew-timeline" data-log-list>
-            <article class="crew-log-entry">
-                <time datetime="2026-11-13T08:40"><strong>{{ $isEn ? 'Yesterday' : 'Ayer' }}</strong><span>08:40</span></time>
-                <div class="crew-log-mark is-ok"><i class="fa fa-check"></i></div>
-                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'No symptoms · Visual tests completed · IOP 16 / 15 mmHg' : 'Sin síntomas · Pruebas visuales completas · PIO 16 / 15 mmHg' }}</p><span class="crew-quality">{{ $isEn ? 'Quality verified' : 'Calidad verificada' }}</span></div>
-            </article>
-            <article class="crew-log-entry">
-                <time datetime="2026-11-10T08:35"><strong>{{ $isEn ? 'Nov 10' : '10 nov' }}</strong><span>08:35</span></time>
-                <div class="crew-log-mark is-note"><i class="fa fa-repeat"></i></div>
-                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'Amsler capture repeated due to distance. Second attempt accepted.' : 'Captura de Amsler repetida por distancia. Segundo intento aceptado.' }}</p><span class="crew-quality">{{ $isEn ? 'Repeat resolved' : 'Repetición resuelta' }}</span></div>
-            </article>
-            <article class="crew-log-entry">
-                <time datetime="2026-11-06T08:42"><strong>{{ $isEn ? 'Nov 6' : '6 nov' }}</strong><span>08:42</span></time>
-                <div class="crew-log-mark is-ok"><i class="fa fa-check"></i></div>
-                <div><h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3><p>{{ $isEn ? 'Mild headache · Visual tests completed · IOP 15 / 15 mmHg' : 'Cefalea leve · Pruebas visuales completas · PIO 15 / 15 mmHg' }}</p><span class="crew-quality">{{ $isEn ? 'Sent to ground review' : 'Enviado a revisión en Tierra' }}</span></div>
-            </article>
+
+        <style>
+            .sv-logbook-list { display:flex; flex-direction:column; gap:12px; max-width:920px; }
+            .sv-log-card { display:grid; grid-template-columns:120px 38px minmax(0,1fr); gap:16px; align-items:start; background:#ffffff; border:1px solid #e4e4e7; border-radius:10px; padding:16px 18px; transition:border-color .15s ease; }
+            .sv-log-card:hover { border-color:#09090b; }
+            .sv-log-time { font-family:ui-monospace,monospace; text-align:right; padding-top:2px; }
+            .sv-log-time strong { display:block; color:#09090b; font-size:0.82rem; font-weight:800; }
+            .sv-log-time span { display:block; color:#71717a; font-size:0.72rem; margin-top:2px; }
+            .sv-log-badge { width:38px; height:38px; border-radius:8px; display:grid; place-items:center; background:#09090b; color:#ffffff; font-size:0.9rem; border:1px solid #09090b; }
+            .sv-log-badge.is-muted { background:#f4f4f5; color:#09090b; border-color:#d4d4d8; }
+            .sv-log-body h3 { margin:0 0 4px; font-size:0.98rem; font-weight:800; color:#09090b; }
+            .sv-log-body p { margin:0 0 10px; font-size:0.84rem; color:#52525b; line-height:1.45; }
+            .sv-log-chips { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+            .sv-log-chip { font-family:ui-monospace,monospace; font-size:0.71rem; font-weight:700; padding:3px 8px; border-radius:5px; background:#f4f4f5; color:#18181b; border:1px solid #e4e4e7; }
+            .sv-log-chip.is-dark { background:#09090b; color:#ffffff; border-color:#09090b; }
+            @media (max-width:640px) { .sv-log-card { grid-template-columns:1fr; gap:10px; } .sv-log-time { text-align:left; } }
+        </style>
+
+        <div class="sv-logbook-list" data-log-list>
+            @php
+                $logCheckpoints = isset($missionObservations)
+                    ? collect($missionObservations)->groupBy(fn($o) => ($o->visit_stage ?? 'DURANTE') . '|' . ($o->mission_day ?? 'X') . '|' . ($o->days_post_end ?? 'X'))
+                    : collect();
+            @endphp
+            @if($logCheckpoints->count() > 0)
+                @foreach($logCheckpoints as $groupKey => $rows)
+                    @php
+                        $first = $rows->first();
+                        $stage = $first->visit_stage ?? 'DURANTE';
+                        $fdLabel = $first->days_post_end !== null
+                            ? ('+' . $first->days_post_end . 'd')
+                            : ($first->mission_day !== null ? ('FD' . $first->mission_day) : $stage);
+                        $obsDate = $first->observed_at ? \Carbon\Carbon::parse($first->observed_at)->format('Y-m-d') : '—';
+                        $trtOdRow = $rows->first(fn($r) => $r->eye === 'OD' && $r->metric_code === 'PERIPAPILLARY_TRT' && $r->value !== null);
+                        $trtOsRow = $rows->first(fn($r) => $r->eye === 'OS' && $r->metric_code === 'PERIPAPILLARY_TRT' && $r->value !== null);
+                        $iopOdRow = $rows->first(fn($r) => $r->eye === 'OD' && $r->metric_code === 'IOP' && $r->value !== null);
+                        $iopOsRow = $rows->first(fn($r) => $r->eye === 'OS' && $r->metric_code === 'IOP' && $r->value !== null);
+
+                        $trtOd = $trtOdRow ? (round((float)$trtOdRow->value) . ' µm') : ($isEn ? 'No OCT' : 'Sin OCT');
+                        $trtOs = $trtOsRow ? (round((float)$trtOsRow->value) . ' µm') : ($isEn ? 'No OCT' : 'Sin OCT');
+                        $iopTxt = ($iopOdRow || $iopOsRow)
+                            ? (($iopOdRow ? round((float)$iopOdRow->value, 1) : '—') . ' / ' . ($iopOsRow ? round((float)$iopOsRow->value, 1) : '—') . ' mmHg')
+                            : ($isEn ? 'IOP pending' : 'PIO pendiente');
+                        $hasOct = $trtOdRow !== null;
+                        $stageTitle = match($stage) {
+                            'ANTES' => $isEn ? 'Pre-flight baseline check' : 'Revisión basal pre-vuelo',
+                            'SEGUIMIENTO_POS' => $isEn ? 'Post-flight recovery control' : 'Control post-vuelo de recuperación',
+                            default => $isEn ? 'Scheduled orbital eye check' : 'Revisión ocular orbital programada',
+                        };
+                    @endphp
+                    <article class="sv-log-card">
+                        <div class="sv-log-time">
+                            <strong>{{ $fdLabel }}</strong>
+                            <span>{{ $obsDate }}</span>
+                        </div>
+                        <div class="sv-log-badge {{ $hasOct ? '' : 'is-muted' }}">
+                            <i class="fa {{ $hasOct ? 'fa-check' : 'fa-clock-o' }}"></i>
+                        </div>
+                        <div class="sv-log-body">
+                            <h3>{{ $stageTitle }}</h3>
+                            <p>{{ $isEn ? 'Logged in mission telemetry dossier · Calibrated seated protocol' : 'Registrado en expediente de telemetría orbital · Protocolo sentado calibrado' }}</p>
+                            <div class="sv-log-chips">
+                                <span class="sv-log-chip">OCT OD: {{ $trtOd }}</span>
+                                <span class="sv-log-chip">OCT OS: {{ $trtOs }}</span>
+                                <span class="sv-log-chip">{{ $isEn ? 'IOP' : 'PIO' }}: {{ $iopTxt }}</span>
+                                <span class="sv-log-chip is-dark">{{ $hasOct ? ($isEn ? 'Verified capture' : 'Captura verificada') : ($isEn ? 'Pending OCT' : 'OCT pendiente') }}</span>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+            @else
+                <article class="sv-log-card">
+                    <div class="sv-log-time"><strong>{{ $isEn ? 'Yesterday' : 'Ayer' }}</strong><span>08:40 UTC</span></div>
+                    <div class="sv-log-badge"><i class="fa fa-check"></i></div>
+                    <div class="sv-log-body">
+                        <h3>{{ $isEn ? 'Routine eye check' : 'Revisión visual rutinaria' }}</h3>
+                        <p>{{ $isEn ? 'No symptoms · Visual tests completed · IOP 16 / 15 mmHg' : 'Sin síntomas · Pruebas visuales completas · PIO 16 / 15 mmHg' }}</p>
+                        <div class="sv-log-chips">
+                            <span class="sv-log-chip is-dark">{{ $isEn ? 'Quality verified' : 'Calidad verificada' }}</span>
+                        </div>
+                    </div>
+                </article>
+            @endif
         </div>
     </div>
 
@@ -271,13 +348,28 @@
                 </div>
                 <style>
                     .crew-wiz-stepper { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-                    .crew-wiz-pill { border:1px solid #cbd5e1; background:#ffffff; color:#0f172a; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
-                    .crew-wiz-pill:hover { border-color:#1d4ed8; color:#1d4ed8; }
-                    .crew-wiz-pill.is-active { background:#0b3d91; border-color:#0b3d91; color:#ffffff; box-shadow:0 0 0 3px rgba(11,61,145,0.18); }
-                    .crew-wiz-pill.is-done { background:#ecfdf5; border-color:#10b981; color:#047857; }
-                    .crew-wiz-pill.is-active.is-done { background:#047857; border-color:#047857; color:#ffffff; }
-                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
-                    .crew-wiz-counter { font-size:13px; font-weight:700; color:#334155; }
+                    .crew-wiz-pill { border:1px solid #d4d4d8; background:#ffffff; color:#09090b; font-family:ui-monospace,monospace; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
+                    .crew-wiz-pill:hover { border-color:#09090b; color:#09090b; background:#f4f4f5; }
+                    .crew-wiz-pill.is-active { background:#09090b; border-color:#09090b; color:#ffffff; box-shadow:0 0 0 3px rgba(9,9,11,0.12); }
+                    .crew-wiz-pill.is-done { background:#f4f4f5; border-color:#18181b; color:#09090b; }
+                    .crew-wiz-pill.is-active.is-done { background:#09090b; border-color:#09090b; color:#ffffff; }
+                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#fafafa; border:1px solid #e4e4e7; border-radius:10px; }
+                    .crew-wiz-counter { font-family:ui-monospace,monospace; font-size:12.5px; font-weight:700; color:#18181b; }
+                </style>
+                <div class="crew-wiz-nav" data-wiz-nav>
+                    <button type="button" class="crew-secondary-action" data-wiz-prev disabled><i class="fa fa-chevron-left"></i> {{ $isEn ? 'Previous check' : 'Prueba anterior' }}</button>
+                    <span class="crew-wiz-counter" data-wiz-counter>{{ $isEn ? 'Check 1 of 6' : 'Prueba 1 de 6' }}</span>
+                    <button type="button" class="crew-secondary-action" data-wiz-next>{{ $isEn ? 'Next check' : 'Siguiente prueba' }} <i class="fa fa-chevron-right"></i></button>
+                </div>
+                <style>
+                    .crew-wiz-stepper { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+                    .crew-wiz-pill { border:1px solid #d4d4d8; background:#ffffff; color:#09090b; font-family:ui-monospace,monospace; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
+                    .crew-wiz-pill:hover { border-color:#09090b; color:#09090b; background:#f4f4f5; }
+                    .crew-wiz-pill.is-active { background:#09090b; border-color:#09090b; color:#ffffff; box-shadow:0 0 0 3px rgba(9,9,11,0.12); }
+                    .crew-wiz-pill.is-done { background:#f4f4f5; border-color:#18181b; color:#09090b; }
+                    .crew-wiz-pill.is-active.is-done { background:#09090b; border-color:#09090b; color:#ffffff; }
+                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#fafafa; border:1px solid #e4e4e7; border-radius:10px; }
+                    .crew-wiz-counter { font-family:ui-monospace,monospace; font-size:12.5px; font-weight:700; color:#18181b; }
                 </style>
                 <p class="crew-step-feedback" data-step-feedback="1" hidden></p>
             </section>
