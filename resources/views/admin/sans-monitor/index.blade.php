@@ -2199,6 +2199,20 @@ window.runCandidatePredictor = async function (e) {
             'initials' => 'JG',
         ],
         [
+            'name' => 'Dr. Alam Tinajero Palacios',
+            'role_en' => 'Ph.D. in Legal Sciences',
+            'role_es' => 'Dr. en Ciencias Jurídicas',
+            'bio_en' => 'Legal research, bioethics & regulatory framework analysis',
+            'bio_es' => 'Investigación jurídica, bioética y análisis del marco normativo',
+            'is_leader' => false,
+            'nasa_user' => '@alamtpalacios',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'alampalacios@nexusdititaldb.com'],
+            ],
+            'photos' => ['Alam.jpeg', 'alam.jpeg', 'alam.jpg'],
+            'initials' => 'AT',
+        ],
+        [
             'name' => 'Miguel Ángel García Espinosa',
             'role_en' => 'Software Engineering',
             'role_es' => 'Ingeniería de Software',
@@ -2212,20 +2226,6 @@ window.runCandidatePredictor = async function (e) {
             'photos' => ['miguel angel.jpeg', 'miguel.jpeg', 'miguel.jpg'],
             'photo_style' => 'transform:scale(1.65);transform-origin:center 20%;',
             'initials' => 'MA',
-        ],
-        [
-            'name' => 'Dr. Alam Tinajero Palacios',
-            'role_en' => 'Ph.D. in Legal Sciences',
-            'role_es' => 'Dr. en Ciencias Jurídicas',
-            'bio_en' => 'Legal research, bioethics & regulatory framework analysis',
-            'bio_es' => 'Investigación jurídica, bioética y análisis del marco normativo',
-            'is_leader' => false,
-            'nasa_user' => '@alamtpalacios',
-            'emails' => [
-                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'alampalacios@nexusdititaldb.com'],
-            ],
-            'photos' => ['Alam.jpeg', 'alam.jpeg', 'alam.jpg'],
-            'initials' => 'AT',
         ],
     ];
 @endphp
