@@ -166,16 +166,16 @@
     </div>
 
     <div class="crew-view" data-crew-view="log" hidden>
-        <div class="crew-page-heading" style="border-bottom:1px solid #e4e4e7;padding-bottom:14px;margin-bottom:18px;">
+        <div class="crew-page-heading" style="border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:18px;">
             <div>
-                <p class="crew-eyebrow" style="color:#52525b;font-family:ui-monospace,monospace;letter-spacing:0.08em;">{{ $isEn ? 'PERSONAL FLIGHT RECORD · ' . $activeCase->case_id : 'REGISTRO PERSONAL DE VUELO · ' . $activeCase->case_id }}</p>
-                <h2 style="color:#09090b;">{{ $isEn ? 'Mission logbook' : 'Bitácora de misión' }}</h2>
+                <p class="crew-eyebrow" style="color:var(--muted-foreground);font-family:ui-monospace,monospace;letter-spacing:0.08em;">{{ $isEn ? 'PERSONAL FLIGHT RECORD · ' . $activeCase->case_id : 'REGISTRO PERSONAL DE VUELO · ' . $activeCase->case_id }}</p>
+                <h2 style="color:var(--foreground);">{{ $isEn ? 'Mission logbook' : 'Bitácora de misión' }}</h2>
             </div>
             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" class="crew-secondary-action" style="border-color:#d4d4d8;color:#09090b;background:#ffffff;text-decoration:none;">
+                <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" class="crew-secondary-action" style="text-decoration:none;">
                     <i class="fa fa-cube"></i> {{ $isEn ? 'Open 3D + OCT' : 'Abrir 3D + OCT' }}
                 </a>
-                <button type="button" class="crew-primary-action" style="background:#09090b;color:#ffffff;border-color:#09090b;" data-start-check>
+                <button type="button" class="crew-primary-action" data-start-check>
                     <i class="fa fa-plus"></i> {{ $isEn ? 'New entry' : 'Nueva entrada' }}
                 </button>
             </div>
@@ -183,18 +183,18 @@
 
         <style>
             .sv-logbook-list { display:flex; flex-direction:column; gap:12px; width:100%; }
-            .sv-log-card { display:grid; grid-template-columns:120px 38px minmax(0,1fr); gap:16px; align-items:start; background:#ffffff; border:1px solid #e4e4e7; border-radius:10px; padding:16px 18px; transition:border-color .15s ease; }
-            .sv-log-card:hover { border-color:#09090b; }
+            .sv-log-card { display:grid; grid-template-columns:120px 38px minmax(0,1fr); gap:16px; align-items:start; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px; transition:border-color .15s ease; }
+            .sv-log-card:hover { border-color:var(--crew-primary); }
             .sv-log-time { font-family:ui-monospace,monospace; text-align:right; padding-top:2px; }
-            .sv-log-time strong { display:block; color:#09090b; font-size:0.82rem; font-weight:800; }
-            .sv-log-time span { display:block; color:#71717a; font-size:0.72rem; margin-top:2px; }
-            .sv-log-badge { width:38px; height:38px; border-radius:8px; display:grid; place-items:center; background:#09090b; color:#ffffff; font-size:0.9rem; border:1px solid #09090b; }
-            .sv-log-badge.is-muted { background:#f4f4f5; color:#09090b; border-color:#d4d4d8; }
-            .sv-log-body h3 { margin:0 0 4px; font-size:0.98rem; font-weight:800; color:#09090b; }
-            .sv-log-body p { margin:0 0 10px; font-size:0.84rem; color:#52525b; line-height:1.45; }
+            .sv-log-time strong { display:block; color:var(--foreground); font-size:0.82rem; font-weight:800; }
+            .sv-log-time span { display:block; color:var(--muted-foreground); font-size:0.72rem; margin-top:2px; }
+            .sv-log-badge { width:38px; height:38px; border-radius:8px; display:grid; place-items:center; background:var(--space-neon); color:#09090b; font-size:0.9rem; border:1px solid #c7d900; font-weight:800; }
+            .sv-log-badge.is-muted { background:var(--muted); color:var(--foreground); border-color:var(--border); }
+            .sv-log-body h3 { margin:0 0 4px; font-size:0.98rem; font-weight:800; color:var(--foreground); }
+            .sv-log-body p { margin:0 0 10px; font-size:0.84rem; color:var(--muted-foreground); line-height:1.45; }
             .sv-log-chips { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-            .sv-log-chip { font-family:ui-monospace,monospace; font-size:0.71rem; font-weight:700; padding:3px 8px; border-radius:5px; background:#f4f4f5; color:#18181b; border:1px solid #e4e4e7; }
-            .sv-log-chip.is-dark { background:#09090b; color:#ffffff; border-color:#09090b; }
+            .sv-log-chip { font-family:ui-monospace,monospace; font-size:0.71rem; font-weight:700; padding:3px 8px; border-radius:5px; background:var(--muted); color:var(--foreground); border:1px solid var(--border); }
+            .sv-log-chip.is-dark { background:var(--space-neon); color:#09090b; border-color:#c7d900; }
             @media (max-width:640px) { .sv-log-card { grid-template-columns:1fr; gap:10px; } .sv-log-time { text-align:left; } }
         </style>
 

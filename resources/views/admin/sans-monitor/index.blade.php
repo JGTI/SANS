@@ -315,7 +315,7 @@
             <span id="fundusActiveIopBadge" style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:5px 11px;border-radius:6px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);font-weight:700;">
                 {{ $isEn ? 'Tonometer IOP:' : 'PIO Tonómetro:' }} {{ $orbitalTransmission['iop_od'] }} / {{ $orbitalTransmission['iop_os'] }} mmHg
             </span>
-            <button type="button" id="btnRunFundusScanner" style="background:var(--primary);color:var(--primary-foreground);border:1px solid var(--primary);border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
+            <button type="button" id="btnRunFundusScanner" style="background:var(--space-neon);color:#09090b;border:1px solid #c7d900;border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="fa fa-crosshairs"></i> {{ $isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV' }}
             </button>
         </div>
