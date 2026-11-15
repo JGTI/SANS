@@ -1,6 +1,9 @@
 name: Publicar en cPanel
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
