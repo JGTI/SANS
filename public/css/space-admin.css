@@ -1286,3 +1286,11 @@ details.collapsible-card > summary::-webkit-details-marker {
     .crew-close-flow span { display:none; }
     .crew-flow-actions .crew-primary-action { width:auto; }
 }
+
+.nexus-logo-adaptive {
+    transition: filter 0.2s ease;
+}
+
+html[data-theme="dark"] .nexus-logo-adaptive {
+    filter: invert(1) brightness(1.15);
+}

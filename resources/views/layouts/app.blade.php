@@ -25,7 +25,7 @@
     <div class="admin-main">
         <header class="topbar">
             <a href="{{ route('home') }}" class="topbar-brand">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:22px;height:22px;object-fit:contain;">
+                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" class="nexus-logo-adaptive" style="width:22px;height:22px;object-fit:contain;">
                 <span class="topbar-brand-text">
                     <strong>SPACE VISION</strong>
                     <small>SANS MONITOR · ISS-01</small>
@@ -73,7 +73,7 @@
         <footer class="admin-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <span>{{ config('app.name') }} · Nexus × NASA Space Apps Challenge · Developed by NEXUS × Visual Rehab Center for the NASA International Space Apps Challenge 2026.</span>
             <span style="display:inline-flex;align-items:center;gap:10px;">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="height:18px;object-fit:contain;">
+                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" class="nexus-logo-adaptive" style="height:18px;object-fit:contain;">
                 <img src="{{ request()->getBasePath() }}/images/space-apps-logo.png" alt="NASA Space Apps Challenge" style="height:18px;object-fit:contain;">
             </span>
         </footer>
