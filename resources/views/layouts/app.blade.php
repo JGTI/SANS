@@ -230,6 +230,14 @@
             <strong id="sv-demo-title" style="font-size:1.08rem;font-weight:800;color:#ffffff;"></strong>
         </div>
         <div style="display:flex;align-items:center;gap:0.4rem;">
+            <label for="sv-demo-speed" style="font-size:0.72rem;color:#a1a1aa;font-weight:700;margin:0;">{{ $isEn ? 'Speed' : 'Vel.' }}</label>
+            <select id="sv-demo-speed" aria-label="{{ $isEn ? 'Demo Speed' : 'Velocidad del Demo' }}" style="background:rgba(255,255,255,0.12);color:#EAFE07;border:1px solid rgba(255,255,255,0.22);border-radius:7px;padding:0.26rem 0.45rem;font-size:0.76rem;font-weight:800;cursor:pointer;">
+                <option value="0.5" style="color:#09090b;">0.5x</option>
+                <option value="1" selected style="color:#09090b;">1x</option>
+                <option value="1.5" style="color:#09090b;">1.5x</option>
+                <option value="2" style="color:#09090b;">2x</option>
+                <option value="3" style="color:#09090b;">3x</option>
+            </select>
             <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
             <button type="button" id="sv-demo-pause" title="{{ $isEn ? 'Pause / Resume' : 'Pausar / Reanudar' }}" style="background:#EAFE07;color:#09090b;border:1px solid #EAFE07;border-radius:7px;padding:0.32rem 0.75rem;font-size:0.78rem;font-weight:800;cursor:pointer;"><i class="fa fa-pause"></i></button>
             <button type="button" id="sv-demo-next" title="{{ $isEn ? 'Next' : 'Siguiente' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-forward"></i></button>
@@ -596,19 +604,35 @@
             }
         }, 120);
 
+        const speedSel = document.getElementById('sv-demo-speed');
+        let demoSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '1') || 1;
+        if (speedSel && speedSel.value !== String(demoSpeed)) {
+            speedSel.value = String(demoSpeed);
+        }
+
         elapsed = 0;
         const dur = step.duration || 7500;
         if (progEl) progEl.style.width = '0%';
 
         tickTimer = setInterval(() => {
             if (paused) return;
-            elapsed += 150;
+            const curSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '1') || 1;
+            elapsed += 150 * curSpeed;
             const pct = Math.min(100, (elapsed / dur) * 100);
             if (progEl) progEl.style.width = `${pct}%`;
             if (elapsed >= dur) {
                 runStep(idx + 1);
             }
         }, 150);
+    }
+
+    const speedSelectEl = document.getElementById('sv-demo-speed');
+    if (speedSelectEl) {
+        const savedSpeed = sessionStorage.getItem('sv_demo_speed');
+        if (savedSpeed) speedSelectEl.value = savedSpeed;
+        speedSelectEl.addEventListener('change', () => {
+            sessionStorage.setItem('sv_demo_speed', speedSelectEl.value || '1');
+        });
     }
 
     launchBtn?.addEventListener('click', () => {
@@ -656,14 +680,14 @@
     const forceDemoLink = window.location.pathname.endsWith('/demo') || new URLSearchParams(window.location.search).get('demo') === '1';
     if (forceDemoLink) {
         sessionStorage.removeItem('sv_demo_v2_dismissed');
-        setTimeout(() => runStep(0), 500);
+        setTimeout(() => runStep(0), 120);
     } else if (sessionStorage.getItem('sv_demo_active') === '1') {
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
-        setTimeout(() => runStep(savedIdx), 350);
+        setTimeout(() => runStep(savedIdx), 120);
     } else if (sessionStorage.getItem('sv_demo_v2_dismissed') !== '1') {
         if (welcomeModal) {
             welcomeModal.style.display = 'flex';
-            let sec = 3;
+            let sec = 1;
             const labelSpan = welcomeStartBtn?.querySelector('span');
             const baseLabel = isEn ? 'ACTIVATE AUTOMATIC DEMO' : 'ACTIVAR DEMO AUTOMÁTICO';
             if (labelSpan) labelSpan.textContent = `${baseLabel} (${sec}s)`;
@@ -676,7 +700,7 @@
                 }
             }, 1000);
         } else {
-            setTimeout(() => runStep(0), 650);
+            setTimeout(() => runStep(0), 150);
         }
     }
 })();
