@@ -2447,6 +2447,46 @@ window.runCandidatePredictor = async function (e) {
                 grid-template-columns: 1fr;
             }
         }
+        @keyframes teamTitleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes teamCardReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.96);
+                filter: blur(3px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+        #project-team-section h2 {
+            animation: teamTitleReveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .team-card-animate {
+            animation: teamCardReveal 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .team-card-animate:hover {
+            transform: translateY(-3px);
+            border-color: var(--interactive-border) !important;
+            box-shadow: 0 10px 24px rgba(0, 66, 166, 0.14);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #project-team-section h2,
+            .team-card-animate {
+                animation: none !important;
+            }
+        }
     </style>
 
     <div class="team-grid-6">
@@ -2461,7 +2501,7 @@ window.runCandidatePredictor = async function (e) {
                 }
                 $photoUrl = $photoFile ? request()->getBasePath() . '/images/users/' . rawurlencode($photoFile) : null;
             @endphp
-            <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.55rem;padding:0.9rem 0.65rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
+            <article class="team-card-animate" style="animation-delay:{{ $loop->index * 110 }}ms;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.55rem;padding:0.9rem 0.65rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
                 @if($photoUrl)
                     <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
                         <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
