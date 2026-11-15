@@ -187,16 +187,16 @@
        class="wizard-step-card {{ $normalizedTab === 'biomarcadores' ? 'is-active' : '' }}">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;">
             <span style="font-size:0.68rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.92;">
-                {{ $isEn ? 'STEP 1 OF 3 · INTAKE & PREDICTOR' : 'PASO 1 DE 3 · INGRESO Y PREDICTOR' }}
+                {{ $isEn ? 'INTAKE & PREDICTOR' : 'INGRESO Y PREDICTOR' }}
             </span>
             <span class="wizard-step-pill" data-wizard-pill
-                  data-label-active="{{ $isEn ? '● ACTIVE STEP' : '● PASO ACTIVO' }}"
-                  data-label-inactive="{{ $isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →' }}">
-                {{ $normalizedTab === 'biomarcadores' ? ($isEn ? '● ACTIVE STEP' : '● PASO ACTIVO') : ($isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →') }}
+                  data-label-active="{{ $isEn ? '● ACTIVE' : '● ACTIVO' }}"
+                  data-label-inactive="{{ $isEn ? 'OPEN →' : 'ABRIR →' }}">
+                {{ $normalizedTab === 'biomarcadores' ? ($isEn ? '● ACTIVE' : '● ACTIVO') : ($isEn ? 'OPEN →' : 'ABRIR →') }}
             </span>
         </div>
         <div style="font-size:0.96rem;font-weight:800;">
-            <i class="fa fa-heartbeat"></i> {{ $isEn ? '1. Initial Form & 6 Biomarkers' : '1. Formulario Inicial y 6 Biomarcadores' }}
+            <i class="fa fa-heartbeat"></i> {{ $isEn ? 'Initial Form & 6 Biomarkers' : 'Formulario Inicial y 6 Biomarcadores' }}
         </div>
         <div style="font-size:0.75rem;opacity:0.88;">
             {{ $isEn ? 'Evaluate OCT, Axial Length, Hyperopia, Frisén, IOP & -6° HDT.' : 'Evalúa OCT, Longitud Axial, Hipermetropía, Frisén, PIO y -6° HDT.' }}
@@ -211,16 +211,16 @@
        class="wizard-step-card {{ $normalizedTab === 'seguimiento' ? 'is-active' : '' }}">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;">
             <span style="font-size:0.68rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.92;">
-                {{ $isEn ? 'STEP 2 OF 3 · LONGITUDINAL CUTS' : 'PASO 2 DE 3 · CORTES EN EL TIEMPO' }}
+                {{ $isEn ? 'LONGITUDINAL CUTS' : 'CORTES EN EL TIEMPO' }}
             </span>
             <span class="wizard-step-pill" data-wizard-pill
-                  data-label-active="{{ $isEn ? '● ACTIVE STEP' : '● PASO ACTIVO' }}"
-                  data-label-inactive="{{ $isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →' }}">
-                {{ $normalizedTab === 'seguimiento' ? ($isEn ? '● ACTIVE STEP' : '● PASO ACTIVO') : ($isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →') }}
+                  data-label-active="{{ $isEn ? '● ACTIVE' : '● ACTIVO' }}"
+                  data-label-inactive="{{ $isEn ? 'OPEN →' : 'ABRIR →' }}">
+                {{ $normalizedTab === 'seguimiento' ? ($isEn ? '● ACTIVE' : '● ACTIVO') : ($isEn ? 'OPEN →' : 'ABRIR →') }}
             </span>
         </div>
         <div style="font-size:0.96rem;font-weight:800;">
-            <i class="fa fa-calendar"></i> {{ $isEn ? '2. Before · During · After (+30, +60, +90 days)' : '2. Antes · Durante · Después (+30, +60, +90 días)' }}
+            <i class="fa fa-calendar"></i> {{ $isEn ? 'Before · During · After (+30, +60, +90 days)' : 'Antes · Durante · Después (+30, +60, +90 días)' }}
         </div>
         <div style="font-size:0.75rem;opacity:0.88;">
             {{ $isEn ? 'Track pre-flight baseline, in-flight shifts & post-flight recovery.' : 'Mide línea base pre-vuelo, cambios en misión y recuperación posvuelo.' }}
@@ -235,19 +235,19 @@
        class="wizard-step-card {{ $normalizedTab === 'escenarios' ? 'is-active' : '' }}">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.4rem;">
             <span style="font-size:0.68rem;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;opacity:0.92;">
-                {{ $isEn ? 'STEP 3 OF 3 · REFERENCE ARCHETYPES' : 'PASO 3 DE 3 · ARQUETIPOS DE REFERENCIA' }}
+                {{ $isEn ? 'REFERENCE ARCHETYPES' : 'ARQUETIPOS DE REFERENCIA' }}
             </span>
             <span class="wizard-step-pill" data-wizard-pill
-                  data-label-active="{{ $isEn ? '● ACTIVE STEP' : '● PASO ACTIVO' }}"
-                  data-label-inactive="{{ $isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →' }}">
-                {{ $normalizedTab === 'escenarios' ? ($isEn ? '● ACTIVE STEP' : '● PASO ACTIVO') : ($isEn ? 'CLICK TO OPEN →' : 'CLIC PARA ABRIR →') }}
+                  data-label-active="{{ $isEn ? '● ACTIVE' : '● ACTIVO' }}"
+                  data-label-inactive="{{ $isEn ? 'OPEN →' : 'ABRIR →' }}">
+                {{ $normalizedTab === 'escenarios' ? ($isEn ? '● ACTIVE' : '● ACTIVO') : ($isEn ? 'OPEN →' : 'ABRIR →') }}
             </span>
         </div>
         <div style="font-size:0.96rem;font-weight:800;">
-            <i class="fa fa-sliders"></i> {{ $isEn ? '3. Scenario Models (Stable · Worsens · Unscanned)' : '3. Escenarios Modelos (Estable · Empeora · No se escanea)' }}
+            <i class="fa fa-sliders"></i> {{ $isEn ? 'Scenario Models (Stable · Worsens · Unscanned)' : 'Escenarios Modelos (Estable · Empeora · No se escanea)' }}
         </div>
         <div style="font-size:0.75rem;opacity:0.88;">
-            {{ $isEn ? 'Compare the 3 canonical models & anatomical SVG schematics.' : 'Compara los 3 modelos canónicos y sus esquemas anatómicos SVG.' }}
+            {{ $isEn ? 'Compare the 3 canonical models & anatomical clinical imaging.' : 'Compara los 3 modelos canónicos y sus vistas clínicas.' }}
         </div>
     </a>
 </div>
@@ -373,21 +373,21 @@
         </div>
         <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
             <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
-                <strong>{{ $isEn ? '1. Sobel Disc Rim' : '1. Borde Sobel Papila' }}</strong>
+                <strong>{{ $isEn ? 'Sobel Disc Rim' : 'Borde Sobel Papila' }}</strong>
                 <span style="color:#38bdf8;">SciPy</span>
             </div>
             <img id="cvEdgeImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Sobel Disc Edge Map" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
         </div>
         <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
             <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
-                <strong>{{ $isEn ? '2. Edema Halo Map' : '2. Mapa Halo Edema' }}</strong>
+                <strong>{{ $isEn ? 'Edema Halo Map' : 'Mapa Halo Edema' }}</strong>
                 <span style="color:#facc15;">NumPy</span>
             </div>
             <img id="cvHeatmapImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Edema Elevation Heatmap" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
         </div>
         <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
             <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
-                <strong>{{ $isEn ? '3. Choroidal Folds' : '3. Pliegues Coroideos' }}</strong>
+                <strong>{{ $isEn ? 'Choroidal Folds' : 'Pliegues Coroideos' }}</strong>
                 <span style="color:#4ade80;">Bandpass</span>
             </div>
             <img id="cvFoldsImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Choroidal Folds Ridge Map" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
@@ -554,7 +554,7 @@
                 <div class="biomarker-input-box">
                     <label style="font-size:0.76rem;font-weight:700;display:block;margin-bottom:0.25rem;">
                         <i class="fa fa-align-justify"></i>
-                        {{ $isEn ? '1. Mean OCT Thickness (µm)' : '1. Espesor Medio por OCT (µm)' }}
+                        {{ $isEn ? 'Mean OCT Thickness (µm)' : 'Espesor Medio por OCT (µm)' }}
                     </label>
                     <div style="display:flex;gap:0.4rem;">
                         <input type="number" step="0.1" name="oct_trt_baseline_um" class="form-control"
@@ -571,7 +571,7 @@
                 <div class="biomarker-input-box">
                     <label style="font-size:0.76rem;font-weight:700;display:block;margin-bottom:0.25rem;">
                         <i class="fa fa-arrows-h"></i>
-                        {{ $isEn ? '2. Eye Axial Length (mm)' : '2. Longitud Axial del Ojo (mm)' }}
+                        {{ $isEn ? 'Eye Axial Length (mm)' : 'Longitud Axial del Ojo (mm)' }}
                     </label>
                     <input type="number" step="0.01" name="axial_length_mm" class="form-control"
                            value="{{ $bp['inputs']['axial_length_mm'] }}" placeholder="23.82 mm">
@@ -584,7 +584,7 @@
                 <div class="biomarker-input-box">
                     <label style="font-size:0.76rem;font-weight:700;display:block;margin-bottom:0.25rem;">
                         <i class="fa fa-eye"></i>
-                        {{ $isEn ? '3. Simulated Hyperopia (ΔSE in D)' : '3. Hipermetropía Simulada (ΔSE en D)' }}
+                        {{ $isEn ? 'Simulated Hyperopia (ΔSE in D)' : 'Hipermetropía Simulada (ΔSE en D)' }}
                     </label>
                     <input type="number" step="0.25" name="hyperopia_sim_d" class="form-control"
                            value="{{ $bp['inputs']['hyperopia_sim_d'] }}" placeholder="+0.75 D">
@@ -1058,7 +1058,7 @@
         {{-- 1. Axial Length & Posterior Pole (Sagittal Ocular MRI / B-Scan) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                <span><i class="fa fa-circle-o"></i> {{ $isEn ? '1. Axial Length & Posterior Pole (Sagittal)' : '1. Longitud Axial y Polo Posterior (Sagital)' }}</span>
+                <span><i class="fa fa-circle-o"></i> {{ $isEn ? 'Axial Length & Posterior Pole (Sagittal)' : 'Longitud Axial y Polo Posterior (Sagital)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">{{ $isWorsening ? 'FLATTENING' : ($isUnscanned ? 'PENDING' : 'NOMINAL') }}</span>
             </h3>
             <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#030712;border:1px solid #1e293b;">
@@ -1076,7 +1076,7 @@
         {{-- 2. Papilledema & Optic Disc (Real Clinical Fundus Photo + Reticle HUD) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                <span><i class="fa fa-dot-circle-o"></i> {{ $isEn ? '2. Papilledema & Optic Disc (Fundus)' : '2. Edema Papilar y Disco Óptico (Fondo)' }}</span>
+                <span><i class="fa fa-dot-circle-o"></i> {{ $isEn ? 'Papilledema & Optic Disc (Fundus)' : 'Edema Papilar y Disco Óptico (Fondo)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">FRISÉN {{ $frisenVal ?? 'N/E' }}</span>
             </h3>
             <div style="position:relative;height:184px;border-radius:8px;overflow:hidden;background:#050507;border:1px solid #1e293b;display:flex;align-items:center;justify-content:center;">
@@ -1095,7 +1095,7 @@
         {{-- 3. Mean OCT Thickness (Procedural SD-OCT B-Scan) --}}
         <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
             <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-                <span><i class="fa fa-align-justify"></i> {{ $isEn ? '3. Mean OCT Thickness (Retinal Layers)' : '3. Espesor Medio por OCT (Capas)' }}</span>
+                <span><i class="fa fa-align-justify"></i> {{ $isEn ? 'Mean OCT Thickness (Retinal Layers)' : 'Espesor Medio por OCT (Capas)' }}</span>
                 <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">SD-OCT</span>
             </h3>
             @if($isUnscanned)
@@ -1310,7 +1310,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;margin-bottom:1rem;">
             <div style="padding:0.75rem 0.9rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
                 <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:var(--muted-foreground);margin-bottom:0.35rem;text-transform:uppercase;">
-                    {{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}
+                    {{ $isEn ? 'Previously Applied Protocol on Subject:' : 'Protocolo Aplicado Previamente en la Ficha:' }}
                 </strong>
                 @if($catalogSearch['previously_applied'])
                     <div style="color:var(--foreground);font-weight:600;">
@@ -1325,7 +1325,7 @@
             @if(!empty($catalogSearch['newer_verified_versions']))
                 <div style="padding:0.75rem 0.9rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
                     <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:var(--foreground);margin-bottom:0.35rem;text-transform:uppercase;">
-                        {{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}
+                        {{ $isEn ? 'Newer Verified Version Available (Never auto-replaces selection):' : 'Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}
                     </strong>
                     @foreach($catalogSearch['newer_verified_versions'] as $nv)
                         <div style="color:var(--foreground);font-weight:600;margin-bottom:2px;">
@@ -1338,7 +1338,7 @@
         </div>
 
         <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;margin-bottom:0.55rem;">
-            {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
+            {{ $isEn ? 'Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : 'Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0.6rem;">
             @foreach($catalogSearch['followup_matches'] as $match)
@@ -1364,7 +1364,7 @@
         <div style="margin-top:1.15rem;padding-top:1rem;border-top:1px solid var(--border);">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.65rem;">
                 <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;">
-                    <i class="fa fa-database"></i> {{ $isEn ? '4. NASA Open Science APIs (Live OSDR Datasets & NTRS Technical Reports):' : '4. APIs Abiertas de NASA (Datasets OSDR y Reportes Técnicos NTRS en vivo):' }}
+                    <i class="fa fa-database"></i> {{ $isEn ? 'NASA Open Science APIs (Live OSDR Datasets & NTRS Technical Reports):' : 'APIs Abiertas de NASA (Datasets OSDR y Reportes Técnicos NTRS en vivo):' }}
                 </div>
                 <form id="nasa-live-search-form" style="display:flex;gap:0.45rem;align-items:center;flex-wrap:wrap;" onsubmit="return window.runNasaLiveSearch(event)">
                     <input type="text" id="nasa-live-query" value="SANS ocular microgravity" placeholder="{{ $isEn ? 'Search NASA OSDR & NTRS...' : 'Buscar en NASA OSDR y NTRS...' }}"
