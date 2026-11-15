@@ -2152,6 +2152,7 @@ window.runCandidatePredictor = async function (e) {
                 ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
             ],
             'photos' => ['gloria.jpg', 'gloria.jpeg', 'gloria.png'],
+            'photo_style' => 'transform:scale(1.38);transform-origin:center 20%;',
             'initials' => 'GM',
         ],
         [
