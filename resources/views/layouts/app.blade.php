@@ -271,14 +271,31 @@
         {
             page: 'home',
             selector: '#btnRunFundusScanner',
-            duration: 8500,
-            titleEn: '3. Ground Fundus Scanner (Python CV) + Photo Upload & Live Camera App',
-            titleEs: '3. Escáner de Fondo de Ojo (Python CV) + Subir Foto y App de Cámara',
-            textEn: 'Running real Computer Vision in Python (Pillow + NumPy + SciPy): computes Retinal FOV mask, Optic Disc localization, Sobel rim sharpness, peripapillary halo, and choroidal folds. You can also upload any photo or open the Camera app (with reticle, Flip Camera, and Flash).',
-            textEs: 'Ejecutando Visión por Computadora real en Python (Pillow + NumPy + SciPy): calcula máscara retiniana, disco óptico, nitidez Sobel del borde, halo peripapilar y pliegues coroideos. También permite subir fotos o abrir la app de Cámara (con retícula, Voltear Cámara y Flash).',
+            duration: 7500,
+            titleEn: '3. Ground Fundus Scanner (Python CV)',
+            titleEs: '3. Escáner de Fondo de Ojo (Python CV)',
+            textEn: 'Running real Computer Vision in Python (Pillow + NumPy + SciPy): computes Retinal FOV mask, Optic Disc localization, Sobel rim sharpness, peripapillary halo, and choroidal folds.',
+            textEs: 'Ejecutando Visión por Computadora real en Python (Pillow + NumPy + SciPy): calcula máscara retiniana, disco óptico, nitidez Sobel del borde, halo peripapilar y pliegues coroideos.',
             action: () => {
                 const btn = document.getElementById('btnRunFundusScanner');
                 if (btn) btn.click();
+            }
+        },
+        {
+            page: 'home',
+            selector: '#cvCameraBox > div',
+            duration: 5500,
+            titleEn: '4. Live Camera App Modal (Reticle, Flip Camera & Flash)',
+            titleEs: '4. App de Cámara en Vivo (Retícula, Voltear Cámara y Flash)',
+            textEn: 'Opening the built-in Camera App modal automatically: includes an optic disc alignment reticle, Flip Camera for mobile devices, Flash toggle, and one-tap Capture & Scan in Python.',
+            textEs: 'Abriendo automáticamente la App de Cámara integrada: incluye retícula circular de alineación ocular, Voltear Cámara para celulares, Flash y disparo directo hacia Python CV.',
+            action: () => {
+                const openCam = document.getElementById('btnOpenCvCamera');
+                if (openCam) openCam.click();
+            },
+            cleanup: () => {
+                const closeCam = document.getElementById('btnCloseCvCamera');
+                if (closeCam) closeCam.click();
             }
         },
         {
@@ -367,30 +384,50 @@
         {
             page: 'astronaut',
             selector: '[data-step="0"]',
-            duration: 8000,
+            duration: 7500,
             titleEn: '11. How the Astronaut Feels Today ("¿Cómo te sientes?")',
             titleEs: '11. Estado Diario del Astronauta: "¿Cómo te sientes hoy?"',
-            textEn: 'Opening today’s guided check: the astronaut reports how they feel right now—blurred near vision, headaches, floaters, eye pressure, or light flashes—so Ground Control correlates subjective symptoms with objective biomarkers.',
-            textEs: 'Iniciando la revisión de hoy: el astronauta indica cómo se siente en este momento (visión borrosa cercana, cefalea, miodesopsias, presión ocular o destellos) para correlacionar síntomas con biomarcadores.',
+            textEn: 'Opening today’s guided check: automatically selects symptoms (e.g. mild blurred near vision) so Ground Control correlates subjective symptoms with objective biomarkers.',
+            textEs: 'Iniciando la revisión de hoy: el asistente selecciona síntomas (ej. visión borrosa cercana) para que Control en Tierra correlacione cómo se siente el astronauta con sus biomarcadores.',
             action: () => {
                 const startBtn = document.querySelector('[data-start-check]');
                 if (startBtn) startBtn.click();
+                setTimeout(() => {
+                    const sym = document.querySelector('input[name="symptoms"]:not([value="none"])') || document.querySelector('input[name="symptoms"]');
+                    if (sym && !sym.checked) {
+                        sym.checked = true;
+                        sym.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }, 250);
             }
         },
         {
             page: 'astronaut',
             selector: '[data-step="1"]',
-            duration: 7500,
+            duration: 8000,
             titleEn: '12. 6-Step Visual Exam: Acuity, Amsler Grid & Contrast Sensitivity',
             titleEs: '12. Examen Visual: Agudeza, Rejilla de Amsler y Contraste',
-            textEn: 'Next in the wizard: interactive tumbling-E visual acuity, Amsler grid distortion test (detecting macular/choroidal fold metamorphopsia), and contrast sensitivity right inside the orbital browser.',
-            textEs: 'Siguiente paso del asistente: prueba interactiva de agudeza visual, rejilla de Amsler (para detectar metamorfopsias por pliegues coroideos) y sensibilidad al contraste directo en vuelo.',
+            textEn: 'Advancing automatically to Step 2 of the wizard: completes the 6 interactive visual checks (Tumbling-E acuity, Amsler grid distortion, and contrast sensitivity) in orbit.',
+            textEs: 'Avanzando automáticamente al Paso 2 del wizard: registra las 6 pruebas visuales interactivas (Agudeza Visual, Rejilla de Amsler y Sensibilidad al Contraste) en órbita.',
             action: () => {
                 const startBtn = document.querySelector('[data-start-check]');
                 const flow = document.querySelector('[data-check-flow]');
                 if (startBtn && flow && flow.hidden) startBtn.click();
+                const sym = document.querySelector('input[name="symptoms"]');
+                if (sym && !document.querySelector('input[name="symptoms"]:checked')) {
+                    sym.checked = true;
+                    sym.dispatchEvent(new Event('change', { bubbles: true }));
+                }
                 const nextBtn = document.querySelector('[data-next-step]');
                 if (nextBtn) nextBtn.click();
+                setTimeout(() => {
+                    document.querySelectorAll('[data-test-answer]').forEach(sel => {
+                        if (!sel.value && sel.options.length > 1) {
+                            sel.selectedIndex = 1;
+                            sel.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                }, 300);
             }
         },
         {
@@ -399,9 +436,32 @@
             duration: 8500,
             titleEn: '13. Bring the Eye Closer: Orbital Fundus Camera & Tonometer Downlink',
             titleEs: '13. Acerca el Ojo: Cámara Orbital de Fondo de Ojo OD/OS y Tonómetro',
-            textEn: 'In step 3, the astronaut brings their eye close to the orbital fundus lens, records tonometer IOP (mmHg), attaches OD/OS fundus captures, and transmits them straight to the Ground Python CV Scanner.',
-            textEs: 'En el paso 3, el astronauta acerca el ojo al equipo de fondo de ojo orbital, registra la PIO del tonómetro (mmHg), adjunta sus capturas OD y OS y las transmite directo al Escáner Python CV en Tierra.',
+            textEn: 'Advancing to Step 3: synchronizes the orbital tonometer & ocular telemetry devices, lets the astronaut bring their eye close to the fundus lens, and transmits OD/OS captures to Ground Control.',
+            textEs: 'Avanzando al Paso 3: sincroniza el tonómetro y dispositivos orbitales, permite acercar el ojo al equipo de fondo de ojo OD/OS y transmite las capturas directo al Escáner Python CV en Tierra.',
             action: () => {
+                document.querySelectorAll('[data-test-answer]').forEach(sel => {
+                    if (!sel.value && sel.options.length > 1) {
+                        sel.selectedIndex = 1;
+                        sel.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+                const nextBtn = document.querySelector('[data-next-step]');
+                if (nextBtn) nextBtn.click();
+                setTimeout(() => {
+                    document.querySelectorAll('[data-capture-device]').forEach(btn => btn.click());
+                }, 350);
+            }
+        },
+        {
+            page: 'astronaut',
+            selector: '[data-step="3"]',
+            duration: 7500,
+            titleEn: '14. Physiological Context (Sleep, Hydration, Exercise & Posture)',
+            titleEs: '14. Contexto Fisiológico (Sueño, Hidratación, Ejercicio y Postura)',
+            textEn: 'Advancing to Step 4 of the wizard: records sleep hours, hydration, recent exercise, and measurement posture before sealing and transmitting the check to Ground Control.',
+            textEs: 'Avanzando al Paso 4 del wizard: registra horas de sueño, hidratación, ejercicio reciente y postura de medición antes de sellar y enviar la revisión a Control en Tierra.',
+            action: () => {
+                document.querySelectorAll('[data-device]').forEach(dev => dev.classList.add('is-complete'));
                 const nextBtn = document.querySelector('[data-next-step]');
                 if (nextBtn) nextBtn.click();
             }
@@ -410,10 +470,10 @@
             page: 'astronaut',
             selector: '[data-crew-tab="log"]',
             duration: 7500,
-            titleEn: '14. Flight Logbook, Longitudinal Trends & Read-Only Pre-Flight Profile',
-            titleEs: '14. Bitácora Espacial, Tendencias y Perfil Basal Protegido',
-            textEn: 'Astronauts can also review their Flight Logbook, symptom/IOP Trends, and their read-only pre-flight baseline profile (append-only in flight to preserve medical integrity).',
-            textEs: 'La tripulación también consulta su Bitácora de Vuelo, gráficas de Tendencias y su Perfil Basal Pre-vuelo (protegido como solo lectura en vuelo para garantizar integridad clínica).',
+            titleEn: '15. Flight Logbook, Longitudinal Trends & Read-Only Pre-Flight Profile',
+            titleEs: '15. Bitácora Espacial, Tendencias y Perfil Basal Protegido',
+            textEn: 'Closing the wizard into the Crew Tabs: Astronauts review their Flight Logbook, symptom/IOP Trends, and their read-only pre-flight baseline profile.',
+            textEs: 'Cerrando el wizard hacia las pestañas de tripulación: el astronauta consulta su Bitácora de Vuelo, Tendencias y su Perfil Basal Pre-vuelo protegido como solo lectura.',
             action: () => {
                 const logTab = document.querySelector('[data-crew-tab="log"]');
                 if (logTab) logTab.click();
@@ -454,6 +514,7 @@
     let timer = null;
     let tickTimer = null;
     let currentSpotlight = null;
+    let lastCleanup = null;
     let paused = false;
     let elapsed = 0;
 
@@ -475,6 +536,10 @@
         clearTimeout(timer);
         clearInterval(tickTimer);
         clearSpotlight();
+        if (typeof lastCleanup === 'function') {
+            try { lastCleanup(); } catch (_) {}
+            lastCleanup = null;
+        }
         sessionStorage.removeItem('sv_demo_active');
         sessionStorage.removeItem('sv_demo_step');
         if (dismiss) sessionStorage.setItem('sv_demo_v2_dismissed', '1');
@@ -485,6 +550,10 @@
         clearTimeout(timer);
         clearInterval(tickTimer);
         clearSpotlight();
+        if (typeof lastCleanup === 'function') {
+            try { lastCleanup(); } catch (_) {}
+            lastCleanup = null;
+        }
 
         if (idx < 0) idx = 0;
         if (idx >= steps.length) {
@@ -509,6 +578,7 @@
         if (titleEl) titleEl.textContent = isEn ? step.titleEn : step.titleEs;
         if (subEl) subEl.textContent = isEn ? step.textEn : step.textEs;
 
+        lastCleanup = typeof step.cleanup === 'function' ? step.cleanup : null;
         if (typeof step.action === 'function') {
             try { step.action(); } catch (_) {}
         }
