@@ -250,6 +250,8 @@
                 <option value="2" selected style="color:#09090b;">2x</option>
                 <option value="3" style="color:#09090b;">3x</option>
                 <option value="4" style="color:#09090b;">4x</option>
+                <option value="5" style="color:#09090b;">5x</option>
+                <option value="6" style="color:#09090b;">6x</option>
             </select>
             <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
             <button type="button" id="sv-demo-pause" title="{{ $isEn ? 'Pause / Resume' : 'Pausar / Reanudar' }}" style="background:#EAFE07;color:#09090b;border:1px solid #EAFE07;border-radius:7px;padding:0.32rem 0.75rem;font-size:0.78rem;font-weight:800;cursor:pointer;"><i class="fa fa-pause"></i></button>
@@ -506,23 +508,37 @@
         {
             page: 'twin',
             selector: '#panel-3d-layout',
-            duration: 8500,
+            duration: 13500,
             titleEn: '15. Interactive 3D WebGL Eye Digital Twin (Posterior Flattening & Folds)',
             titleEs: '15. Gemelo Digital Ocular 3D WebGL (Aplanamiento y Pliegues)',
-            textEn: 'In the 3D Viewer + OCT module, inspect the interactive 3D WebGL ocular globe showing posterior globe flattening, optic disc protrusion, and choroidal folds—complete with orbital presets and real-time deformation.',
-            textEs: 'En el Visor 3D + OCT interactúas con el Gemelo Digital Ocular en WebGL 3D: muestra aplanamiento posterior del globo, protrusión del disco óptico y pliegues coroideos con vistas predefinidas y deformación en vivo.',
+            textEn: 'In the 3D Viewer + OCT module, we trigger Play Samples so you can watch the 3D WebGL ocular globe rotate and animate posterior flattening, optic disc protrusion, and choroidal folds in real time.',
+            textEs: 'En el Visor 3D + OCT activamos Recorrer Muestras para que observes en movimiento el globo ocular 3D WebGL: aplanamiento posterior, protrusión del disco óptico y pliegues coroideos en vivo.',
+            action: () => {
+                const playBtn = document.getElementById('play-pause-btn');
+                const playIcon = document.getElementById('play-icon');
+                if (playBtn && (!playIcon || !playIcon.classList.contains('fa-pause'))) {
+                    setTimeout(() => playBtn.click(), 450);
+                }
+            }
         },
         {
             page: 'twin',
             selector: '#panel-cirrus-oct',
-            duration: 8500,
+            duration: 12500,
             titleEn: 'Cirrus SD-OCT Workstation & ETDRS 9-Sector Map',
             titleEs: 'Estación Cirrus SD-OCT y Mapa ETDRS de 9 Sectores',
-            textEn: 'Synchronized SD-OCT B-Scan workstation for OD & OS, ETDRS 9-sector retinal thickness maps, Frisén grade, and choroidal fold status.',
-            textEs: 'Estación SD-OCT B-Scan sincronizada para OD y OS, mapas ETDRS de 9 sectores, grado Frisén y estado de pliegues coroideos.',
+            textEn: 'Synchronized SD-OCT B-Scan workstation for OD & OS, ETDRS 9-sector retinal thickness maps, Frisén grade, and choroidal fold status animating through the active samples.',
+            textEs: 'Estación SD-OCT B-Scan sincronizada para OD y OS, mapas ETDRS de 9 sectores, grado Frisén y estado de pliegues coroideos recorriendo las muestras clínicas en vivo.',
             action: () => {
                 const etdrs = document.getElementById('etdrsSvgOd');
-                if (etdrs) setTimeout(() => etdrs.scrollIntoView({ behavior: 'smooth', block: 'center' }), 2600);
+                if (etdrs) setTimeout(() => etdrs.scrollIntoView({ behavior: 'smooth', block: 'center' }), 2200);
+            },
+            cleanup: () => {
+                const playBtn = document.getElementById('play-pause-btn');
+                const playIcon = document.getElementById('play-icon');
+                if (playBtn && playIcon && playIcon.classList.contains('fa-pause')) {
+                    playBtn.click();
+                }
             }
         },
         {
@@ -653,7 +669,8 @@
         }
 
         elapsed = 0;
-        const dur = step.duration || 7500;
+        const baseDur = step.duration || 7500;
+        const dur = step.page === 'twin' ? baseDur : Math.max(2500, baseDur - 2000);
         if (progEl) progEl.style.width = '0%';
 
         tickTimer = setInterval(() => {
