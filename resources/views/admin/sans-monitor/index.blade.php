@@ -576,10 +576,10 @@
             {{-- Viewfinder + Optic Reticle Overlay --}}
             <style>
                 @keyframes svAstroApproachEye {
-                    0%   { transform: scale(1) translate(0%, 0%); opacity: 1; }
-                    55%  { transform: scale(1.62) translate(4%, 8%); opacity: 1; }
-                    72%  { transform: scale(1.85) translate(5%, 10%); opacity: 0.15; }
-                    100% { transform: scale(1.85) translate(5%, 10%); opacity: 0; }
+                    0%   { transform: scale(0.92); opacity: 1; }
+                    55%  { transform: scale(1.42); opacity: 1; }
+                    72%  { transform: scale(1.75); opacity: 0.12; }
+                    100% { transform: scale(1.75); opacity: 0; }
                 }
                 @keyframes svFundusCaptureReveal {
                     0%, 54% { opacity: 0; transform: scale(0.92); }
