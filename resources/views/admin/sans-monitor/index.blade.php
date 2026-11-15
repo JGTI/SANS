@@ -1164,8 +1164,114 @@
                 </article>
             @endforeach
         </div>
+
+        {{-- 4. NASA Open Science Live APIs (OSDR + NTRS) --}}
+        <div style="margin-top:1.15rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.65rem;">
+                <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;">
+                    <i class="fa fa-database"></i> {{ $isEn ? '4. NASA Open Science APIs (Live OSDR Datasets & NTRS Technical Reports):' : '4. APIs Abiertas de NASA (Datasets OSDR y Reportes Técnicos NTRS en vivo):' }}
+                </div>
+                <form id="nasa-live-search-form" style="display:flex;gap:0.45rem;align-items:center;flex-wrap:wrap;" onsubmit="return window.runNasaLiveSearch(event)">
+                    <input type="text" id="nasa-live-query" value="SANS ocular microgravity" placeholder="{{ $isEn ? 'Search NASA OSDR & NTRS...' : 'Buscar en NASA OSDR y NTRS...' }}"
+                           style="padding:0.35rem 0.65rem;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--foreground);font-size:0.76rem;min-width:220px;">
+                    <button type="submit" id="nasa-live-search-btn"
+                            style="background:#EAFE07;color:#09090b;border:1px solid #09090b;padding:0.35rem 0.75rem;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;">
+                        <i class="fa fa-search"></i> {{ $isEn ? 'Query NASA API' : 'Consultar NASA' }}
+                    </button>
+                </form>
+            </div>
+            <div id="nasa-live-results" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0.6rem;">
+                @foreach(($nasaSnapshot['osdr'] ?? []) as $osdrItem)
+                    <article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                        <div style="min-width:0;">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                                <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#07173F;color:#ffffff;">NASA OSDR</span>
+                                <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--foreground);">{{ $osdrItem['accession'] ?? 'OSD' }}</code>
+                            </div>
+                            <div style="color:var(--foreground);font-weight:600;line-height:1.35;">{{ $osdrItem['title'] ?? 'NASA OSDR Study' }}</div>
+                            <div style="font-size:0.72rem;color:var(--muted-foreground);margin-top:2px;">{{ $osdrItem['organism'] ?? '' }} · {{ $osdrItem['assay'] ?? '' }}</div>
+                        </div>
+                        @if(!empty($osdrItem['dataset_url']))
+                            <a href="{{ $osdrItem['dataset_url'] }}" target="_blank" rel="noopener"
+                               style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
+                                <i class="fa fa-external-link"></i> OSDR
+                            </a>
+                        @endif
+                    </article>
+                @endforeach
+                @foreach(($nasaSnapshot['ntrs'] ?? []) as $ntrsItem)
+                    <article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                        <div style="min-width:0;">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                                <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#0042A6;color:#ffffff;">NASA NTRS</span>
+                                <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--foreground);">{{ $ntrsItem['year'] ?? 'NASA' }}</code>
+                            </div>
+                            <div style="color:var(--foreground);font-weight:600;line-height:1.35;">{{ $ntrsItem['title'] ?? 'NASA Technical Paper' }}</div>
+                            <div style="font-size:0.72rem;color:var(--muted-foreground);margin-top:2px;">{{ $ntrsItem['authors'] ?? 'NASA HRP' }}</div>
+                        </div>
+                        @if(!empty($ntrsItem['url']))
+                            <a href="{{ $ntrsItem['url'] }}" target="_blank" rel="noopener"
+                               style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
+                                <i class="fa fa-external-link"></i> NTRS
+                            </a>
+                        @endif
+                    </article>
+                @endforeach
+            </div>
+        </div>
     </div>
 </details>
+
+<script>
+window.runNasaLiveSearch = async function (e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('nasa-live-query');
+    const btn = document.getElementById('nasa-live-search-btn');
+    const box = document.getElementById('nasa-live-results');
+    if (!input || !box) return false;
+    const q = encodeURIComponent(input.value.trim() || 'SANS ocular microgravity');
+    const orig = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ...'; }
+    try {
+        const res = await fetch(`{{ route('public.sans-monitor.nasa-search') }}?q=${q}`);
+        const data = await res.json();
+        const esc = (s) => String(s || '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+        let html = '';
+        (data.osdr || []).forEach((o) => {
+            html += `<article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                <div style="min-width:0;">
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#07173F;color:#ffffff;">NASA OSDR</span>
+                        <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--foreground);">${esc(o.accession)}</code>
+                    </div>
+                    <div style="color:var(--foreground);font-weight:600;line-height:1.35;">${esc(o.title)}</div>
+                    <div style="font-size:0.72rem;color:var(--muted-foreground);margin-top:2px;">${esc(o.organism)} · ${esc(o.assay)}</div>
+                </div>
+                ${o.dataset_url ? `<a href="${esc(o.dataset_url)}" target="_blank" rel="noopener" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;"><i class="fa fa-external-link"></i> OSDR</a>` : ''}
+            </article>`;
+        });
+        (data.ntrs || []).forEach((n) => {
+            html += `<article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                <div style="min-width:0;">
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#0042A6;color:#ffffff;">NASA NTRS</span>
+                        <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--foreground);">${esc(n.year)}</code>
+                    </div>
+                    <div style="color:var(--foreground);font-weight:600;line-height:1.35;">${esc(n.title)}</div>
+                    <div style="font-size:0.72rem;color:var(--muted-foreground);margin-top:2px;">${esc(n.authors)}</div>
+                </div>
+                ${n.url ? `<a href="${esc(n.url)}" target="_blank" rel="noopener" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;"><i class="fa fa-external-link"></i> NTRS</a>` : ''}
+            </article>`;
+        });
+        box.innerHTML = html || '<div style="font-size:0.78rem;color:var(--muted-foreground);">No results found.</div>';
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+    }
+    return false;
+};
+</script>
 
 <script id="sans-monitor-chart-data" type="application/json">
 {!! json_encode([

@@ -1,5 +1,9 @@
 @php
     $crew = \App\Models\AstronautProfile::crewMetaForCase($activeCase->case_id);
+    $iss = $nasaSnapshot['iss'] ?? ['altitude_km' => 408.4, 'velocity_kmh' => 27580, 'visibility' => 'daylight', 'is_live' => false];
+    $donkiList = $nasaSnapshot['donki'] ?? [];
+    $donkiCount = count($donkiList);
+    $donkiLatest = $donkiList[0]['messageType'] ?? 'Nominal';
 @endphp
 
 <section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
@@ -10,8 +14,15 @@
                 <span style="background:#ffffff;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
                     <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
                 </span>
-                <span style="color:#bfdbfe;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
-                <span style="color:#bfdbfe;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
+                <span style="color:#bfdbfe;">ISS ALT: <strong style="color:#ffffff;">{{ round((float) ($iss['altitude_km'] ?? 408), 1) }} km</strong></span>
+                <span style="color:#bfdbfe;">VEL: <strong style="color:#ffffff;">{{ number_format((int) ($iss['velocity_kmh'] ?? 27580)) }} km/h</strong></span>
+                <span style="color:#bfdbfe;">GRAVITY: <strong style="color:#ffffff;">0.00 G</strong></span>
+                <span style="background:{{ !empty($iss['is_live']) ? '#EAFE07' : 'rgba(255,255,255,0.16)' }};color:{{ !empty($iss['is_live']) ? '#09090b' : '#e0f2fe' }};font-weight:800;padding:0.1rem 0.45rem;border-radius:4px;font-size:0.66rem;">
+                    {{ !empty($iss['is_live']) ? 'ISS LIVE · ' . strtoupper((string) ($iss['visibility'] ?? 'ORBIT')) : 'ISS ORBIT' }}
+                </span>
+                <span style="background:rgba(255,255,255,0.16);color:#e0f2fe;font-weight:800;padding:0.1rem 0.45rem;border-radius:4px;font-size:0.66rem;" title="NASA DONKI Space Weather">
+                    <i class="fa fa-sun-o"></i> DONKI: {{ $donkiCount > 0 ? $donkiCount . ' ' . $donkiLatest : 'Nominal' }}
+                </span>
                 <span style="color:#bfdbfe;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
             </div>
             <span style="font-size:0.68rem;color:#e0f2fe;font-weight:700;">

@@ -255,7 +255,97 @@ class NasaDataService
                 'items_cached' => 1,
                 'type' => 'Imágenes Aeroespaciales de Misión',
             ],
+            'iss' => [
+                'name' => 'ISS Live Orbital Telemetry (NORAD 25544)',
+                'endpoint' => 'https://api.wheretheiss.at/v1/satellites/25544',
+                'status' => 'ONLINE (Con respaldo orbital nominal)',
+                'items_cached' => 1,
+                'type' => 'Telemetría Orbital en Vivo',
+            ],
         ];
+    }
+
+    /**
+     * Telemetría orbital en vivo de la Estación Espacial Internacional (ISS - NORAD 25544).
+     */
+    public function getIssTelemetry(bool $allowNetwork = true): array
+    {
+        $fallback = [
+            'name' => 'ISS (ZARYA)',
+            'altitude_km' => 408,
+            'velocity_kmh' => 27580,
+            'latitude' => 28.57,
+            'longitude' => -80.65,
+            'visibility' => 'daylight',
+            'source' => 'Nominal ISS Orbit (Fallback)',
+            'is_live' => false,
+            'timestamp' => now()->toIso8601String(),
+        ];
+
+        if (! $allowNetwork) {
+            return $fallback;
+        }
+
+        return Cache::remember('nasa_iss_live_telemetry', 60, function () use ($fallback) {
+            try {
+                $response = Http::timeout(2)->get('https://api.wheretheiss.at/v1/satellites/25544');
+                if ($response->successful()) {
+                    $json = $response->json();
+                    if (is_array($json) && isset($json['altitude'])) {
+                        return [
+                            'name' => 'ISS (ZARYA)',
+                            'altitude_km' => round((float) $json['altitude'], 1),
+                            'velocity_kmh' => (int) round((float) ($json['velocity'] ?? 27580)),
+                            'latitude' => round((float) ($json['latitude'] ?? 0), 2),
+                            'longitude' => round((float) ($json['longitude'] ?? 0), 2),
+                            'visibility' => (string) ($json['visibility'] ?? 'daylight'),
+                            'source' => 'Live NORAD 25544 Telemetry',
+                            'is_live' => true,
+                            'timestamp' => now()->toIso8601String(),
+                        ];
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::notice('ISS Live Telemetry API no accesible, usando órbita nominal: ' . $e->getMessage());
+            }
+
+            return $fallback;
+        });
+    }
+
+    /**
+     * Resumen unificado de APIs NASA / ISS para los módulos principales (Scientific Module y Astronaut Check).
+     */
+    public function getSansOpenScienceSnapshot(bool $allowNetwork = true): array
+    {
+        $osdr = $allowNetwork
+            ? $this->getOsdrStudies('eye OR retina OR optic OR SANS')
+            : $this->readLocalCache('osdr_studies.json');
+
+        $ntrs = $allowNetwork
+            ? $this->getNtrsPublications('SANS spaceflight ocular')
+            : $this->readLocalCache('ntrs_publications.json');
+
+        $donki = $allowNetwork
+            ? $this->getDonkiAlerts()
+            : $this->readLocalCache('donki_alerts.json');
+
+        return [
+            'iss' => $this->getIssTelemetry($allowNetwork),
+            'osdr' => array_slice($osdr, 0, 3),
+            'ntrs' => array_slice($ntrs, 0, 3),
+            'donki' => array_slice($donki, 0, 2),
+        ];
+    }
+
+    protected function readLocalCache(string $filename): array
+    {
+        $path = storage_path('app/nasa_cache/' . $filename);
+        if (! File::exists($path)) {
+            return [];
+        }
+        $decoded = json_decode(File::get($path), true);
+        return is_array($decoded) ? $decoded : [];
     }
 
     /**

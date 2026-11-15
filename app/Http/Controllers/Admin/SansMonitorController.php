@@ -187,6 +187,8 @@ class SansMonitorController extends Controller
             ['id' => 'fd45-os', 'eye' => 'OS', 'day' => 'FD45', 'label_en' => 'FD45 Venous Engorgement', 'label_es' => 'FD45 Ingurgitación Venosa', 'preset' => 'venous', 'iop' => 17.1, 'image' => 'images/sans/fundus/fundus-venous.jpg', 'filename' => 'fundus-venous.jpg'],
         ];
 
+        $nasaSnapshot = app(\App\Services\NasaDataService::class)->getSansOpenScienceSnapshot(! app()->runningUnitTests());
+
         return view('admin.sans-monitor.index', compact(
             'cases',
             'activeCase',
@@ -216,8 +218,29 @@ class SansMonitorController extends Controller
             'exposureComparison',
             'biomarkerPredictor',
             'orbitalTransmission',
-            'fundusGallery'
+            'fundusGallery',
+            'nasaSnapshot'
         ));
+    }
+
+    /**
+     * Consulta en vivo NASA OSDR + NASA NTRS para el Módulo Científico.
+     */
+    public function nasaSearch(Request $request)
+    {
+        $query = trim((string) $request->query('q', 'SANS ocular microgravity'));
+        if ($query === '') {
+            $query = 'SANS ocular microgravity';
+        }
+
+        $nasa = app(\App\Services\NasaDataService::class);
+
+        return response()->json([
+            'ok' => true,
+            'query' => $query,
+            'osdr' => array_slice($nasa->getOsdrStudies($query), 0, 4),
+            'ntrs' => array_slice($nasa->getNtrsPublications($query), 0, 4),
+        ]);
     }
 
     /**

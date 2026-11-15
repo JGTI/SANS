@@ -390,4 +390,30 @@ class SansMonitorAcceptanceTest extends TestCase
         $monitor->assertOk();
         $monitor->assertSee('Escáner Científico de Fondo de Ojo y Edema Papilar');
     }
+
+    public function test_public_nasa_osdr_ntrs_donki_and_iss_telemetry_are_integrated_without_login(): void
+    {
+        $this->assertGuest();
+
+        $astro = $this->get('/astronaut-check?lang=en');
+        $astro->assertOk();
+        $astro->assertSee('ISS ALT:');
+        $astro->assertSee('DONKI:');
+
+        $home = $this->get('/?lang=en');
+        $home->assertOk();
+        $home->assertSee('NASA Open Science APIs');
+        $home->assertSee('NASA OSDR');
+        $home->assertSee('NASA NTRS');
+
+        \Illuminate\Support\Facades\Http::fake([
+            'osdr.nasa.gov/*' => \Illuminate\Support\Facades\Http::response([], 500),
+            'ntrs.nasa.gov/*' => \Illuminate\Support\Facades\Http::response([], 500),
+        ]);
+
+        $search = $this->getJson('/sans-monitor/nasa-search?q=SANS');
+        $search->assertOk()
+            ->assertJsonPath('ok', true)
+            ->assertJsonStructure(['ok', 'query', 'osdr', 'ntrs']);
+    }
 }
