@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="{{ request()->getBasePath() }}/images/letra_C_fondo_transparente.png">
     <script>
         const savedTheme = localStorage.getItem('nexus-space-theme');
-        document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+        document.documentElement.dataset.theme = savedTheme === 'light' ? 'light' : 'dark';
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
