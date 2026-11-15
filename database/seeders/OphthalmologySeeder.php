@@ -184,13 +184,13 @@ class OphthalmologySeeder extends Seeder
             ]
         );
 
-        // 3. Kenji Sato (JAXA) - Misión activa reciente
+        // 3. Kenji Sato (JAXA) - CASE-NOSCAN-03A (Sin escaneo OCT previo, solo PIO registrada)
         AstronautProfile::updateOrCreate(
             ['code' => 'ASTRO-03'],
             [
                 'name' => 'Kenji Sato',
                 'agency' => 'JAXA',
-                'mission_name' => 'ISS Expedition 72',
+                'mission_name' => 'ISS Expedition 72 (MSN-DEMO-03A)',
                 'role' => 'Flight Engineer',
                 'launch_date' => now()->subDays(25),
                 'days_in_microgravity' => 25,
@@ -199,7 +199,67 @@ class OphthalmologySeeder extends Seeder
                 'baseline_se_os' => 0.00,
                 'baseline_logmar_od' => 0.000,
                 'baseline_logmar_os' => 0.000,
-                'medical_notes' => 'Fase temprana de adaptación a microgravedad. Monitoreo rutinario sin signos de edema o pliegues.',
+                'medical_notes' => 'Expediente CASE-NOSCAN-03A: Cuenta con tonometría PIO (16 mmHg OD / 15 mmHg OS), pero sin escaneo OCT basal ni en vuelo. Nunca se asume estabilidad por falta de OCT.',
+                'is_simulated' => true,
+            ]
+        );
+
+        // 4. Maj. Elena Rostova (RSA/ISS) - CASE-ASO-05 (Asimetría mixta: OD en progresión +26 µm, OS sin línea base)
+        AstronautProfile::updateOrCreate(
+            ['code' => 'ASTRO-04'],
+            [
+                'name' => 'Maj. Elena Rostova',
+                'agency' => 'RSA/ISS',
+                'mission_name' => 'ISS Expedition 72 (MSN-ISS-DEMO-05)',
+                'role' => 'Orbital Specialist',
+                'launch_date' => now()->subDays(90),
+                'days_in_microgravity' => 90,
+                'status' => 'active_mission',
+                'baseline_se_od' => 0.00,
+                'baseline_se_os' => 0.00,
+                'baseline_logmar_od' => 0.000,
+                'baseline_logmar_os' => 0.000,
+                'medical_notes' => 'Expediente CASE-ASO-05 (AT-05): Ojo derecho en progresión neuro-ocular (280 -> 292 -> 306 µm, ΔTRT +26 µm) y Ojo izquierdo sin línea base pre-vuelo registrada.',
+                'is_simulated' => true,
+            ]
+        );
+
+        // 5. Dr. Marcus Thorne (CSA) - CASE-NORECENT-03B (Con línea base, pero sin segundo control reciente en ventana)
+        AstronautProfile::updateOrCreate(
+            ['code' => 'ASTRO-05'],
+            [
+                'name' => 'Dr. Marcus Thorne',
+                'agency' => 'CSA',
+                'mission_name' => 'Gateway Logistics (MSN-DEMO-03B)',
+                'role' => 'Payload Specialist',
+                'launch_date' => now()->subDays(60),
+                'days_in_microgravity' => 60,
+                'status' => 'active_mission',
+                'baseline_se_od' => -0.25,
+                'baseline_se_os' => -0.25,
+                'baseline_logmar_od' => 0.000,
+                'baseline_logmar_os' => 0.000,
+                'medical_notes' => 'Expediente CASE-NORECENT-03B (AT-07): Línea base OCT completa (275 µm OD / 274 µm OS) y control en FD10 (279 µm), pero falta control reciente en la ventana actual.',
+                'is_simulated' => true,
+            ]
+        );
+
+        // 6. Capt. Mateo Vargas (ESA/DLR) - CASE-TILT-04 (Análogo terrestre -6° HDT + Misión orbital separada)
+        AstronautProfile::updateOrCreate(
+            ['code' => 'ASTRO-06'],
+            [
+                'name' => 'Capt. Mateo Vargas',
+                'agency' => 'ESA/DLR',
+                'mission_name' => '-6° HDT Analog & Orbital MSN-ORB-04',
+                'role' => 'Test Pilot & Payload Specialist',
+                'launch_date' => now()->subDays(45),
+                'days_in_microgravity' => 30,
+                'status' => 'post_flight_recovery',
+                'baseline_se_od' => 0.00,
+                'baseline_se_os' => 0.00,
+                'baseline_logmar_od' => 0.000,
+                'baseline_logmar_os' => 0.000,
+                'medical_notes' => 'Expediente CASE-TILT-04 (AT-10 a AT-14): Participó en estudio terrestre -6° HDT (280 -> 304 -> 284 µm) y misión orbital separada MSN-ORB-04 con línea base independiente (282 -> 288 µm).',
                 'is_simulated' => true,
             ]
         );

@@ -92,4 +92,24 @@ class DigitalTwinTest extends TestCase
         $response->assertSee('SPECTRAL DOMAIN TECHNOLOGY');
         $response->assertSee('Macular Cube 512x128');
     }
+
+    public function test_public_dual_view_links_all_six_astronauts_and_real_clinical_samples(): void
+    {
+        $cases = [
+            'CASE-PROG-02' => ['name' => 'CDR Alex Mercer', 'sample' => 'OBS-PR02-OD-D30'],
+            'CASE-STABLE-01' => ['name' => 'Dr. Sara Lindqvist', 'sample' => 'OBS-ST01-OD-D30'],
+            'CASE-NOSCAN-03A' => ['name' => 'Kenji Sato', 'sample' => 'OBS-NS03A-IOP-ONLY'],
+            'CASE-ASO-05' => ['name' => 'Maj. Elena Rostova', 'sample' => 'OBS-ASO05-OD-D30'],
+            'CASE-NORECENT-03B' => ['name' => 'Dr. Marcus Thorne', 'sample' => 'VISIT-NR03B-D30-MISSING'],
+            'CASE-TILT-04' => ['name' => 'Capt. Mateo Vargas', 'sample' => 'OBS-TILT04-EXP1-OD-FIRST-POST'],
+        ];
+
+        foreach ($cases as $caseId => $expected) {
+            $response = $this->get(route('public.digital-twin', ['mode' => 'dual', 'case_id' => $caseId]));
+            $response->assertOk();
+            $response->assertSee($expected['name']);
+            $response->assertSee($caseId);
+            $response->assertSee($expected['sample']);
+        }
+    }
 }

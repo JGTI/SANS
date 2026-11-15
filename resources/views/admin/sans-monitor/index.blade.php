@@ -101,7 +101,7 @@
             <a href="{{ route('public.astronaut') }}" class="btn btn-outline" style="padding:0.5rem 0.8rem;font-size:0.8rem;">
                 <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut View' : 'Vista Astronauta' }}
             </a>
-            <a href="{{ route('public.digital-twin', ['mode' => 'dual']) }}" class="btn btn-primary" style="padding:0.5rem 0.9rem;font-size:0.8rem;">
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]) }}" class="btn btn-primary" style="padding:0.5rem 0.9rem;font-size:0.8rem;">
                 <i class="fa fa-cube"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
             </a>
         </div>

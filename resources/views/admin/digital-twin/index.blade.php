@@ -1,6 +1,27 @@
 @extends('layouts.app')
 
-@section('title', 'Astronaut Digital Twin · Gemelo Digital Neurooftalmológico 3D')
+@php
+    $isEn = app()->getLocale() === 'en';
+    $trMap = [
+        'Listo para revisión' => 'Ready for review',
+        'Priorizar revisión' => 'Prioritize review',
+        'Faltan datos' => 'Missing data',
+        'Estable' => 'Stable',
+        'En progresión' => 'Worsening / In progression',
+        'Sin datos suficientes' => 'Insufficient data',
+        'Aptitud no evaluada' => 'Fitness not evaluated',
+        'Sin medición' => 'Unmeasured',
+        'Sin escaneo' => 'Unscanned',
+    ];
+    $t = fn (?string $val) => ($isEn && $val !== null && isset($trMap[$val])) ? $trMap[$val] : $val;
+    $headerBadgeClass = match($caseEvaluation['case_operational_code']) {
+        'LISTO_PARA_REVISION' => 'status-badge-ready',
+        'PRIORIZAR_REVISION' => 'status-badge-prioritize',
+        default => 'status-badge-missing',
+    };
+@endphp
+
+@section('title', 'Astronaut Digital Twin · Gemelo Digital Neurooftalmológico 3D & Consola OCT')
 
 @push('styles')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -8,20 +29,20 @@
 <style>
     .twin-layout {
         display: grid;
-        grid-template-columns: minmax(0, 1.6fr) minmax(340px, 1fr);
-        gap: 20px;
-        margin-bottom: 24px;
+        grid-template-columns: minmax(0, 1.45fr) minmax(360px, 1fr);
+        gap: 18px;
+        margin-bottom: 18px;
     }
     @media (max-width: 1024px) {
         .twin-layout { grid-template-columns: 1fr; }
     }
     .viewport-card {
         background: #05070d;
-        border: 1px solid var(--border);
+        border: 1.5px solid #1e293b;
         border-radius: var(--radius);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
         display: flex;
         flex-direction: column;
     }
@@ -29,10 +50,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 18px;
-        background: #090c15;
-        border-bottom: 1px solid #1a2234;
-        color: #e2e8f0;
+        padding: 10px 16px;
+        background: #07173F;
+        border-bottom: 1px solid #1e3a8a;
+        color: #f8fafc;
         font-size: 12px;
         z-index: 10;
     }
@@ -49,7 +70,7 @@
         transform: translate(-50%, -50%);
         width: 120px;
         height: 120px;
-        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border: 1px dashed rgba(46, 150, 245, 0.28);
         border-radius: 50%;
         pointer-events: none;
     }
@@ -57,7 +78,7 @@
     .hud-reticle::after {
         content: '';
         position: absolute;
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(46, 150, 245, 0.35);
     }
     .hud-reticle::before {
         top: 50%;
@@ -73,16 +94,16 @@
     }
     .hud-coords {
         position: absolute;
-        bottom: 14px;
-        left: 18px;
+        bottom: 12px;
+        left: 14px;
         font-family: ui-monospace, monospace;
         font-size: 11px;
-        color: #94a3b8;
-        line-height: 1.4;
-        background: rgba(5, 7, 13, 0.75);
-        padding: 6px 10px;
+        color: #cbd5e1;
+        line-height: 1.45;
+        background: rgba(7, 23, 63, 0.85);
+        padding: 7px 11px;
         border-radius: 6px;
-        border: 1px solid #1a2234;
+        border: 1px solid #1e3a8a;
         backdrop-filter: blur(4px);
     }
     .hud-scan-beam {
@@ -91,8 +112,8 @@
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-        opacity: 0.4;
+        background: linear-gradient(90deg, transparent, rgba(46, 150, 245, 0.85), transparent);
+        opacity: 0.45;
         animation: scanAnim 4s linear infinite;
     }
     @keyframes scanAnim {
@@ -103,7 +124,7 @@
     }
     #threeCanvasContainer {
         width: 100%;
-        height: 480px;
+        height: 440px;
         position: relative;
         cursor: grab;
     }
@@ -112,7 +133,7 @@
     }
     .viewport-controls {
         position: absolute;
-        top: 54px;
+        top: 14px;
         right: 14px;
         display: flex;
         flex-direction: column;
@@ -120,13 +141,13 @@
         z-index: 10;
     }
     .view-btn {
-        background: rgba(9, 12, 21, 0.85);
+        background: rgba(7, 23, 63, 0.88);
         color: #f1f5f9;
-        border: 1px solid #1e293b;
+        border: 1px solid #1e3a8a;
         border-radius: 6px;
         padding: 6px 10px;
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
         backdrop-filter: blur(4px);
         transition: all 0.15s ease;
@@ -136,25 +157,18 @@
         text-align: left;
     }
     .view-btn:hover {
-        background: #1e293b;
-        border-color: #475569;
+        background: #0042A6;
+        border-color: #2E96F5;
     }
     .view-btn.active {
-        background: #ffffff;
-        color: #09090b;
-        border-color: #ffffff;
-    }
-    .timeline-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 18px 22px;
-        margin-bottom: 22px;
-        box-shadow: var(--shadow);
+        background: #0042A6;
+        color: #EAFE07;
+        border-color: #2E96F5;
+        box-shadow: 0 0 0 2px rgba(46, 150, 245, 0.25);
     }
     .slider-rail {
         width: 100%;
-        accent-color: var(--foreground);
+        accent-color: #0042A6;
         height: 8px;
         border-radius: 4px;
         cursor: pointer;
@@ -162,50 +176,85 @@
     .gauge-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 10px;
     }
     .gauge-cell {
         background: var(--background);
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 12px 14px;
+        padding: 10px 12px;
     }
     .gauge-label {
-        font-size: 11px;
+        font-size: 10px;
         text-transform: uppercase;
         color: var(--muted-foreground);
         font-weight: 700;
-        letter-spacing: .05em;
+        letter-spacing: .04em;
     }
     .gauge-val {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 800;
         font-family: ui-monospace, monospace;
         color: var(--foreground);
-        margin-top: 4px;
+        margin-top: 2px;
     }
     .oct-scan-box {
         background: #09090b;
         border: 1px solid var(--border);
         border-radius: 8px;
-        padding: 14px;
-        margin-top: 14px;
+        padding: 12px;
+        margin-top: 10px;
+    }
+    .sample-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 11px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: var(--card);
+        color: var(--foreground);
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    .sample-pill:hover {
+        border-color: #2E96F5;
+        background: rgba(46, 150, 245, 0.08);
+    }
+    .sample-pill.active {
+        background: #0042A6;
+        color: #ffffff;
+        border-color: #07173F;
+        box-shadow: 0 3px 10px rgba(0, 66, 166, 0.25);
+    }
+    .sample-row {
+        cursor: pointer;
+        transition: background 0.12s ease;
+    }
+    .sample-row:hover {
+        background: rgba(46, 150, 245, 0.08) !important;
+    }
+    .sample-row.active-sample-row {
+        background: rgba(0, 66, 166, 0.12) !important;
+        border-left: 4px solid #0042A6;
     }
 
     /* ZEISS Cirrus HD-OCT Workstation Styles (Clinical Mode) */
     .oct-workstation {
         background: #09090b;
-        border: 1px solid var(--border);
+        border: 1.5px solid #1e293b;
         border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.35);
         color: #f4f4f5;
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     .oct-topbar {
-        background: #121215;
-        border-bottom: 1px solid #27272a;
-        padding: 10px 18px;
+        background: #07173F;
+        border-bottom: 1px solid #1e3a8a;
+        padding: 10px 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -219,8 +268,8 @@
         gap: 10px;
     }
     .oct-brand-logo {
-        background: #ffffff;
-        color: #000000;
+        background: #EAFE07;
+        color: #07173F;
         font-weight: 900;
         padding: 2px 6px;
         border-radius: 3px;
@@ -231,7 +280,7 @@
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
-        padding: 16px;
+        padding: 14px;
         background: #09090b;
     }
     @media (max-width: 1100px) {
@@ -262,7 +311,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px 0;
+        padding: 8px 0;
     }
     .oct-table {
         width: 100%;
@@ -270,7 +319,7 @@
         border-collapse: collapse;
     }
     .oct-table th {
-        color: #71717a;
+        color: #94a3b8;
         text-align: left;
         padding: 6px 8px;
         border-bottom: 1px solid #27272a;
@@ -295,385 +344,221 @@
 @endpush
 
 @section('content')
-<div class="page-heading">
-    <div>
-        <div class="eyebrow">NASA HUMAN RESEARCH PROGRAM · HIGH-FIDELITY BIOMECHANICAL MODEL</div>
-        <h1>Gemelo Digital Neurooftalmológico 3D</h1>
-        <p>Modelo biomecánico tridimensional interactivo del globo ocular y vaina del nervio óptico bajo redistribución cefálica de fluidos (SANS).</p>
-    </div>
-    <div style="display:flex; gap:12px; align-items:center;">
-        @if($astronaut)
-            <img src="{{ $astronaut->avatar_url }}"
-                 alt="{{ $astronaut->name }}"
-                 style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:2px solid var(--foreground);">
-        @endif
-        <label for="astro-select" style="font-size:13px; font-weight:600; color:var(--muted-foreground);">Tripulante:</label>
-        <select id="astro-select" class="form-control" style="max-width:280px; height:36px;" onchange="location.href='?astro=' + this.value">
-            @foreach ($astronauts as $item)
-                <option value="{{ $item->code }}" @selected($astronaut && $astronaut->code === $item->code)>
-                    {{ $item->code }} - {{ $item->name }} ({{ $item->agency }})
-                </option>
-            @endforeach
-        </select>
+{{-- 1. CABECERA CIENTÍFICA COMPACTA VINCULADA AL EXPEDIENTE SANS --}}
+<div class="card" style="padding:1rem 1.25rem;margin-bottom:1rem;border:1.5px solid var(--space-blue);">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <div>
+            <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.25rem;">
+                <span class="interactive-pill" style="background:#07173F;color:#EAFE07;border-color:#07173F;font-size:0.68rem;">
+                    <i class="fa fa-flask"></i>
+                    {{ $isEn ? 'FOR GROUND SCIENTISTS & CLINICAL INVESTIGATORS · 3D & OCT WORKSTATION' : 'MÓDULO PARA CIENTÍFICOS E INVESTIGADORES · VISOR 3D Y TOMOGRAFÍA OCT VINCULADA' }}
+                </span>
+                <span style="font-size:0.74rem;color:var(--muted-foreground);font-weight:600;">
+                    Astronaut Digital Twin · <code>{{ $activeCase->case_id }}</code> ({{ $astronaut->code }})
+                </span>
+            </div>
+            <h1 style="font-size:1.28rem;font-weight:800;margin:0;">
+                {{ $isEn
+                    ? 'Gemelo Digital Neurooftalmológico 3D & Linked ZEISS Cirrus™ HD-OCT Samples'
+                    : 'Gemelo Digital Neurooftalmológico 3D y Muestras ZEISS Cirrus™ HD-OCT Vinculadas' }}
+            </h1>
+        </div>
+
+        <div style="display:flex;gap:0.55rem;align-items:center;flex-wrap:wrap;">
+            <div style="padding:0.38rem 0.7rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--muted-foreground);">
+                    {{ $isEn ? 'Case Result' : 'Resultado Expediente' }} ({{ $activeCase->case_id }})
+                </div>
+                <span class="{{ $headerBadgeClass }}">
+                    <i class="fa {{ $caseEvaluation['case_operational_code'] === 'LISTO_PARA_REVISION' ? 'fa-check-circle' : ($caseEvaluation['case_operational_code'] === 'PRIORIZAR_REVISION' ? 'fa-exclamation-triangle' : 'fa-question-circle') }}"></i>
+                    {{ $t($caseEvaluation['case_operational_text']) }}
+                </span>
+            </div>
+            <div style="padding:0.38rem 0.7rem;border:1px solid var(--border);border-radius:7px;text-align:right;background:var(--muted);">
+                <div style="font-size:0.62rem;text-transform:uppercase;color:var(--muted-foreground);">
+                    {{ $isEn ? 'Signal Index' : 'Índice Predictor' }}
+                </div>
+                <div style="font-size:0.86rem;font-weight:800;color:var(--space-blue);">{{ $biomarkerPredictor['signal_index'] }} / 100</div>
+            </div>
+            <a href="{{ route('home', ['case_id' => $activeCase->case_id, 'tab' => 'biomarcadores']) }}" id="btn-open-predictor" class="btn btn-primary" style="padding:0.5rem 0.85rem;font-size:0.8rem;">
+                <i class="fa fa-sliders"></i> {{ $isEn ? 'Open in SANS Predictor' : 'Abrir en Predictor SANS' }}
+            </a>
+        </div>
     </div>
 </div>
 
-{{-- Control Deslizante de Cronología de Vuelo (FD0 -> FD120) --}}
-<div class="timeline-card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:12px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <button type="button" class="btn btn-primary" id="play-pause-btn" style="padding:6px 14px; font-size:12px; min-height:34px;">
-                <i class="fa fa-play" id="play-icon"></i> <span id="play-text">Simular Misión</span>
-            </button>
-            <span style="font-size:13px; color:var(--muted-foreground); font-weight:500;">
-                Línea temporal de microgravedad en vuelo:
-            </span>
+{{-- 2. SELECTOR VISUAL DE LOS 6 ASTRONAUTAS / EXPEDIENTES (CON FOTOS A COLOR Y ESTADO OPERATIVO REAL) --}}
+<div class="card" style="padding:0.9rem 1.15rem;margin-bottom:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.65rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+            <img src="{{ $astronaut->avatar_url }}"
+                 alt="{{ $astronaut->name }}"
+                 style="width:46px;height:46px;border-radius:10px;object-fit:cover;border:2px solid var(--space-blue);flex-shrink:0;">
+            <div>
+                <div style="display:flex;align-items:center;gap:0.45rem;flex-wrap:wrap;">
+                    <strong style="font-size:0.98rem;">{{ $astronaut->name }}</strong>
+                    <span class="badge" style="font-size:0.68rem;">{{ $astronaut->code }} · {{ $activeCase->case_id }}</span>
+                    <span style="font-size:0.74rem;color:var(--muted-foreground);font-weight:600;">{{ $astronaut->mission_name }}</span>
+                </div>
+                <div style="font-size:0.76rem;color:var(--muted-foreground);margin-top:0.12rem;">
+                    <strong>OD:</strong> {{ $t($caseEvaluation['eyes']['OD']['operational_text']) }} ({{ $t($caseEvaluation['eyes']['OD']['trajectory_text']) }}) ·
+                    <strong>OS:</strong> {{ $t($caseEvaluation['eyes']['OS']['operational_text']) }} ({{ $t($caseEvaluation['eyes']['OS']['trajectory_text']) }})
+                </div>
+            </div>
         </div>
-        <div style="font-size:15px; font-weight:800; font-family:ui-monospace, monospace; color:var(--foreground);" id="flight-day-badge">
-            DÍA DE VUELO: FD0 (Línea Base Pre-Vuelo)
+
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+            <label for="astro-select" style="font-size:0.75rem;font-weight:700;color:var(--muted-foreground);">
+                <i class="fa fa-user-astronaut"></i> {{ $isEn ? 'Select Astronaut:' : 'Seleccionar Astronauta:' }}
+            </label>
+            <select id="astro-select" class="form-control" style="width:auto;min-width:250px;height:34px;padding:0.25rem 0.6rem;font-size:0.8rem;font-weight:700;"
+                    onchange="switchAstronaut(this.value)">
+                @foreach ($crewRoster as $member)
+                    <option value="{{ $member['astro_code'] }}" @selected($astronaut && $astronaut->code === $member['astro_code'])>
+                        {{ $member['astro_code'] }} — {{ $member['name'] }} ({{ $member['case_id'] }} · {{ $t($member['operational_text']) }})
+                    </option>
+                @endforeach
+            </select>
         </div>
     </div>
-    <input type="range" min="0" max="{{ count($timelineDays) - 1 }}" value="0" step="1" class="slider-rail" id="day-slider">
-    <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted-foreground); margin-top:8px; font-family:ui-monospace, monospace;">
-        @foreach ($timelineDays as $idx => $d)
-            <span style="cursor:pointer;" onclick="setSliderIndex({{ $idx }})">FD{{ $d }}</span>
+
+    {{-- 6 Tarjetas Interactivas de Tripulación --}}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.5rem;">
+        @foreach($crewRoster as $member)
+            @php
+                $isSelectedAstro = $member['case_id'] === $activeCase->case_id;
+                $cBadge = match($member['operational_code']) {
+                    'LISTO_PARA_REVISION' => 'status-badge-ready',
+                    'PRIORIZAR_REVISION' => 'status-badge-prioritize',
+                    default => 'status-badge-missing',
+                };
+            @endphp
+            <a href="{{ route('public.digital-twin', ['astro' => $member['astro_code'], 'case_id' => $member['case_id'], 'mode' => $initialMode]) }}"
+               class="clickable-card {{ $isSelectedAstro ? 'is-selected' : '' }}"
+               style="display:flex;align-items:center;gap:0.55rem;padding:0.45rem 0.6rem;border-radius:8px;text-decoration:none;color:var(--foreground);">
+                <img src="{{ $member['avatar'] }}"
+                     alt="{{ $member['name'] }}"
+                     style="width:36px;height:36px;border-radius:7px;object-fit:cover;border:1.5px solid {{ $isSelectedAstro ? 'var(--space-electric)' : 'var(--border)' }};flex-shrink:0;">
+                <div style="min-width:0;flex:1;">
+                    <div style="font-size:0.76rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        {{ $member['name'] }}
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:0.25rem;margin-top:0.12rem;">
+                        <span style="font-size:0.63rem;color:var(--muted-foreground);font-family:monospace;">{{ $member['case_id'] }}</span>
+                        <span class="{{ $cBadge }}" style="font-size:0.58rem;padding:0.06rem 0.32rem;">{{ $t($member['operational_text']) }}</span>
+                    </div>
+                </div>
+            </a>
         @endforeach
     </div>
 </div>
 
-{{-- Barra de Selección de Modo: 3D / Consola Tomográfica ZEISS Cirrus / Vista Dual --}}
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+{{-- 3. SELECTOR DE MUESTRAS CLÍNICAS REALES Y RESULTADO VINCULADO (ANTES · DURANTE · POSVUELO +30/+60/+90d) --}}
+<div class="card" style="padding:1rem 1.2rem;margin-bottom:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.65rem;flex-wrap:wrap;gap:0.6rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary" id="play-pause-btn" style="padding:0.35rem 0.8rem;font-size:0.78rem;min-height:32px;">
+                <i class="fa fa-play" id="play-icon"></i> <span id="play-text">{{ $isEn ? 'Play Samples' : 'Recorrer Muestras' }}</span>
+            </button>
+            <div>
+                <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--space-blue);font-weight:800;">
+                    {{ $isEn ? 'LINKED LONGITUDINAL SAMPLES (' . count($clinicalSamples) . ' RECORDS)' : 'MUESTRAS CLÍNICAS VINCULADAS AL EXPEDIENTE (' . count($clinicalSamples) . ' CORTES)' }}
+                </div>
+                <div style="font-size:0.86rem;font-weight:800;color:var(--foreground);" id="flight-day-badge">
+                    {{ $clinicalSamples[$initialSampleIndex]['stage_es'] ?? 'FD0' }}
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <span id="sample-status-pill" class="status-badge-prioritize">
+                {{ $clinicalSamples[$initialSampleIndex]['status_es'] ?? '' }}
+            </span>
+            <span style="font-size:0.74rem;font-family:ui-monospace,monospace;padding:0.25rem 0.55rem;background:var(--muted);border-radius:6px;border:1px solid var(--border);" id="sample-id-badge">
+                ID: {{ $clinicalSamples[$initialSampleIndex]['sample_id'] ?? '' }}
+            </span>
+        </div>
+    </div>
+
+    {{-- Botones rápidos por muestra longitudinal --}}
+    <div style="display:flex;gap:0.45rem;flex-wrap:wrap;margin-bottom:0.65rem;" id="sample-pills-container">
+        @foreach ($clinicalSamples as $idx => $s)
+            <button type="button"
+                    class="sample-pill {{ $idx === $initialSampleIndex ? 'active' : '' }}"
+                    id="sample-pill-{{ $idx }}"
+                    onclick="setSliderIndex({{ $idx }})">
+                <i class="fa {{ $s['has_oct_od'] ? ($s['status_code'] === 'PRIORIZAR_REVISION' ? 'fa-exclamation-triangle' : 'fa-check-circle') : 'fa-ban' }}"></i>
+                <span>{{ $s['code_label'] }}</span>
+            </button>
+        @endforeach
+    </div>
+
+    <input type="range" min="0" max="{{ max(0, count($clinicalSamples) - 1) }}" value="{{ $initialSampleIndex }}" step="1" class="slider-rail" id="day-slider">
+
+    {{-- Nota clínica vinculada a la muestra seleccionada + Tabla rápida de todas las muestras del astronauta --}}
+    <div style="margin-top:0.65rem;padding:0.6rem 0.85rem;background:var(--muted);border-radius:8px;border-left:4px solid var(--space-blue);display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <div style="font-size:0.8rem;line-height:1.45;">
+            <strong style="color:var(--space-blue);"><i class="fa fa-link"></i> {{ $isEn ? 'Sample Verdict:' : 'Dictamen de la Muestra:' }}</strong>
+            <span id="sample-clinical-note">{{ $isEn ? ($clinicalSamples[$initialSampleIndex]['note_en'] ?? '') : ($clinicalSamples[$initialSampleIndex]['note_es'] ?? '') }}</span>
+        </div>
+        <a href="{{ route('home', ['case_id' => $activeCase->case_id, 'tab' => 'seguimiento']) }}"
+           id="sample-timeline-link"
+           style="font-size:0.75rem;font-weight:800;color:var(--space-blue);text-decoration:none;white-space:nowrap;">
+            {{ $isEn ? 'View in +30/+60/+90d Timeline' : 'Ver en Línea +30/+60/+90d' }} <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+{{-- 4. BARRA DE MODO DE TRABAJO: VISTA DUAL SIMULTÁNEA (POR DEFECTO) / 3D / CONSOLA OCT --}}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
     <div class="tabs" style="margin:0;">
-        <button type="button" class="tab active" id="tab-btn-3d" onclick="setWorkstationMode('3d')">
-            <i class="fa fa-cube"></i> Gemelo Digital 3D (Three.js)
+        <button type="button" class="tab {{ $initialMode === 'dual' ? 'active' : '' }}" id="tab-btn-dual" onclick="setWorkstationMode('dual')">
+            <i class="fa fa-th-large"></i> {{ $isEn ? 'Simultaneous Dual View (3D + OCT)' : 'Vista Dual Simultánea (3D + OCT)' }}
         </button>
-        <button type="button" class="tab" id="tab-btn-oct" onclick="setWorkstationMode('oct')">
-            <i class="fa fa-heartbeat"></i> Consola ZEISS Cirrus™ HD-OCT
+        <button type="button" class="tab {{ $initialMode === '3d' ? 'active' : '' }}" id="tab-btn-3d" onclick="setWorkstationMode('3d')">
+            <i class="fa fa-cube"></i> {{ $isEn ? '3D Digital Twin (Three.js)' : 'Gemelo Digital 3D (Three.js)' }}
         </button>
-        <button type="button" class="tab" id="tab-btn-dual" onclick="setWorkstationMode('dual')">
-            <i class="fa fa-th-large"></i> Vista Dual Simultánea (3D + OCT)
+        <button type="button" class="tab {{ $initialMode === 'oct' ? 'active' : '' }}" id="tab-btn-oct" onclick="setWorkstationMode('oct')">
+            <i class="fa fa-heartbeat"></i> {{ $isEn ? 'ZEISS Cirrus™ HD-OCT Console' : 'Consola ZEISS Cirrus™ HD-OCT' }}
         </button>
     </div>
 
-    <div style="font-size:12px; color:var(--muted-foreground); font-family:ui-monospace, monospace;">
-        INSTRUMENTO: <strong style="color:var(--foreground);">ZEISS CIRRUS™ HD-OCT · SPECTRAL DOMAIN</strong>
+    <div style="font-size:11.5px;color:var(--muted-foreground);font-family:ui-monospace,monospace;">
+        PROTOCOLO: <strong style="color:var(--foreground);">{{ $activeCase->applied_protocol_version_id ?? 'SIN PROTOCOLO PREVIO (AT-01)' }}</strong> ·
+        INSTRUMENTO: <strong style="color:var(--space-blue);">ZEISS CIRRUS™ HD-OCT</strong>
     </div>
 </div>
 
-{{-- ESTACIÓN DE TRABAJO CLÍNICA ZEISS CIRRUS™ HD-OCT (MACULAR CUBE 512x128) --}}
-<div id="panel-cirrus-oct" class="oct-workstation" style="display:none; margin-bottom:24px;">
-    {{-- Barra Superior de Instrumentación Clínica --}}
-    <div class="oct-topbar">
-        <div class="oct-brand">
-            <span class="oct-brand-logo">ZEISS</span>
-            <strong style="color:#ffffff; letter-spacing:0.04em;">Cirrus™ HD-OCT</strong>
-            <span style="color:#71717a;">| SPECTRAL DOMAIN TECHNOLOGY</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-            <div>PACIENTE: <strong style="color:#ffffff;" id="oct-patient-info">{{ $astronaut->name }} ({{ $astronaut->code }})</strong></div>
-            <div>PROTOCOLO: <strong style="color:#38bdf8;">Macular Cube 512x128</strong></div>
-            <div>SIGNAL STRENGTH: <strong style="color:#22c55e;" id="oct-signal-badge">OD: 9/10 · OS: 10/10</strong></div>
-        </div>
-    </div>
-
-    {{-- Matriz Clínica de 9 Paneles (Réplica Exacta del Monitor Hospitalario) --}}
-    <div class="oct-grid-container">
-        {{-- Fila 1 - Panel 1: Mapa de Espesor ILM-RPE (OD) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>ILM-RPE Thickness Map (OD)</span>
-                <span style="color:#38bdf8; font-size:10px;">OJO DERECHO</span>
-            </div>
-            <div style="display:flex; justify-content:center; align-items:center; height:160px; position:relative;">
-                <canvas id="octHeatmapOd" width="160" height="160" style="border-radius:50%; border:1px solid #27272a;"></canvas>
-                {{-- Escala de calor lateral --}}
-                <div style="position:absolute; right:4px; top:10px; bottom:10px; width:12px; border-radius:2px; background:linear-gradient(to top, #0284c7 0%, #22c55e 35%, #eab308 70%, #ef4444 100%); display:flex; flex-direction:column; justify-content:space-between; font-size:8px; color:#ffffff; padding:2px; text-shadow:0 0 2px #000;">
-                    <span>500</span>
-                    <span>300</span>
-                    <span>100</span>
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:10px; color:#71717a; margin-top:6px;">
-                <span>Fóvea Central: <strong style="color:#38bdf8;" id="oct-fovea-od-val">252 &mu;m</strong></span>
-                <span>Unidades: Micras (&mu;m)</span>
-            </div>
-        </div>
-
-        {{-- Fila 1 - Panel 2: Fondo de Ojo Infrarrojo OCT Fundus (OD / OS) --}}
-        <div class="oct-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
-            <div class="oct-panel-title">
-                <span>OCT Fundus Infrared Alignment</span>
-                <span style="color:#a1a1aa; font-size:10px;">Macular 6x6 mm</span>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:6px 0;">
-                <div style="background:#05070a; border:1px solid #27272a; border-radius:4px; padding:8px; text-align:center;">
-                    <div style="font-size:10px; color:#94a3b8; margin-bottom:4px;">OD (Fovea: 254, 66)</div>
-                    <svg width="100" height="100" viewBox="0 0 100 100" style="margin:0 auto; background:#18181b; border-radius:50%;">
-                        <circle cx="50" cy="50" r="45" fill="#27272a" stroke="#3f3f46" stroke-width="1"/>
-                        <circle cx="50" cy="50" r="8" fill="#09090b"/>
-                        <line x1="10" y1="50" x2="90" y2="50" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2,2"/>
-                        <line x1="50" y1="10" x2="50" y2="90" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2,2"/>
-                    </svg>
-                </div>
-                <div style="background:#05070a; border:1px solid #27272a; border-radius:4px; padding:8px; text-align:center;">
-                    <div style="font-size:10px; color:#94a3b8; margin-bottom:4px;">OS (Fovea: 239, 69)</div>
-                    <svg width="100" height="100" viewBox="0 0 100 100" style="margin:0 auto; background:#18181b; border-radius:50%;">
-                        <circle cx="50" cy="50" r="45" fill="#27272a" stroke="#3f3f46" stroke-width="1"/>
-                        <circle cx="50" cy="50" r="8" fill="#09090b"/>
-                        <line x1="10" y1="50" x2="90" y2="50" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2"/>
-                        <line x1="50" y1="10" x2="50" y2="90" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2"/>
-                    </svg>
-                </div>
-            </div>
-            <div style="font-size:10px; color:#71717a; text-align:center;">
-                Sistema de seguimiento foveal LSO (Line Scanning Ophthalmoscope)
-            </div>
-        </div>
-
-        {{-- Fila 1 - Panel 3: Mapa de Espesor ILM-RPE (OS) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>ILM-RPE Thickness Map (OS)</span>
-                <span style="color:#22c55e; font-size:10px;">OJO IZQUIERDO</span>
-            </div>
-            <div style="display:flex; justify-content:center; align-items:center; height:160px; position:relative;">
-                <canvas id="octHeatmapOs" width="160" height="160" style="border-radius:50%; border:1px solid #27272a;"></canvas>
-                <div style="position:absolute; right:4px; top:10px; bottom:10px; width:12px; border-radius:2px; background:linear-gradient(to top, #0284c7 0%, #22c55e 35%, #eab308 70%, #ef4444 100%); display:flex; flex-direction:column; justify-content:space-between; font-size:8px; color:#ffffff; padding:2px; text-shadow:0 0 2px #000;">
-                    <span>500</span>
-                    <span>300</span>
-                    <span>100</span>
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:10px; color:#71717a; margin-top:6px;">
-                <span>Fóvea Central: <strong style="color:#22c55e;" id="oct-fovea-os-val">248 &mu;m</strong></span>
-                <span>Unidades: Micras (&mu;m)</span>
-            </div>
-        </div>
-
-        {{-- Fila 2 - Panel 4: Tomograma Horizontal B-Scan (OD) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>Horizontal B-Scan (OD)</span>
-                <span id="bscan-od-label" style="color:#38bdf8; font-size:10px;">512x128 Axial</span>
-            </div>
-            <div style="background:#020408; border:1px solid #1e1e24; border-radius:4px; height:140px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                <canvas id="bscanCanvasOd" width="360" height="140" style="width:100%; height:100%;"></canvas>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:10px; color:#71717a; margin-top:6px;">
-                <span>Temporal</span>
-                <span style="color:#a1a1aa;">Depresión Foveal Central</span>
-                <span>Nasal</span>
-            </div>
-        </div>
-
-        {{-- Fila 2 - Panel 5: Tabla Cuantitativa Central de Espesor ILM-RPE --}}
-        <div class="oct-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
-            <div class="oct-panel-title">
-                <span>Tabla Cuantitativa ILM - RPE</span>
-                <span style="color:#a1a1aa; font-size:10px;">Cirrus Normative Match</span>
-            </div>
-            <table class="oct-table">
-                <thead>
-                    <tr>
-                        <th>Parámetro Macular</th>
-                        <th style="color:#38bdf8; text-align:right;">OD</th>
-                        <th style="color:#22c55e; text-align:right;">OS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Thickness Central Subfield (&mu;m)</td>
-                        <td style="text-align:right; font-weight:700;" id="table-central-od">252</td>
-                        <td style="text-align:right; font-weight:700;" id="table-central-os">248</td>
-                    </tr>
-                    <tr>
-                        <td>Volume Cube (mm&sup3;)</td>
-                        <td style="text-align:right; font-weight:700;" id="table-vol-od">10.1</td>
-                        <td style="text-align:right; font-weight:700;" id="table-vol-os">10.0</td>
-                    </tr>
-                    <tr>
-                        <td>Thickness Avg Cube (&mu;m)</td>
-                        <td style="text-align:right; font-weight:700;" id="table-avg-od">280</td>
-                        <td style="text-align:right; font-weight:700;" id="table-avg-os">276</td>
-                    </tr>
-                    <tr>
-                        <td>Asimetría Interocular (&Delta;OD-OS)</td>
-                        <td colspan="2" style="text-align:right; font-weight:700; color:#eab308;" id="table-asym">+4 &mu;m</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="font-size:10px; color:#71717a; text-align:center; padding-top:4px;">
-                Criterio SANS NASA: &Delta;Espesor > 25 &mu;m sugiere congestión retrobulbar asimétrica
-            </div>
-        </div>
-
-        {{-- Fila 2 - Panel 6: Tomograma Vertical B-Scan (OS) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>Vertical B-Scan (OS)</span>
-                <span style="color:#22c55e; font-size:10px;">Meridiano Vertical</span>
-            </div>
-            <div style="background:#020408; border:1px solid #1e1e24; border-radius:4px; height:140px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                <canvas id="bscanCanvasOs" width="360" height="140" style="width:100%; height:100%;"></canvas>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:10px; color:#71717a; margin-top:6px;">
-                <span>Superior</span>
-                <span style="color:#a1a1aa;">Corte Sagital Foveal</span>
-                <span>Inferior</span>
-            </div>
-        </div>
-
-        {{-- Fila 3 - Panel 7: Rejilla ETDRS de 9 Sectores (OD) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>Rejilla ETDRS 9 Sectores (OD)</span>
-                <span style="color:#38bdf8; font-size:10px;">Deviation Map</span>
-            </div>
-            <div class="etdrs-circle-container">
-                <svg id="etdrsSvgOd" width="160" height="160" viewBox="-100 -100 200 200">
-                    {{-- Anillo Exterior (6 mm) --}}
-                    <path d="M -63.6 -63.6 A 90 90 0 0 1 63.6 -63.6 L 39.6 -39.6 A 56 56 0 0 0 -39.6 -39.6 Z" id="sec-od-outer-sup" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="-72" class="etdrs-text" id="sec-od-outer-sup-val">280</text>
-
-                    <path d="M 63.6 -63.6 A 90 90 0 0 1 63.6 63.6 L 39.6 39.6 A 56 56 0 0 0 39.6 -39.6 Z" id="sec-od-outer-nas" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="72" y="0" class="etdrs-text" id="sec-od-outer-nas-val">295</text>
-
-                    <path d="M 63.6 63.6 A 90 90 0 0 1 -63.6 63.6 L -39.6 39.6 A 56 56 0 0 0 39.6 39.6 Z" id="sec-od-outer-inf" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="72" class="etdrs-text" id="sec-od-outer-inf-val">272</text>
-
-                    <path d="M -63.6 63.6 A 90 90 0 0 1 -63.6 -63.6 L -39.6 -39.6 A 56 56 0 0 0 -39.6 39.6 Z" id="sec-od-outer-temp" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="-72" y="0" class="etdrs-text" id="sec-od-outer-temp-val">265</text>
-
-                    {{-- Anillo Interior (3 mm) --}}
-                    <path d="M -39.6 -39.6 A 56 56 0 0 1 39.6 -39.6 L 17 -17 A 24 24 0 0 0 -17 -17 Z" id="sec-od-inner-sup" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="-40" class="etdrs-text" id="sec-od-inner-sup-val">320</text>
-
-                    <path d="M 39.6 -39.6 A 56 56 0 0 1 39.6 39.6 L 17 17 A 24 24 0 0 0 17 -17 Z" id="sec-od-inner-nas" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="40" y="0" class="etdrs-text" id="sec-od-inner-nas-val">325</text>
-
-                    <path d="M 39.6 39.6 A 56 56 0 0 1 -39.6 39.6 L -17 17 A 24 24 0 0 0 17 17 Z" id="sec-od-inner-inf" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="40" class="etdrs-text" id="sec-od-inner-inf-val">318</text>
-
-                    <path d="M -39.6 39.6 A 56 56 0 0 1 -39.6 -39.6 L -17 -17 A 24 24 0 0 0 -17 17 Z" id="sec-od-inner-temp" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="-40" y="0" class="etdrs-text" id="sec-od-inner-temp-val">310</text>
-
-                    {{-- Círculo Foveal Central (1 mm) --}}
-                    <circle cx="0" cy="0" r="24" id="sec-od-central" class="etdrs-sector" fill="#22c55e" stroke="#09090b" stroke-width="1.5"/>
-                    <text x="0" y="0" class="etdrs-text" id="sec-od-central-val">252</text>
-                </svg>
-            </div>
-            <div style="display:flex; justify-content:center; gap:8px; font-size:9px; color:#a1a1aa; margin-top:4px;">
-                <span style="color:#22c55e;">&#9632; Normal (5-95%)</span>
-                <span style="color:#eab308;">&#9632; Borderline (95-99%)</span>
-                <span style="color:#ef4444;">&#9632; &gt;99%</span>
-            </div>
-        </div>
-
-        {{-- Fila 3 - Panel 8: Estado Diagnóstico de Biomarcadores Estructurales SANS --}}
-        <div class="oct-panel" style="display:flex; flex-direction:column; justify-content:space-between;">
-            <div class="oct-panel-title">
-                <span>SANS Structural Biomarker Diagnostics</span>
-                <span style="color:#38bdf8; font-size:10px;">Telemetría NASA HRP</span>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:4px 0;">
-                <div style="background:#09090b; border:1px solid #27272a; border-radius:4px; padding:8px;">
-                    <div style="font-size:10px; color:#71717a;">Elevación de Disco Óptico</div>
-                    <div style="font-size:16px; font-weight:800; color:#38bdf8;" id="oct-disc-elevation">+0 &mu;m</div>
-                </div>
-                <div style="background:#09090b; border:1px solid #27272a; border-radius:4px; padding:8px;">
-                    <div style="font-size:10px; color:#71717a;">Grado Frisén Estimado</div>
-                    <div style="font-size:16px; font-weight:800; color:#22c55e;" id="oct-frisen-grade">Grado 0 (Normal)</div>
-                </div>
-                <div style="background:#09090b; border:1px solid #27272a; border-radius:4px; padding:8px;">
-                    <div style="font-size:10px; color:#71717a;">Pliegues Coroideos</div>
-                    <div style="font-size:13px; font-weight:700; color:#ffffff;" id="oct-folds-status">Ausentes</div>
-                </div>
-                <div style="background:#09090b; border:1px solid #27272a; border-radius:4px; padding:8px;">
-                    <div style="font-size:10px; color:#71717a;">Aplanamiento Foveal</div>
-                    <div style="font-size:13px; font-weight:700; color:#ffffff;" id="oct-foveal-flattening">0.0%</div>
-                </div>
-            </div>
-            <div style="padding:6px; background:#18181b; border-radius:4px; font-size:10px; color:#a1a1aa; text-align:center;">
-                Correlación clínica: Basado en protocolo de vuelo espacial OCT Spectralis/Cirrus de la ISS
-            </div>
-        </div>
-
-        {{-- Fila 3 - Panel 9: Rejilla ETDRS de 9 Sectores (OS) --}}
-        <div class="oct-panel">
-            <div class="oct-panel-title">
-                <span>Rejilla ETDRS 9 Sectores (OS)</span>
-                <span style="color:#22c55e; font-size:10px;">Deviation Map</span>
-            </div>
-            <div class="etdrs-circle-container">
-                <svg id="etdrsSvgOs" width="160" height="160" viewBox="-100 -100 200 200">
-                    <path d="M -63.6 -63.6 A 90 90 0 0 1 63.6 -63.6 L 39.6 -39.6 A 56 56 0 0 0 -39.6 -39.6 Z" id="sec-os-outer-sup" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="-72" class="etdrs-text" id="sec-os-outer-sup-val">275</text>
-
-                    <path d="M 63.6 -63.6 A 90 90 0 0 1 63.6 63.6 L 39.6 39.6 A 56 56 0 0 0 39.6 -39.6 Z" id="sec-os-outer-nas" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="72" y="0" class="etdrs-text" id="sec-os-outer-nas-val">288</text>
-
-                    <path d="M 63.6 63.6 A 90 90 0 0 1 -63.6 63.6 L -39.6 39.6 A 56 56 0 0 0 39.6 39.6 Z" id="sec-os-outer-inf" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="72" class="etdrs-text" id="sec-os-outer-inf-val">268</text>
-
-                    <path d="M -63.6 63.6 A 90 90 0 0 1 -63.6 -63.6 L -39.6 -39.6 A 56 56 0 0 0 -39.6 39.6 Z" id="sec-os-outer-temp" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="-72" y="0" class="etdrs-text" id="sec-os-outer-temp-val">262</text>
-
-                    <path d="M -39.6 -39.6 A 56 56 0 0 1 39.6 -39.6 L 17 -17 A 24 24 0 0 0 -17 -17 Z" id="sec-os-inner-sup" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="-40" class="etdrs-text" id="sec-os-inner-sup-val">315</text>
-
-                    <path d="M 39.6 -39.6 A 56 56 0 0 1 39.6 39.6 L 17 17 A 24 24 0 0 0 17 -17 Z" id="sec-os-inner-nas" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="40" y="0" class="etdrs-text" id="sec-os-inner-nas-val">318</text>
-
-                    <path d="M 39.6 39.6 A 56 56 0 0 1 -39.6 39.6 L -17 17 A 24 24 0 0 0 17 17 Z" id="sec-os-inner-inf" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="0" y="40" class="etdrs-text" id="sec-os-inner-inf-val">312</text>
-
-                    <path d="M -39.6 39.6 A 56 56 0 0 1 -39.6 -39.6 L -17 -17 A 24 24 0 0 0 -17 17 Z" id="sec-os-inner-temp" class="etdrs-sector" fill="#22c55e"/>
-                    <text x="-40" y="0" class="etdrs-text" id="sec-os-inner-temp-val">308</text>
-
-                    <circle cx="0" cy="0" r="24" id="sec-os-central" class="etdrs-sector" fill="#22c55e" stroke="#09090b" stroke-width="1.5"/>
-                    <text x="0" y="0" class="etdrs-text" id="sec-os-central-val">248</text>
-                </svg>
-            </div>
-            <div style="display:flex; justify-content:center; gap:8px; font-size:9px; color:#a1a1aa; margin-top:4px;">
-                <span style="color:#22c55e;">&#9632; Normal (5-95%)</span>
-                <span style="color:#eab308;">&#9632; Borderline (95-99%)</span>
-                <span style="color:#ef4444;">&#9632; &gt;99%</span>
-            </div>
-        </div>
-    </div>
-</div>
-
+{{-- 5. VISOR 3D BIOMECÁNICO + TELEMETRÍA Y TABLA DE MUESTRAS --}}
 <div class="twin-layout" id="panel-3d-layout">
     {{-- Columna Izquierda: Visor 3D WebGL (Three.js) con HUD Aeroespacial --}}
     <div class="viewport-card">
         <div class="viewport-header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="width:8px; height:8px; border-radius:50%; background:#22c55e; display:inline-block;"></span>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#EAFE07;display:inline-block;"></span>
                 <strong style="letter-spacing:0.04em;">Corte Sagital Anatómico · Modelo 3D en Tiempo Real</strong>
-                <span style="color:#64748b;">· WebGL Hardware Accelerated</span>
+                <span style="color:#93c5fd;">· {{ $astronaut->name }} ({{ $activeCase->case_id }})</span>
             </div>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <span class="badge-subtle" id="hud-tier-badge" style="background:#0f172a; border-color:#334155; color:#38bdf8;">
+            <div style="display:flex;gap:10px;align-items:center;">
+                <span class="badge-subtle" id="hud-tier-badge" style="background:#0042A6;border-color:#2E96F5;color:#EAFE07;font-weight:800;">
                     NOMINAL FD0
                 </span>
             </div>
         </div>
 
-        {{-- Contenedor del Canvas Three.js --}}
         <div id="threeCanvasContainer">
-            {{-- HUD Capas de Información Aeroespacial --}}
             <div class="viewport-hud">
                 <div class="hud-scan-beam"></div>
                 <div class="hud-reticle"></div>
 
                 <div class="hud-coords">
-                    <div>POLO POSTERIOR (Z): <span id="hud-z-coord">-12.10 mm</span></div>
-                    <div>DEFORMACIÓN AXIAL: <span id="hud-deform-mm">0.00 mm</span></div>
-                    <div>PRESIÓN RETROBULBAR: <span id="hud-icp-val">15.0 mmHg</span></div>
+                    <div>MUESTRA ACTIVA: <strong id="hud-sample-code" style="color:#EAFE07;">FD0</strong></div>
+                    <div>ESPESOR OCT (OD / OS): <strong id="hud-oct-pair" style="color:#38bdf8;">280 / 279 &mu;m</strong></div>
+                    <div>POLO POSTERIOR (Z): <span id="hud-z-coord">-12.10 mm</span> · DEFORMACIÓN: <span id="hud-deform-mm">0.00 mm</span></div>
+                    <div>PIO TONOMETRÍA: <span id="hud-icp-val">15.0 mmHg</span></div>
                 </div>
             </div>
 
-            {{-- Selector de Perspectivas y Modos 3D --}}
             <div class="viewport-controls">
                 <button type="button" class="view-btn active" id="btn-view-free" onclick="setPresetView('free')">
                     <i class="fa fa-arrows"></i> 3D Libre (Rotar)
@@ -693,130 +578,461 @@
             </div>
         </div>
 
-        <div style="padding:10px 18px; background:#090c15; border-top:1px solid #1a2234; display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; font-family:ui-monospace, monospace;">
-            <span><i class="fa fa-mouse-pointer"></i> Arrastra con el cursor para rotar en 3D · Rueda para zoom</span>
-            <span style="color:#f1f5f9;">VECTOR CEFÁLICO: <strong id="hud-vector-status" style="color:#4ade80;">GRADIENTE ESTABLE (1G)</strong></span>
+        <div style="padding:9px 16px;background:#07173F;border-top:1px solid #1e3a8a;display:flex;justify-content:space-between;font-size:11px;color:#cbd5e1;font-family:ui-monospace,monospace;">
+            <span><i class="fa fa-mouse-pointer"></i> Arrastra para rotar · Rueda para zoom</span>
+            <span style="color:#f1f5f9;">ESTADO BIOMECÁNICO: <strong id="hud-vector-status" style="color:#EAFE07;">GRADIENTE ESTABLE (1G)</strong></span>
         </div>
     </div>
 
-    {{-- Columna Derecha: Telemetría Biomecánica & Biomarcadores SANS --}}
-    <div style="display:flex; flex-direction:column; gap:16px;">
-        {{-- Tarjeta 1: Parámetros Biomecánicos Cuantitativos --}}
-        <div class="card" style="padding:20px; margin:0;">
-            <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:flex-start;">
+    {{-- Columna Derecha: Los 6 Biomarcadores Vinculados a la Muestra + Matriz de Muestras del Astronauta --}}
+    <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="padding:16px;margin:0;">
+            <div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
                 <div>
-                    <h2 class="card-title" style="font-size:15px;">Telemetría Biomecánica (OD)</h2>
-                    <p class="card-description">Parámetros anatómicos computados por el gemelo digital.</p>
+                    <h2 class="card-title" style="font-size:14.5px;margin:0;">
+                        {{ $isEn ? '6 Linked SANS Biomarkers (Sample Telemetry)' : 'Los 6 Biomarcadores SANS de la Muestra Activa' }}
+                    </h2>
+                    <p class="card-description" style="font-size:11.5px;margin:2px 0 0;" id="telemetry-subtitle">
+                        {{ $astronaut->name }} · {{ $activeCase->case_id }}
+                    </p>
                 </div>
-                <span class="badge-subtle" id="twin-risk-badge" style="font-weight:700;">RIESGO BAJO</span>
+                <span class="badge-subtle" id="twin-risk-badge" style="font-weight:800;">RIESGO BAJO</span>
             </div>
 
             <div class="gauge-grid">
                 <div class="gauge-cell">
-                    <div class="gauge-label">Longitud Axial</div>
-                    <div class="gauge-val" id="val-axial-len">24.20 mm</div>
-                    <div style="font-size:10px; color:var(--muted-foreground); margin-top:2px;" id="val-axial-delta">Base pre-vuelo nominal</div>
+                    <div class="gauge-label">1. Espesor OCT TRT (OD / OS)</div>
+                    <div class="gauge-val" id="val-oct-trt" style="font-size:16px;color:var(--space-blue);">280 / 279 &mu;m</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;" id="val-oct-delta">&Delta;TRT: +0 &mu;m (Umbral &ge; +20 &mu;m)</div>
                 </div>
 
                 <div class="gauge-cell">
-                    <div class="gauge-label">Shift Hipermetrópico</div>
+                    <div class="gauge-label">2. Longitud Axial (OD)</div>
+                    <div class="gauge-val" id="val-axial-len">24.10 mm</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;" id="val-axial-delta">Base pre-vuelo nominal</div>
+                </div>
+
+                <div class="gauge-cell">
+                    <div class="gauge-label">3. Hipermetropía (&Delta;SE)</div>
                     <div class="gauge-val" id="val-shift">+0.00 D</div>
-                    <div style="font-size:10px; color:var(--muted-foreground); margin-top:2px;">&Delta;SE refracción en cabina</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;">Agudeza: <strong id="val-snellen">20/20</strong> (<span id="val-logmar">LogMAR 0.000</span>)</div>
                 </div>
 
                 <div class="gauge-cell">
-                    <div class="gauge-label">Agudeza Snellen</div>
-                    <div class="gauge-val" id="val-snellen">20/20</div>
-                    <div style="font-size:10px; color:var(--muted-foreground); margin-top:2px;" id="val-logmar">LogMAR 0.000</div>
+                    <div class="gauge-label">4. Edema Papilar (Frisén)</div>
+                    <div class="gauge-val" id="val-frisen" style="font-size:15px;">Grado 0 (Normal)</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;">RNFL: <strong id="val-rnfl">96 &mu;m</strong></div>
                 </div>
 
                 <div class="gauge-cell">
-                    <div class="gauge-label">Presión Intraocular</div>
-                    <div class="gauge-val" id="val-iop">15.0 mmHg</div>
-                    <div style="font-size:10px; color:var(--muted-foreground); margin-top:2px;">Tonometría de misión</div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Tarjeta 2: Signos Clínicos Estructurales & OCT --}}
-        <div class="card" style="padding:20px; margin:0;">
-            <div style="margin-bottom:12px;">
-                <h2 class="card-title" style="font-size:15px;">Biomarcadores de Síndrome SANS</h2>
-                <p class="card-description">Respuesta fisiológica al desplazamiento de 2L de fluidos cefálicos.</p>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:var(--muted); border-radius:6px;">
-                    <span style="font-weight:500;">Edema Papilar (Escala Frisén)</span>
-                    <strong id="val-frisen" style="font-family:ui-monospace, monospace;">Grado 0 (Normal)</strong>
+                    <div class="gauge-label">5. Presión Intraocular (PIO)</div>
+                    <div class="gauge-val" id="val-iop">14.5 mmHg</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;">Aplanamiento: <strong id="val-flattening">Ausente</strong></div>
                 </div>
 
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:var(--muted); border-radius:6px;">
-                    <span style="font-weight:500;">Aplanamiento de Polo Posterior</span>
-                    <strong id="val-flattening" style="font-family:ui-monospace, monospace;">Ausente</strong>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:var(--muted); border-radius:6px;">
-                    <span style="font-weight:500;">Pliegues Coroideos</span>
-                    <strong id="val-folds" style="font-family:ui-monospace, monospace;">No detectados</strong>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:var(--muted); border-radius:6px;">
-                    <span style="font-weight:500;">Grosor Capa de Fibras (RNFL OCT)</span>
-                    <strong id="val-rnfl" style="font-family:ui-monospace, monospace;">95 &mu;m</strong>
+                <div class="gauge-cell">
+                    <div class="gauge-label">6. Pliegues / Contexto -6&deg; HDT</div>
+                    <div class="gauge-val" id="val-folds" style="font-size:14px;">No detectados</div>
+                    <div style="font-size:10px;color:var(--muted-foreground);margin-top:2px;">Fuente: <code>{{ $activeCase->source_type }}</code></div>
                 </div>
             </div>
 
             {{-- Perfil de Tomografía OCT B-Scan Simulado --}}
             <div class="oct-scan-box">
-                <div style="display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; font-family:ui-monospace, monospace; margin-bottom:6px;">
-                    <span>PERFIL RETINIANO OCT B-SCAN</span>
-                    <span id="oct-elevation-val">ELEVACIÓN PAPILAR: 0 &mu;m</span>
+                <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#94a3b8;font-family:ui-monospace,monospace;margin-bottom:5px;">
+                    <span>PERFIL RETINIANO OCT B-SCAN (MUESTRA ACTIVA)</span>
+                    <span id="oct-elevation-val" style="color:#EAFE07;">ELEVACIÓN PAPILAR: 0 &mu;m</span>
                 </div>
-                <div style="height:48px; background:#000; border:1px solid #27272a; border-radius:4px; position:relative; overflow:hidden;">
-                    <svg id="octCurveSvg" width="100%" height="48" preserveAspectRatio="none" viewBox="0 0 300 48">
+                <div style="height:44px;background:#000;border:1px solid #27272a;border-radius:4px;position:relative;overflow:hidden;">
+                    <svg id="octCurveSvg" width="100%" height="44" preserveAspectRatio="none" viewBox="0 0 300 48">
                         <path id="octCurvePath" d="M 0 34 Q 75 34 110 32 Q 150 30 190 32 Q 225 34 300 34" fill="none" stroke="#22c55e" stroke-width="2.5"/>
                         <path id="octBaseCurve" d="M 0 34 Q 75 34 150 34 Q 225 34 300 34" fill="none" stroke="#52525b" stroke-width="1" stroke-dasharray="3,3"/>
                     </svg>
                 </div>
-                <div style="display:flex; justify-content:space-between; font-size:10px; color:#71717a; margin-top:4px;">
-                    <span>Temporal</span>
-                    <span>Disco Óptico Central</span>
-                    <span>Nasal</span>
-                </div>
+            </div>
+        </div>
+
+        {{-- Tabla Interactiva de Todas las Muestras del Astronauta --}}
+        <div class="card" style="padding:14px 16px;margin:0;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <strong style="font-size:12.5px;text-transform:uppercase;letter-spacing:0.04em;color:var(--space-blue);">
+                    <i class="fa fa-table"></i> {{ $isEn ? 'Click Any Sample to Inspect in 3D & OCT' : 'Haz Clic en Cualquier Muestra para Inspeccionar en 3D y OCT' }}
+                </strong>
+                <span style="font-size:11px;color:var(--muted-foreground);">{{ $activeCase->case_id }}</span>
+            </div>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
+                    <thead>
+                        <tr style="border-bottom:1.5px solid var(--border);text-align:left;color:var(--muted-foreground);">
+                            <th style="padding:5px 6px;">{{ $isEn ? 'Sample / Cut' : 'Muestra / Corte' }}</th>
+                            <th style="padding:5px 6px;text-align:right;">OD TRT</th>
+                            <th style="padding:5px 6px;text-align:right;">&Delta;OD</th>
+                            <th style="padding:5px 6px;text-align:right;">OS TRT</th>
+                            <th style="padding:5px 6px;">{{ $isEn ? 'Result' : 'Resultado' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($clinicalSamples as $idx => $s)
+                            <tr class="sample-row {{ $idx === $initialSampleIndex ? 'active-sample-row' : '' }}"
+                                id="sample-table-row-{{ $idx }}"
+                                onclick="setSliderIndex({{ $idx }})"
+                                style="border-bottom:1px solid var(--border);">
+                                <td style="padding:6px;font-weight:700;">
+                                    {{ $s['code_label'] }}
+                                    <div style="font-size:9.5px;color:var(--muted-foreground);font-family:monospace;">{{ $s['observed_at'] }}</div>
+                                </td>
+                                <td style="padding:6px;text-align:right;font-family:monospace;font-weight:700;">
+                                    {{ $s['od_trt_um'] !== null ? number_format($s['od_trt_um'], 0) . ' µm' : ($isEn ? 'No OCT' : 'Sin OCT') }}
+                                </td>
+                                <td style="padding:6px;text-align:right;font-family:monospace;font-weight:800;color:{{ ($s['od_delta_um'] ?? 0) >= 20 ? '#dc2626' : (($s['od_delta_um'] ?? 0) >= 10 ? '#d97706' : 'var(--foreground)') }};">
+                                    {{ $s['od_delta_um'] !== null ? sprintf('%+d µm', $s['od_delta_um']) : '---' }}
+                                </td>
+                                <td style="padding:6px;text-align:right;font-family:monospace;">
+                                    @if($s['os_trt_um'] !== null)
+                                        {{ number_format($s['os_trt_um'], 0) }} &mu;m
+                                        @if($s['os_missing_baseline'])
+                                            <span style="font-size:9px;color:#d97706;display:block;">(Sin base)</span>
+                                        @endif
+                                    @else
+                                        <span style="color:var(--muted-foreground);">{{ $isEn ? 'No OCT' : 'Sin OCT' }}</span>
+                                    @endif
+                                </td>
+                                <td style="padding:6px;">
+                                    @php
+                                        $rowBadge = match($s['status_code']) {
+                                            'LISTO_PARA_REVISION' => 'status-badge-ready',
+                                            'PRIORIZAR_REVISION' => 'status-badge-prioritize',
+                                            default => 'status-badge-missing',
+                                        };
+                                    @endphp
+                                    <span class="{{ $rowBadge }}" style="font-size:9.5px;padding:1px 6px;">
+                                        {{ $s['status_code'] === 'LISTO_PARA_REVISION' ? ($isEn ? 'Ready' : 'Listo') : ($s['status_code'] === 'PRIORIZAR_REVISION' ? ($isEn ? 'Prioritize' : 'Priorizar') : ($isEn ? 'Missing' : 'Faltan datos')) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-{{-- Explicación Fisiopatológica del Modelo --}}
-<div class="card" style="padding:20px;">
-    <h3 style="font-size:14px; font-weight:700; margin:0 0 8px; color:var(--foreground);">
-        <i class="fa fa-info-circle"></i> Fisiopatología de Microgravedad: El Modelo Biomecánico del Gemelo Digital
-    </h3>
-    <p style="margin:0; font-size:13px; color:var(--muted-foreground); line-height:1.6;">
-        En la Tierra, el gradiente gravitacional mantiene la presión venosa intracraneal baja en bipedestación. En el espacio, la ausencia de gradiente hidrostático redistribuye ~2,000 ml de fluidos corporales cefálicamente hacia cabeza y cuello. Esto eleva de forma crónica la presión en el espacio subaracnoideo de la vaina del nervio óptico (ONSH), ejerciendo una carga mecánica sobre la lámina cribosa y el polo posterior del globo ocular. Como resultado observable, se genera aplanamiento escleral posterior, acortamiento de la longitud axial y un desplazamiento refractivo hipermetrópico donde el punto focal de luz converge detrás de la retina.
-    </p>
+{{-- 6. ESTACIÓN DE TRABAJO CLÍNICA ZEISS CIRRUS™ HD-OCT VINCULADA A LA MUESTRA --}}
+<div id="panel-cirrus-oct" class="oct-workstation" style="display:block;margin-bottom:16px;">
+    <div class="oct-topbar">
+        <div class="oct-brand">
+            <span class="oct-brand-logo">ZEISS</span>
+            <strong style="color:#ffffff;letter-spacing:0.04em;">Cirrus™ HD-OCT</strong>
+            <span style="color:#93c5fd;">| SPECTRAL DOMAIN TECHNOLOGY</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div>EXPEDIENTE: <strong style="color:#EAFE07;" id="oct-patient-info">{{ $astronaut->name }} ({{ $activeCase->case_id }} · {{ $astronaut->code }})</strong></div>
+            <div>PROTOCOLO: <strong style="color:#38bdf8;">Macular Cube 512x128 &amp; Peripapillary TRT</strong></div>
+            <div>COBERTURA OCT: <strong style="color:#22c55e;" id="oct-signal-badge">OD: VÁLIDA · OS: VÁLIDA</strong></div>
+        </div>
+    </div>
+
+    {{-- Aviso dinámico cuando la muestra seleccionada NO tiene escaneo OCT (ej. CASE-NOSCAN-03A o Corte +60d omitido) --}}
+    <div id="oct-missing-banner" style="display:none;background:#451a03;border-bottom:1px solid #f59e0b;padding:10px 16px;color:#fef3c7;font-size:12px;">
+        <i class="fa fa-exclamation-triangle" style="color:#fbbf24;"></i>
+        <strong id="oct-missing-title">SIN ESCANEO OCT REGISTRADO EN ESTA MUESTRA:</strong>
+        <span id="oct-missing-desc">El sistema no inventa ni interpola tomografías faltantes (Reglas AT-01 / AT-07 / AT-15 / AT-17).</span>
+    </div>
+
+    <div class="oct-grid-container">
+        {{-- Fila 1 - Panel 1: Mapa de Espesor ILM-RPE (OD) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>ILM-RPE &amp; Peripapillary Map (OD)</span>
+                <span style="color:#38bdf8;font-size:10px;" id="oct-panel-od-tag">OJO DERECHO</span>
+            </div>
+            <div style="display:flex;justify-content:center;align-items:center;height:155px;position:relative;">
+                <canvas id="octHeatmapOd" width="155" height="155" style="border-radius:50%;border:1px solid #27272a;"></canvas>
+                <div style="position:absolute;right:4px;top:10px;bottom:10px;width:12px;border-radius:2px;background:linear-gradient(to top, #0284c7 0%, #22c55e 35%, #eab308 70%, #ef4444 100%);display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:#ffffff;padding:2px;text-shadow:0 0 2px #000;">
+                    <span>350</span>
+                    <span>280</span>
+                    <span>200</span>
+                </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#a1a1aa;margin-top:6px;">
+                <span>TRT Peripapilar OD: <strong style="color:#38bdf8;" id="oct-fovea-od-val">280 &mu;m</strong></span>
+                <span id="oct-delta-od-label">&Delta;TRT: +0 &mu;m</span>
+            </div>
+        </div>
+
+        {{-- Fila 1 - Panel 2: Fondo de Ojo Infrarrojo OCT Fundus (OD / OS) --}}
+        <div class="oct-panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <div class="oct-panel-title">
+                <span>OCT Fundus Infrared Alignment</span>
+                <span style="color:#a1a1aa;font-size:10px;" id="oct-sample-date-label">Macular 6x6 mm</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 0;">
+                <div style="background:#05070a;border:1px solid #27272a;border-radius:4px;padding:8px;text-align:center;">
+                    <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;" id="fundus-od-caption">OD (Base: 280 &mu;m)</div>
+                    <svg width="96" height="96" viewBox="0 0 100 100" style="margin:0 auto;background:#18181b;border-radius:50%;">
+                        <circle cx="50" cy="50" r="45" fill="#27272a" stroke="#3f3f46" stroke-width="1"/>
+                        <circle cx="50" cy="50" r="9" id="fundus-disc-od" fill="#09090b" stroke="#22c55e" stroke-width="1.5"/>
+                        <line x1="10" y1="50" x2="90" y2="50" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2,2"/>
+                        <line x1="50" y1="10" x2="50" y2="90" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="2,2"/>
+                    </svg>
+                </div>
+                <div style="background:#05070a;border:1px solid #27272a;border-radius:4px;padding:8px;text-align:center;">
+                    <div style="font-size:10px;color:#94a3b8;margin-bottom:4px;" id="fundus-os-caption">OS (Base: 279 &mu;m)</div>
+                    <svg width="96" height="96" viewBox="0 0 100 100" style="margin:0 auto;background:#18181b;border-radius:50%;">
+                        <circle cx="50" cy="50" r="45" fill="#27272a" stroke="#3f3f46" stroke-width="1"/>
+                        <circle cx="50" cy="50" r="9" id="fundus-disc-os" fill="#09090b" stroke="#38bdf8" stroke-width="1.5"/>
+                        <line x1="10" y1="50" x2="90" y2="50" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2"/>
+                        <line x1="50" y1="10" x2="50" y2="90" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="2,2"/>
+                    </svg>
+                </div>
+            </div>
+            <div style="font-size:10px;color:#a1a1aa;text-align:center;" id="oct-fundus-footer">
+                Trazabilidad directa con observación <code>sans_metric_observations</code>
+            </div>
+        </div>
+
+        {{-- Fila 1 - Panel 3: Mapa de Espesor ILM-RPE (OS) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>ILM-RPE &amp; Peripapillary Map (OS)</span>
+                <span style="color:#22c55e;font-size:10px;" id="oct-panel-os-tag">OJO IZQUIERDO</span>
+            </div>
+            <div style="display:flex;justify-content:center;align-items:center;height:155px;position:relative;">
+                <canvas id="octHeatmapOs" width="155" height="155" style="border-radius:50%;border:1px solid #27272a;"></canvas>
+                <div style="position:absolute;right:4px;top:10px;bottom:10px;width:12px;border-radius:2px;background:linear-gradient(to top, #0284c7 0%, #22c55e 35%, #eab308 70%, #ef4444 100%);display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:#ffffff;padding:2px;text-shadow:0 0 2px #000;">
+                    <span>350</span>
+                    <span>280</span>
+                    <span>200</span>
+                </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#a1a1aa;margin-top:6px;">
+                <span>TRT Peripapilar OS: <strong style="color:#22c55e;" id="oct-fovea-os-val">279 &mu;m</strong></span>
+                <span id="oct-delta-os-label">&Delta;TRT: +0 &mu;m</span>
+            </div>
+        </div>
+
+        {{-- Fila 2 - Panel 4: Tomograma Horizontal B-Scan (OD) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>Horizontal B-Scan (OD)</span>
+                <span id="bscan-od-label" style="color:#38bdf8;font-size:10px;">512x128 Axial</span>
+            </div>
+            <div style="background:#020408;border:1px solid #1e1e24;border-radius:4px;height:135px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <canvas id="bscanCanvasOd" width="360" height="135" style="width:100%;height:100%;"></canvas>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#71717a;margin-top:6px;">
+                <span>Temporal</span>
+                <span style="color:#a1a1aa;">Perfil ILM / RNFL / RPE (OD)</span>
+                <span>Nasal</span>
+            </div>
+        </div>
+
+        {{-- Fila 2 - Panel 5: Tabla Cuantitativa Central de Espesor ILM-RPE y TRT --}}
+        <div class="oct-panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <div class="oct-panel-title">
+                <span>Tabla Cuantitativa OCT (Muestra Activa)</span>
+                <span style="color:#EAFE07;font-size:10px;" id="oct-table-sample-tag">FD0</span>
+            </div>
+            <table class="oct-table">
+                <thead>
+                    <tr>
+                        <th>Parámetro OCT</th>
+                        <th style="color:#38bdf8;text-align:right;">OD</th>
+                        <th style="color:#22c55e;text-align:right;">OS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Peripapillary TRT (&mu;m)</td>
+                        <td style="text-align:right;font-weight:800;color:#38bdf8;" id="table-avg-od">280</td>
+                        <td style="text-align:right;font-weight:800;color:#22c55e;" id="table-avg-os">279</td>
+                    </tr>
+                    <tr>
+                        <td>Cambio vs Base (&Delta;TRT)</td>
+                        <td style="text-align:right;font-weight:700;" id="table-delta-od">+0 &mu;m</td>
+                        <td style="text-align:right;font-weight:700;" id="table-delta-os">+0 &mu;m</td>
+                    </tr>
+                    <tr>
+                        <td>Central Subfield (&mu;m)</td>
+                        <td style="text-align:right;font-weight:700;" id="table-central-od">256</td>
+                        <td style="text-align:right;font-weight:700;" id="table-central-os">255</td>
+                    </tr>
+                    <tr>
+                        <td>Volume Cube (mm&sup3;)</td>
+                        <td style="text-align:right;font-weight:700;" id="table-vol-od">10.1</td>
+                        <td style="text-align:right;font-weight:700;" id="table-vol-os">10.0</td>
+                    </tr>
+                    <tr>
+                        <td>Asimetría Interocular (&Delta;OD-OS)</td>
+                        <td colspan="2" style="text-align:right;font-weight:800;color:#22c55e;" id="table-asym">+1 &mu;m</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="font-size:9.5px;color:#a1a1aa;text-align:center;padding-top:4px;">
+                Umbral SANS Monitor: &Delta;TRT &ge; +20 &mu;m activa «Priorizar revisión»
+            </div>
+        </div>
+
+        {{-- Fila 2 - Panel 6: Tomograma Vertical B-Scan (OS) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>Vertical B-Scan (OS)</span>
+                <span id="bscan-os-label" style="color:#22c55e;font-size:10px;">Meridiano Vertical</span>
+            </div>
+            <div style="background:#020408;border:1px solid #1e1e24;border-radius:4px;height:135px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <canvas id="bscanCanvasOs" width="360" height="135" style="width:100%;height:100%;"></canvas>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#71717a;margin-top:6px;">
+                <span>Superior</span>
+                <span style="color:#a1a1aa;">Perfil ILM / RNFL / RPE (OS)</span>
+                <span>Inferior</span>
+            </div>
+        </div>
+
+        {{-- Fila 3 - Panel 7: Rejilla ETDRS de 9 Sectores (OD) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>Rejilla ETDRS 9 Sectores (OD)</span>
+                <span style="color:#38bdf8;font-size:10px;">Deviation Map</span>
+            </div>
+            <div class="etdrs-circle-container">
+                <svg id="etdrsSvgOd" width="150" height="150" viewBox="-100 -100 200 200">
+                    <path d="M -63.6 -63.6 A 90 90 0 0 1 63.6 -63.6 L 39.6 -39.6 A 56 56 0 0 0 -39.6 -39.6 Z" id="sec-od-outer-sup" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="-72" class="etdrs-text" id="sec-od-outer-sup-val">280</text>
+
+                    <path d="M 63.6 -63.6 A 90 90 0 0 1 63.6 63.6 L 39.6 39.6 A 56 56 0 0 0 39.6 -39.6 Z" id="sec-od-outer-nas" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="72" y="0" class="etdrs-text" id="sec-od-outer-nas-val">295</text>
+
+                    <path d="M 63.6 63.6 A 90 90 0 0 1 -63.6 63.6 L -39.6 39.6 A 56 56 0 0 0 39.6 39.6 Z" id="sec-od-outer-inf" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="72" class="etdrs-text" id="sec-od-outer-inf-val">272</text>
+
+                    <path d="M -63.6 63.6 A 90 90 0 0 1 -63.6 -63.6 L -39.6 -39.6 A 56 56 0 0 0 -39.6 39.6 Z" id="sec-od-outer-temp" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="-72" y="0" class="etdrs-text" id="sec-od-outer-temp-val">265</text>
+
+                    <path d="M -39.6 -39.6 A 56 56 0 0 1 39.6 -39.6 L 17 -17 A 24 24 0 0 0 -17 -17 Z" id="sec-od-inner-sup" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="-40" class="etdrs-text" id="sec-od-inner-sup-val">302</text>
+
+                    <path d="M 39.6 -39.6 A 56 56 0 0 1 39.6 39.6 L 17 17 A 24 24 0 0 0 17 -17 Z" id="sec-od-inner-nas" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="40" y="0" class="etdrs-text" id="sec-od-inner-nas-val">306</text>
+
+                    <path d="M 39.6 39.6 A 56 56 0 0 1 -39.6 39.6 L -17 17 A 24 24 0 0 0 17 17 Z" id="sec-od-inner-inf" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="40" class="etdrs-text" id="sec-od-inner-inf-val">298</text>
+
+                    <path d="M -39.6 39.6 A 56 56 0 0 1 -39.6 -39.6 L -17 -17 A 24 24 0 0 0 -17 17 Z" id="sec-od-inner-temp" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="-40" y="0" class="etdrs-text" id="sec-od-inner-temp-val">292</text>
+
+                    <circle cx="0" cy="0" r="24" id="sec-od-central" class="etdrs-sector" fill="#22c55e" stroke="#09090b" stroke-width="1.5"/>
+                    <text x="0" y="0" class="etdrs-text" id="sec-od-central-val">256</text>
+                </svg>
+            </div>
+            <div style="display:flex;justify-content:center;gap:8px;font-size:9px;color:#a1a1aa;margin-top:4px;">
+                <span style="color:#22c55e;">&#9632; Normal (&Delta;&lt;10 &mu;m)</span>
+                <span style="color:#eab308;">&#9632; Vigilancia (&Delta;10-19 &mu;m)</span>
+                <span style="color:#ef4444;">&#9632; Alerta (&Delta;&ge;20 &mu;m)</span>
+            </div>
+        </div>
+
+        {{-- Fila 3 - Panel 8: Estado Diagnóstico de Biomarcadores Estructurales SANS --}}
+        <div class="oct-panel" style="display:flex;flex-direction:column;justify-content:space-between;">
+            <div class="oct-panel-title">
+                <span>SANS Structural Biomarker Diagnostics</span>
+                <span style="color:#38bdf8;font-size:10px;">Telemetría NASA HRP</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0;">
+                <div style="background:#09090b;border:1px solid #27272a;border-radius:4px;padding:8px;">
+                    <div style="font-size:10px;color:#71717a;">Elevación de Disco Óptico</div>
+                    <div style="font-size:15px;font-weight:800;color:#38bdf8;" id="oct-disc-elevation">+0 &mu;m</div>
+                </div>
+                <div style="background:#09090b;border:1px solid #27272a;border-radius:4px;padding:8px;">
+                    <div style="font-size:10px;color:#71717a;">Grado Frisén Muestra</div>
+                    <div style="font-size:15px;font-weight:800;color:#22c55e;" id="oct-frisen-grade">Grado 0 (Normal)</div>
+                </div>
+                <div style="background:#09090b;border:1px solid #27272a;border-radius:4px;padding:8px;">
+                    <div style="font-size:10px;color:#71717a;">Pliegues Coroideos</div>
+                    <div style="font-size:12.5px;font-weight:700;color:#ffffff;" id="oct-folds-status">Ausentes</div>
+                </div>
+                <div style="background:#09090b;border:1px solid #27272a;border-radius:4px;padding:8px;">
+                    <div style="font-size:10px;color:#71717a;">Acortamiento Axial</div>
+                    <div style="font-size:12.5px;font-weight:700;color:#ffffff;" id="oct-foveal-flattening">24.10 mm</div>
+                </div>
+            </div>
+            <div style="padding:6px;background:#18181b;border-radius:4px;font-size:10px;color:#EAFE07;text-align:center;" id="oct-operational-verdict">
+                Dictamen de aptitud: Aptitud no evaluada (Requiere firma humana RF-11)
+            </div>
+        </div>
+
+        {{-- Fila 3 - Panel 9: Rejilla ETDRS de 9 Sectores (OS) --}}
+        <div class="oct-panel">
+            <div class="oct-panel-title">
+                <span>Rejilla ETDRS 9 Sectores (OS)</span>
+                <span style="color:#22c55e;font-size:10px;">Deviation Map</span>
+            </div>
+            <div class="etdrs-circle-container">
+                <svg id="etdrsSvgOs" width="150" height="150" viewBox="-100 -100 200 200">
+                    <path d="M -63.6 -63.6 A 90 90 0 0 1 63.6 -63.6 L 39.6 -39.6 A 56 56 0 0 0 -39.6 -39.6 Z" id="sec-os-outer-sup" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="-72" class="etdrs-text" id="sec-os-outer-sup-val">275</text>
+
+                    <path d="M 63.6 -63.6 A 90 90 0 0 1 63.6 63.6 L 39.6 39.6 A 56 56 0 0 0 39.6 -39.6 Z" id="sec-os-outer-nas" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="72" y="0" class="etdrs-text" id="sec-os-outer-nas-val">288</text>
+
+                    <path d="M 63.6 63.6 A 90 90 0 0 1 -63.6 63.6 L -39.6 39.6 A 56 56 0 0 0 39.6 39.6 Z" id="sec-os-outer-inf" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="72" class="etdrs-text" id="sec-os-outer-inf-val">268</text>
+
+                    <path d="M -63.6 63.6 A 90 90 0 0 1 -63.6 -63.6 L -39.6 -39.6 A 56 56 0 0 0 -39.6 39.6 Z" id="sec-os-outer-temp" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="-72" y="0" class="etdrs-text" id="sec-os-outer-temp-val">262</text>
+
+                    <path d="M -39.6 -39.6 A 56 56 0 0 1 39.6 -39.6 L 17 -17 A 24 24 0 0 0 -17 -17 Z" id="sec-os-inner-sup" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="-40" class="etdrs-text" id="sec-os-inner-sup-val">295</text>
+
+                    <path d="M 39.6 -39.6 A 56 56 0 0 1 39.6 39.6 L 17 17 A 24 24 0 0 0 17 -17 Z" id="sec-os-inner-nas" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="40" y="0" class="etdrs-text" id="sec-os-inner-nas-val">298</text>
+
+                    <path d="M 39.6 39.6 A 56 56 0 0 1 -39.6 39.6 L -17 17 A 24 24 0 0 0 17 17 Z" id="sec-os-inner-inf" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="0" y="40" class="etdrs-text" id="sec-os-inner-inf-val">292</text>
+
+                    <path d="M -39.6 39.6 A 56 56 0 0 1 -39.6 -39.6 L -17 -17 A 24 24 0 0 0 -17 17 Z" id="sec-os-inner-temp" class="etdrs-sector" fill="#22c55e"/>
+                    <text x="-40" y="0" class="etdrs-text" id="sec-os-inner-temp-val">288</text>
+
+                    <circle cx="0" cy="0" r="24" id="sec-os-central" class="etdrs-sector" fill="#22c55e" stroke="#09090b" stroke-width="1.5"/>
+                    <text x="0" y="0" class="etdrs-text" id="sec-os-central-val">255</text>
+                </svg>
+            </div>
+            <div style="display:flex;justify-content:center;gap:8px;font-size:9px;color:#a1a1aa;margin-top:4px;">
+                <span style="color:#22c55e;">&#9632; Normal (&Delta;&lt;10 &mu;m)</span>
+                <span style="color:#eab308;">&#9632; Vigilancia (&Delta;10-19 &mu;m)</span>
+                <span style="color:#ef4444;">&#9632; Alerta (&Delta;&ge;20 &mu;m)</span>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-// Datos de telemetría pasados por el controlador
+const clinicalSamples = @json($clinicalSamples);
 const simulationData = @json($simulationData);
 const timelineDays = @json($timelineDays);
 let currentCirrusData = @json($cirrusOct);
 const currentScenario = @json($scenario);
 const currentAstroCode = @json($astronaut ? $astronaut->code : 'ASTRO-01');
 const currentAstroName = @json($astronaut ? $astronaut->name : 'CDR Alex Mercer');
+const currentCaseId = @json($activeCase->case_id);
+const isEnLocale = @json($isEn);
+let activeWorkstationMode = @json($initialMode ?? 'dual');
 
-let currentIndex = 0;
+let currentIndex = {{ (int) $initialSampleIndex }};
 let playInterval = null;
+
+function switchAstronaut(astroCode) {
+    window.location.href = `{{ route('public.digital-twin') }}?astro=${encodeURIComponent(astroCode)}&mode=${encodeURIComponent(activeWorkstationMode)}`;
+}
 
 // ==========================================================================
 // CONTROL DE MODOS DE LA ESTACIÓN: 3D / CIRRUS OCT / VISTA DUAL
 // ==========================================================================
 function setWorkstationMode(mode) {
+    activeWorkstationMode = mode;
     const p3d = document.getElementById('panel-3d-layout');
     const poct = document.getElementById('panel-cirrus-oct');
     const btn3d = document.getElementById('tab-btn-3d');
@@ -835,21 +1051,27 @@ function setWorkstationMode(mode) {
         btnoct.classList.add('active');
         p3d.style.display = 'none';
         poct.style.display = 'block';
-        updateCirrusOctDisplay(currentCirrusData);
-    } else if (mode === 'dual') {
+        renderSampleOnCirrusOct(clinicalSamples[currentIndex]);
+    } else {
         btndual.classList.add('active');
         p3d.style.display = 'grid';
         poct.style.display = 'block';
-        updateCirrusOctDisplay(currentCirrusData);
+        renderSampleOnCirrusOct(clinicalSamples[currentIndex]);
         setTimeout(onWindowResize, 30);
         setTimeout(onWindowResize, 150);
+    }
+
+    if (window.history && window.history.replaceState) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mode', mode);
+        window.history.replaceState({}, '', url.toString());
     }
 }
 
 // ==========================================================================
-// RENDERIZADO CLÍNICO DE TOMOGRAFÍA ZEISS CIRRUS™ HD-OCT
+// RENDERIZADO CLÍNICO DE TOMOGRAFÍA ZEISS CIRRUS™ HD-OCT VINCULADO A MUESTRA
 // ==========================================================================
-function renderOctHeatmap(canvasId, centralUm, isOd) {
+function renderOctHeatmap(canvasId, trtUm, hasOct) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -862,30 +1084,49 @@ function renderOctHeatmap(canvasId, centralUm, isOd) {
     ctx.fillStyle = '#05070a';
     ctx.fillRect(0, 0, w, h);
 
-    const grad = ctx.createRadialGradient(cx, cy, 4, cx, cy, 74);
+    if (!hasOct || trtUm === null) {
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, 66, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-    if (centralUm >= 320) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 11px ui-monospace, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('SIN ESCANEO OCT', cx, cy - 6);
+        ctx.fillStyle = '#a1a1aa';
+        ctx.font = '9px ui-monospace, monospace';
+        ctx.fillText('No se interpola', cx, cy + 10);
+        return;
+    }
+
+    const grad = ctx.createRadialGradient(cx, cy, 4, cx, cy, 70);
+
+    if (trtUm >= 300) {
         grad.addColorStop(0, '#ef4444');
-        grad.addColorStop(0.28, '#f59e0b');
-        grad.addColorStop(0.60, '#22c55e');
+        grad.addColorStop(0.32, '#f59e0b');
+        grad.addColorStop(0.62, '#22c55e');
         grad.addColorStop(0.85, '#0284c7');
         grad.addColorStop(1, '#05070a');
-    } else if (centralUm >= 285) {
+    } else if (trtUm >= 289) {
         grad.addColorStop(0, '#eab308');
-        grad.addColorStop(0.32, '#22c55e');
-        grad.addColorStop(0.70, '#0284c7');
+        grad.addColorStop(0.35, '#22c55e');
+        grad.addColorStop(0.72, '#0284c7');
         grad.addColorStop(1, '#05070a');
     } else {
-        grad.addColorStop(0, '#0369a1');
-        grad.addColorStop(0.22, '#0284c7');
-        grad.addColorStop(0.48, '#22c55e');
-        grad.addColorStop(0.78, '#0284c7');
+        grad.addColorStop(0, '#0284c7');
+        grad.addColorStop(0.28, '#22c55e');
+        grad.addColorStop(0.65, '#22c55e');
+        grad.addColorStop(0.88, '#0284c7');
         grad.addColorStop(1, '#05070a');
     }
 
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(cx, cy, 74, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 70, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
@@ -896,7 +1137,7 @@ function renderOctHeatmap(canvasId, centralUm, isOd) {
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 48, 0, Math.PI * 2);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -906,7 +1147,7 @@ function renderOctHeatmap(canvasId, centralUm, isOd) {
     ctx.fill();
 }
 
-function renderBScanCanvas(canvasId, bscanData, isOd) {
+function renderSampleBScanCanvas(canvasId, trtUm, deltaUm, hasOct, hasFolds) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -917,180 +1158,220 @@ function renderBScanCanvas(canvasId, bscanData, isOd) {
     ctx.fillStyle = '#05070a';
     ctx.fillRect(0, 0, w, h);
 
+    if (!hasOct || trtUm === null) {
+        ctx.strokeStyle = '#52525b';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(20, h / 2);
+        ctx.lineTo(w - 20, h / 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 11px ui-monospace, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('TOMOGRAFÍA OCT NO REGISTRADA EN ESTE CORTE', w / 2, h / 2 - 8);
+        ctx.fillStyle = '#a1a1aa';
+        ctx.font = '10px ui-monospace, monospace';
+        ctx.fillText('Estado operativo: Faltan datos (No se asume estabilidad)', w / 2, h / 2 + 10);
+        return;
+    }
+
     // Speckle noise característico de Spectral Domain OCT
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-    for (let i = 0; i < 280; i++) {
-        const rx = Math.random() * w;
-        const ry = 25 + Math.random() * 90;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+    for (let i = 0; i < 220; i++) {
+        const rx = (i * 37) % w;
+        const ry = 18 + ((i * 53) % (h - 32));
         ctx.fillRect(rx, ry, 1, 1);
     }
 
-    if (!bscanData || !bscanData.ilm_layer) return;
-
-    const n = bscanData.ilm_layer.length;
+    const n = 96;
     const stepX = w / (n - 1);
+    const edemaBoost = Math.max(0, (trtUm - 278.0) * 0.75);
 
-    function mapY(valUm) {
-        return 125 - ((valUm - 20) / 320.0) * 95;
+    const rpeY = [];
+    const rnflY = [];
+    const ilmY = [];
+
+    for (let i = 0; i < n; i++) {
+        const normX = (i / (n - 1)) * 2 - 1; // -1 to +1
+        const foldWave = hasFolds ? Math.sin(normX * 18) * 2.2 : 0;
+        const rpe = 104 + foldWave;
+        // Depresión foveal central o engrosamiento peripapilar
+        const pit = Math.exp(-Math.pow(normX * 3.2, 2)) * 18;
+        const rimSwelling = Math.exp(-Math.pow((Math.abs(normX) - 0.38) * 4.2, 2)) * (14 + edemaBoost);
+        const ilm = rpe - 36 + pit - rimSwelling;
+        const rnfl = ilm + 12 + (edemaBoost * 0.25);
+
+        rpeY.push(rpe);
+        rnflY.push(rnfl);
+        ilmY.push(ilm);
     }
 
-    // 1. RPE / Bruch's Membrane (Hiperreflectiva inferior - oro)
+    // 1. RPE / Bruch's Membrane (Oro)
     ctx.beginPath();
     for (let i = 0; i < n; i++) {
         const x = i * stepX;
-        const y = mapY(bscanData.rpe_layer[i]);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, rpeY[i]);
+        else ctx.lineTo(x, rpeY[i]);
     }
     ctx.strokeStyle = '#eab308';
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2.4;
     ctx.stroke();
 
-    // 2. RNFL / IPL (Banda intermedia - cian)
+    // 2. RNFL / IPL (Cian)
     ctx.beginPath();
     for (let i = 0; i < n; i++) {
         const x = i * stepX;
-        const y = mapY(bscanData.rnfl_layer[i]);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, rnflY[i]);
+        else ctx.lineTo(x, rnflY[i]);
     }
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.8)';
+    ctx.lineWidth = 1.6;
     ctx.stroke();
 
-    // 3. ILM (Membrana limitante interna foveal - verde)
+    // 3. ILM (Verde si normal, Amarillo/Rojo si engrosado)
+    const ilmColor = (deltaUm !== null && deltaUm >= 20) ? '#ef4444' : ((deltaUm !== null && deltaUm >= 10) ? '#eab308' : '#22c55e');
     ctx.beginPath();
     for (let i = 0; i < n; i++) {
         const x = i * stepX;
-        const y = mapY(bscanData.ilm_layer[i]);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (i === 0) ctx.moveTo(x, ilmY[i]);
+        else ctx.lineTo(x, ilmY[i]);
     }
-    ctx.strokeStyle = '#22c55e';
-    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = ilmColor;
+    ctx.lineWidth = 2.3;
     ctx.stroke();
 
-    // Relleno de capas retinianas
-    ctx.lineTo(w, mapY(bscanData.rpe_layer[n - 1]));
+    // Relleno translúcido
+    ctx.lineTo(w, rpeY[n - 1]);
     for (let i = n - 1; i >= 0; i--) {
-        const x = i * stepX;
-        const y = mapY(bscanData.rpe_layer[i]);
-        ctx.lineTo(x, y);
+        ctx.lineTo(i * stepX, rpeY[i]);
     }
     ctx.closePath();
-    ctx.fillStyle = 'rgba(34, 197, 94, 0.08)';
+    ctx.fillStyle = (deltaUm !== null && deltaUm >= 20) ? 'rgba(239, 68, 68, 0.14)' : 'rgba(34, 197, 94, 0.09)';
     ctx.fill();
-
-    // Retícula vertical foveal central
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
-    ctx.setLineDash([2, 2]);
-    ctx.beginPath();
-    ctx.moveTo(w / 2, 8);
-    ctx.lineTo(w / 2, h - 8);
-    ctx.stroke();
-    ctx.setLineDash([]);
 }
 
-function updateCirrusOctDisplay(octData) {
-    if (!octData || !octData.summary_table) return;
+function updateEtdrsEyeGrid(prefix, trtUm, deltaUm, hasOct, missingBaseline) {
+    const sectors = [
+        { id: `sec-${prefix}-central`, offset: -24 },
+        { id: `sec-${prefix}-inner-sup`, offset: +18 },
+        { id: `sec-${prefix}-inner-nas`, offset: +24 },
+        { id: `sec-${prefix}-inner-inf`, offset: +16 },
+        { id: `sec-${prefix}-inner-temp`, offset: +10 },
+        { id: `sec-${prefix}-outer-sup`, offset: +2 },
+        { id: `sec-${prefix}-outer-nas`, offset: +12 },
+        { id: `sec-${prefix}-outer-inf`, offset: -4 },
+        { id: `sec-${prefix}-outer-temp`, offset: -10 },
+    ];
 
-    const st = octData.summary_table;
-    document.getElementById('table-central-od').textContent = Math.round(st.central_subfield_um.od);
-    document.getElementById('table-central-os').textContent = Math.round(st.central_subfield_um.os);
-    document.getElementById('table-vol-od').textContent = st.volume_cube_mm3.od;
-    document.getElementById('table-vol-os').textContent = st.volume_cube_mm3.os;
-    document.getElementById('table-avg-od').textContent = Math.round(st.avg_thickness_cube_um.od);
-    document.getElementById('table-avg-os').textContent = Math.round(st.avg_thickness_cube_um.os);
+    sectors.forEach(sec => {
+        const pathEl = document.getElementById(sec.id);
+        const txtEl = document.getElementById(sec.id + '-val');
+        if (!hasOct || trtUm === null) {
+            if (pathEl) pathEl.setAttribute('fill', '#27272a');
+            if (txtEl) txtEl.textContent = '---';
+            return;
+        }
+        const val = Math.round(trtUm + sec.offset);
+        let fill = '#22c55e';
+        if (missingBaseline) {
+            fill = '#eab308';
+        } else if (deltaUm !== null && deltaUm >= 20) {
+            fill = (sec.offset >= 10) ? '#ef4444' : '#eab308';
+        } else if (deltaUm !== null && deltaUm >= 10) {
+            fill = (sec.offset >= 10) ? '#eab308' : '#22c55e';
+        }
+        if (pathEl) pathEl.setAttribute('fill', fill);
+        if (txtEl) txtEl.textContent = val;
+    });
+}
 
-    const asym = Math.round(st.central_subfield_um.od - st.central_subfield_um.os);
+function renderSampleOnCirrusOct(sample) {
+    if (!sample) return;
+
+    const hasOd = Boolean(sample.has_oct_od && sample.od_trt_um !== null);
+    const hasOs = Boolean(sample.has_oct_os && sample.os_trt_um !== null);
+    const odTrt = sample.od_trt_um;
+    const osTrt = sample.os_trt_um;
+    const odDelta = sample.od_delta_um;
+    const osDelta = sample.os_delta_um;
+
+    // Mostrar u ocultar banner de falta de OCT en esta muestra
+    const missingBanner = document.getElementById('oct-missing-banner');
+    if (!hasOd || !hasOs || sample.os_missing_baseline) {
+        missingBanner.style.display = 'block';
+        document.getElementById('oct-missing-title').textContent = !hasOd && !hasOs
+            ? `MUESTRA SIN ESCANEO OCT (${sample.code_label}):`
+            : `COBERTURA OCT INCOMPLETA EN ${sample.code_label}:`;
+        document.getElementById('oct-missing-desc').textContent = isEnLocale ? sample.note_en : sample.note_es;
+    } else {
+        missingBanner.style.display = 'none';
+    }
+
+    const sigBadge = document.getElementById('oct-signal-badge');
+    sigBadge.textContent = `OD: ${hasOd ? 'VÁLIDA (9/10)' : 'SIN ESCANEO'} · OS: ${hasOs ? (sample.os_missing_baseline ? 'SIN BASE PRE-VUELO' : 'VÁLIDA (10/10)') : 'SIN ESCANEO'}`;
+    sigBadge.style.color = (hasOd && hasOs && !sample.os_missing_baseline) ? '#22c55e' : '#fbbf24';
+
+    document.getElementById('oct-table-sample-tag').textContent = sample.code_label;
+    document.getElementById('oct-sample-date-label').textContent = `Fecha: ${sample.observed_at}`;
+
+    // Tabla central Cirrus
+    document.getElementById('table-avg-od').textContent = hasOd ? `${Math.round(odTrt)} µm` : 'SIN OCT';
+    document.getElementById('table-avg-os').textContent = hasOs ? `${Math.round(osTrt)} µm` : 'SIN OCT';
+
+    const dOdEl = document.getElementById('table-delta-od');
+    dOdEl.textContent = odDelta !== null ? `${odDelta >= 0 ? '+' : ''}${Math.round(odDelta)} µm` : '---';
+    dOdEl.style.color = (odDelta !== null && odDelta >= 20) ? '#ef4444' : ((odDelta !== null && odDelta >= 10) ? '#eab308' : '#22c55e');
+
+    const dOsEl = document.getElementById('table-delta-os');
+    dOsEl.textContent = osDelta !== null ? `${osDelta >= 0 ? '+' : ''}${Math.round(osDelta)} µm` : (sample.os_missing_baseline && hasOs ? 'SIN BASE' : '---');
+    dOsEl.style.color = sample.os_missing_baseline ? '#fbbf24' : '#22c55e';
+
+    document.getElementById('table-central-od').textContent = sample.od_central_fovea_um !== null ? `${sample.od_central_fovea_um} µm` : '---';
+    document.getElementById('table-central-os').textContent = sample.os_central_fovea_um !== null ? `${sample.os_central_fovea_um} µm` : '---';
+    document.getElementById('table-vol-od').textContent = sample.od_volume_mm3 !== null ? sample.od_volume_mm3 : '---';
+    document.getElementById('table-vol-os').textContent = sample.os_volume_mm3 !== null ? sample.os_volume_mm3 : '---';
+
     const asymEl = document.getElementById('table-asym');
-    asymEl.textContent = (asym >= 0 ? '+' : '') + asym + ' \u00B5m';
-    asymEl.style.color = Math.abs(asym) >= 25 ? '#ef4444' : (Math.abs(asym) >= 15 ? '#eab308' : '#22c55e');
+    if (hasOd && hasOs) {
+        const asym = Math.round(odTrt - osTrt);
+        asymEl.textContent = `${asym >= 0 ? '+' : ''}${asym} µm`;
+        asymEl.style.color = Math.abs(asym) >= 15 ? '#ef4444' : '#22c55e';
+    } else {
+        asymEl.textContent = 'No comparable (Falta OCT)';
+        asymEl.style.color = '#fbbf24';
+    }
 
-    document.getElementById('oct-fovea-od-val').textContent = Math.round(st.central_subfield_um.od) + ' \u00B5m';
-    document.getElementById('oct-fovea-os-val').textContent = Math.round(st.central_subfield_um.os) + ' \u00B5m';
+    document.getElementById('oct-fovea-od-val').textContent = hasOd ? `${Math.round(odTrt)} µm` : 'SIN OCT';
+    document.getElementById('oct-fovea-os-val').textContent = hasOs ? `${Math.round(osTrt)} µm` : 'SIN OCT';
+    document.getElementById('oct-delta-od-label').textContent = odDelta !== null ? `ΔTRT: ${odDelta >= 0 ? '+' : ''}${Math.round(odDelta)} µm` : 'Sin línea base';
+    document.getElementById('oct-delta-os-label').textContent = osDelta !== null ? `ΔTRT: ${osDelta >= 0 ? '+' : ''}${Math.round(osDelta)} µm` : (sample.os_missing_baseline ? 'Sin base pre-vuelo (AT-05)' : 'Sin medición');
 
-    const bio = octData.biomarkers || {};
-    document.getElementById('oct-disc-elevation').textContent = `+${bio.optic_disc_elevation_um || 0} \u00B5m`;
-    const frisGrade = bio.frisen_estimated_grade || 0;
+    document.getElementById('fundus-od-caption').textContent = sample.od_base_um !== null ? `OD (Base: ${Math.round(sample.od_base_um)} µm)` : 'OD (Sin Base OCT)';
+    document.getElementById('fundus-os-caption').textContent = sample.os_base_um !== null ? `OS (Base: ${Math.round(sample.os_base_um)} µm)` : 'OS (Sin Base OCT)';
+
+    // Biomarcadores estructurales del panel 8
+    const elev = odDelta !== null ? Math.max(0, Math.round(odDelta * 1.4)) : 0;
+    document.getElementById('oct-disc-elevation').textContent = hasOd ? `+${elev} µm` : 'Sin OCT';
+    const frisGrade = Number(sample.frisen_grade || 0);
     const frisEl = document.getElementById('oct-frisen-grade');
-    frisEl.textContent = `Grado ${frisGrade} (${frisGrade === 0 ? 'Normal' : (frisGrade === 1 ? 'Mínimo' : (frisGrade === 2 ? 'Moderado' : 'Severo'))})`;
+    frisEl.textContent = `Grado ${frisGrade} (${frisGrade === 0 ? 'Normal' : (frisGrade === 1 ? 'Leve' : 'Moderado')})`;
     frisEl.style.color = frisGrade >= 2 ? '#ef4444' : (frisGrade === 1 ? '#eab308' : '#22c55e');
 
-    document.getElementById('oct-folds-status').textContent = bio.choroidal_folds_present ? 'DETECTADOS (Pliegues)' : 'Ausentes';
-    document.getElementById('oct-folds-status').style.color = bio.choroidal_folds_present ? '#ef4444' : '#ffffff';
-    document.getElementById('oct-foveal-flattening').textContent = `${bio.foveal_pit_flattening_pct || 0}%`;
+    const foldsEl = document.getElementById('oct-folds-status');
+    foldsEl.textContent = sample.choroidal_folds ? 'DETECTADOS (Pliegues)' : 'Ausentes';
+    foldsEl.style.color = sample.choroidal_folds ? '#ef4444' : '#ffffff';
 
-    const colorMap = {
-        'NORMAL_GREEN': '#22c55e',
-        'BORDERLINE_YELLOW': '#eab308',
-        'OUTSIDE_NORMAL_RED': '#ef4444',
-        'ATROPHY_RED': '#ef4444',
-    };
+    document.getElementById('oct-foveal-flattening').textContent = `${Number(sample.axial_length_mm || 24.10).toFixed(2)} mm`;
 
-    // Actualizar Sectores ETDRS de OD
-    if (octData.etdrs_grid && octData.etdrs_grid.od) {
-        const odGrid = octData.etdrs_grid.od;
-        const secMapping = [
-            { key: 'central', id: 'sec-od-central' },
-            { key: 'inner_superior', id: 'sec-od-inner-sup' },
-            { key: 'inner_nasal', id: 'sec-od-inner-nas' },
-            { key: 'inner_inferior', id: 'sec-od-inner-inf' },
-            { key: 'inner_temporal', id: 'sec-od-inner-temp' },
-            { key: 'outer_superior', id: 'sec-od-outer-sup' },
-            { key: 'outer_nasal', id: 'sec-od-outer-nas' },
-            { key: 'outer_inferior', id: 'sec-od-outer-inf' },
-            { key: 'outer_temporal', id: 'sec-od-outer-temp' },
-        ];
-
-        secMapping.forEach(item => {
-            const val = Math.round(odGrid.values[item.key] || 250);
-            const status = odGrid.normative_status[item.key] || 'NORMAL_GREEN';
-            const color = colorMap[status] || '#22c55e';
-            const pathEl = document.getElementById(item.id);
-            const txtEl = document.getElementById(item.id + '-val');
-            if (pathEl) pathEl.setAttribute('fill', color);
-            if (txtEl) txtEl.textContent = val;
-        });
-    }
-
-    // Actualizar Sectores ETDRS de OS
-    if (octData.etdrs_grid && octData.etdrs_grid.os) {
-        const osGrid = octData.etdrs_grid.os;
-        const secMappingOs = [
-            { key: 'central', id: 'sec-os-central' },
-            { key: 'inner_superior', id: 'sec-os-inner-sup' },
-            { key: 'inner_nasal', id: 'sec-os-inner-nas' },
-            { key: 'inner_inferior', id: 'sec-os-inner-inf' },
-            { key: 'inner_temporal', id: 'sec-os-inner-temp' },
-            { key: 'outer_superior', id: 'sec-os-outer-sup' },
-            { key: 'outer_nasal', id: 'sec-os-outer-nas' },
-            { key: 'outer_inferior', id: 'sec-os-outer-inf' },
-            { key: 'outer_temporal', id: 'sec-os-outer-temp' },
-        ];
-
-        secMappingOs.forEach(item => {
-            const val = Math.round(osGrid.values[item.key] || 248);
-            const status = osGrid.normative_status[item.key] || 'NORMAL_GREEN';
-            const color = colorMap[status] || '#22c55e';
-            const pathEl = document.getElementById(item.id);
-            const txtEl = document.getElementById(item.id + '-val');
-            if (pathEl) pathEl.setAttribute('fill', color);
-            if (txtEl) txtEl.textContent = val;
-        });
-    }
-
-    renderOctHeatmap('octHeatmapOd', st.central_subfield_um.od, true);
-    renderOctHeatmap('octHeatmapOs', st.central_subfield_um.os, false);
-
-    if (octData.b_scans) {
-        if (octData.b_scans.od && octData.b_scans.od.horizontal) {
-            renderBScanCanvas('bscanCanvasOd', octData.b_scans.od.horizontal, true);
-        }
-        if (octData.b_scans.os && octData.b_scans.os.vertical) {
-            renderBScanCanvas('bscanCanvasOs', octData.b_scans.os.vertical, false);
-        }
-    }
+    // Renderizar Heatmaps, B-Scans y Rejillas ETDRS con los datos reales de la muestra
+    renderOctHeatmap('octHeatmapOd', odTrt, hasOd);
+    renderOctHeatmap('octHeatmapOs', osTrt, hasOs);
+    renderSampleBScanCanvas('bscanCanvasOd', odTrt, odDelta, hasOd, Boolean(sample.choroidal_folds));
+    renderSampleBScanCanvas('bscanCanvasOs', osTrt, osDelta, hasOs, false);
+    updateEtdrsEyeGrid('od', odTrt, odDelta, hasOd, false);
+    updateEtdrsEyeGrid('os', osTrt, osDelta, hasOs, Boolean(sample.os_missing_baseline));
 }
 
 // ==========================================================================
@@ -1104,25 +1385,21 @@ let isWireframe = false;
 const container = document.getElementById('threeCanvasContainer');
 
 function initThreeEngine() {
-    // 1. Escena & Niebla
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x05070d);
     scene.fog = new THREE.FogExp2(0x05070d, 0.025);
 
-    // 2. Cámara de Perspectiva
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+    const width = container.clientWidth || 640;
+    const height = container.clientHeight || 440;
     camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
     camera.position.set(24, 8, 22);
 
-    // 3. Renderer WebGL con antialias
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
-    // 4. Controles Orbitales (Mouse drag & zoom)
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -1130,7 +1407,6 @@ function initThreeEngine() {
     controls.minDistance = 8;
     controls.target.set(0, 0, 0);
 
-    // 5. Iluminación Aeroespacial / Quirúrgica
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
 
@@ -1142,24 +1418,16 @@ function initThreeEngine() {
     dirLight2.position.set(-20, -15, -20);
     scene.add(dirLight2);
 
-    // 6. Cuadrícula de Referencia Biomédica (Grid en el piso)
     const gridHelper = new THREE.GridHelper(30, 30, 0x1e293b, 0x0f172a);
     gridHelper.position.y = -8;
     scene.add(gridHelper);
 
-    // 7. Construcción de Malla Anatómica 3D del Ojo
     buildEyeAnatomy();
-
-    // 8. Loop de Animación
     animate();
-
-    // 9. Resize Listener
     window.addEventListener('resize', onWindowResize);
 }
 
 function buildEyeAnatomy() {
-    // A. Esclera (Globo Ocular) - Esfera deformable
-    // Radio base: 7.5 unidades (representando los ~24mm anatómicos)
     const scleraGeo = new THREE.SphereGeometry(7.5, 48, 48);
     const scleraMat = new THREE.MeshPhysicalMaterial({
         color: 0xf1f5f9,
@@ -1173,11 +1441,8 @@ function buildEyeAnatomy() {
     });
     scleraMesh = new THREE.Mesh(scleraGeo, scleraMat);
     scene.add(scleraMesh);
-
-    // Guardar posiciones de vértices originales para deformación biomecánica
     scleraGeo.userData = { originalPositions: scleraGeo.attributes.position.clone() };
 
-    // B. Córnea Anterior (Transparente y abombada hacia +X)
     const corneaGeo = new THREE.SphereGeometry(3.6, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2.2);
     const corneaMat = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
@@ -1192,10 +1457,9 @@ function buildEyeAnatomy() {
     corneaMesh.position.x = 6.2;
     scene.add(corneaMesh);
 
-    // C. Iris (Anillo en +X)
     const irisGeo = new THREE.RingGeometry(1.2, 3.4, 32);
     const irisMat = new THREE.MeshStandardMaterial({
-        color: 0x1e293b,
+        color: 0x1e3a8a,
         side: THREE.DoubleSide,
         roughness: 0.6
     });
@@ -1204,7 +1468,6 @@ function buildEyeAnatomy() {
     irisMesh.position.x = 6.0;
     scene.add(irisMesh);
 
-    // D. Cristalino (Lens)
     const lensGeo = new THREE.SphereGeometry(2.2, 32, 16);
     lensGeo.scale(0.5, 1, 1);
     const lensMat = new THREE.MeshPhysicalMaterial({
@@ -1217,7 +1480,6 @@ function buildEyeAnatomy() {
     lensMesh.position.x = 4.8;
     scene.add(lensMesh);
 
-    // E. Vaina del Nervio Óptico (Saliendo por -X hacia atrás)
     const nerveGeo = new THREE.CylinderGeometry(1.6, 1.8, 8, 32);
     nerveGeo.rotateZ(Math.PI / 2);
     const nerveMat = new THREE.MeshStandardMaterial({
@@ -1229,7 +1491,6 @@ function buildEyeAnatomy() {
     opticNerveMesh.position.x = -10.5;
     scene.add(opticNerveMesh);
 
-    // F. Disco Óptico (Papila / Elevación Frisén)
     const discGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.4, 32);
     discGeo.rotateZ(Math.PI / 2);
     const discMat = new THREE.MeshStandardMaterial({
@@ -1240,10 +1501,9 @@ function buildEyeAnatomy() {
     opticDiscMesh.position.x = -7.2;
     scene.add(opticDiscMesh);
 
-    // G. Rayos de Luz y Foco Refractivo
     rayLinesGroup = new THREE.Group();
     const rayMat = new THREE.LineDashedMaterial({
-        color: 0xffffff,
+        color: 0xEAFE07,
         dashSize: 0.4,
         gapSize: 0.2,
         linewidth: 1.5
@@ -1266,23 +1526,20 @@ function buildEyeAnatomy() {
     rayLinesGroup.add(ray1);
     rayLinesGroup.add(ray2);
 
-    // Esfera indicadora del Punto Focal
-    const focalGeo = new THREE.SphereGeometry(0.25, 16, 16);
-    const focalMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const focalGeo = new THREE.SphereGeometry(0.28, 16, 16);
+    const focalMat = new THREE.MeshBasicMaterial({ color: 0xEAFE07 });
     const focalSphere = new THREE.Mesh(focalGeo, focalMat);
     focalSphere.name = 'focalSphere';
     focalSphere.position.set(-7.2, 0, 0);
     rayLinesGroup.add(focalSphere);
-
     scene.add(rayLinesGroup);
 
-    // H. Vectores de Fuerza de Presión Cefálica (Flechas de Empuje)
     forceVectorGroup = new THREE.Group();
     const dir = new THREE.Vector3(1, 0, 0);
     const origin1 = new THREE.Vector3(-14, 2.2, 0);
     const origin2 = new THREE.Vector3(-14, -2.2, 0);
-    const arrow1 = new THREE.ArrowHelper(dir, origin1, 3.8, 0x94a3b8, 0.8, 0.4);
-    const arrow2 = new THREE.ArrowHelper(dir, origin2, 3.8, 0x94a3b8, 0.8, 0.4);
+    const arrow1 = new THREE.ArrowHelper(dir, origin1, 3.8, 0x2E96F5, 0.8, 0.4);
+    const arrow2 = new THREE.ArrowHelper(dir, origin2, 3.8, 0x2E96F5, 0.8, 0.4);
     forceVectorGroup.add(arrow1);
     forceVectorGroup.add(arrow2);
     scene.add(forceVectorGroup);
@@ -1301,9 +1558,8 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    if (controls) controls.update();
 
-    // Pulso suave en las flechas de fuerza si hay presión en microgravedad
     const time = Date.now() * 0.003;
     if (forceVectorGroup) {
         forceVectorGroup.children.forEach((arrow, i) => {
@@ -1311,12 +1567,11 @@ function animate() {
         });
     }
 
-    renderer.render(scene, camera);
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
 }
 
-// ==========================================================================
-// VISTAS PRECONFIGURADAS DE CÁMARA
-// ==========================================================================
 function setPresetView(mode) {
     document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
 
@@ -1357,7 +1612,7 @@ function toggleWireframe() {
     const btn = document.getElementById('btn-toggle-wireframe');
     if (isWireframe) {
         btn.classList.add('active');
-        scleraMesh.material.color.setHex(0xffffff);
+        scleraMesh.material.color.setHex(0x2E96F5);
     } else {
         btn.classList.remove('active');
         scleraMesh.material.color.setHex(0xf1f5f9);
@@ -1365,101 +1620,131 @@ function toggleWireframe() {
 }
 
 // ==========================================================================
-// ACTUALIZACIÓN TELEMÉTRICA Y DEFORMACIÓN 3D POR DÍA DE VUELO
+// ACTUALIZACIÓN REACTIVA DE MUESTRA EN 3D + CONSOLA CIRRUS + TABLA
 // ==========================================================================
 function renderDay(index) {
     currentIndex = index;
-    const day = timelineDays[index];
-    const data = simulationData[day] || {};
+    const sample = clinicalSamples[index] || clinicalSamples[0];
+    if (!sample) return;
 
-    // 1. Textos principales
-    document.getElementById('flight-day-badge').textContent = `DÍA DE VUELO: FD${day}` + (day === 0 ? ' (Línea Base Pre-Vuelo)' : '');
+    // 1. Actualizar píldoras y filas activas de la tabla de muestras
+    document.querySelectorAll('.sample-pill').forEach((el, idx) => {
+        el.classList.toggle('active', idx === index);
+    });
+    document.querySelectorAll('.sample-row').forEach((el, idx) => {
+        el.classList.toggle('active-sample-row', idx === index);
+    });
 
-    const shiftVal = Number(data.od_shift || 0);
-    document.getElementById('val-shift').textContent = (shiftVal > 0 ? '+' : '') + shiftVal.toFixed(2) + ' D';
+    // 2. Cabecera de muestra y notas clínicas
+    document.getElementById('flight-day-badge').textContent = isEnLocale ? sample.stage_en : sample.stage_es;
+    document.getElementById('sample-id-badge').textContent = `ID: ${sample.sample_id} · ${sample.observed_at}`;
+    document.getElementById('sample-clinical-note').textContent = isEnLocale ? sample.note_en : sample.note_es;
 
-    document.getElementById('val-snellen').textContent = data.od_snellen || '20/20';
-    document.getElementById('val-logmar').textContent = 'LogMAR ' + Number(data.od_logmar || 0).toFixed(3);
-    document.getElementById('val-iop').textContent = Number(data.iop || 15).toFixed(1) + ' mmHg';
+    const statusPill = document.getElementById('sample-status-pill');
+    statusPill.textContent = isEnLocale ? sample.status_en : sample.status_es;
+    statusPill.className = sample.status_code === 'LISTO_PARA_REVISION'
+        ? 'status-badge-ready'
+        : (sample.status_code === 'PRIORIZAR_REVISION' ? 'status-badge-prioritize' : 'status-badge-missing');
 
-    const frisen = Number(data.frisen_grade || 0);
+    // Actualizar botón "Abrir en Predictor SANS" con los valores exactos de esta muestra
+    const predBtn = document.getElementById('btn-open-predictor');
+    if (predBtn) {
+        const params = new URLSearchParams({
+            case_id: currentCaseId,
+            tab: 'biomarcadores',
+            oct_trt_baseline_um: sample.od_base_um !== null ? sample.od_base_um : '',
+            oct_trt_current_um: sample.od_trt_um !== null ? sample.od_trt_um : '',
+            axial_length_mm: sample.axial_length_mm !== null ? sample.axial_length_mm : '',
+            hyperopia_sim_d: sample.od_shift !== null ? sample.od_shift : '',
+            papilledema_frisen: sample.frisen_grade !== null ? sample.frisen_grade : 0,
+            iop_mmhg: sample.iop !== null ? sample.iop : '',
+        });
+        predBtn.href = `{{ route('home') }}?` + params.toString();
+    }
+
+    // 3. Los 6 Biomarcadores de la Muestra
+    const hasOd = Boolean(sample.has_oct_od && sample.od_trt_um !== null);
+    const hasOs = Boolean(sample.has_oct_os && sample.os_trt_um !== null);
+    const odStr = hasOd ? `${Math.round(sample.od_trt_um)} µm` : 'Sin OCT';
+    const osStr = hasOs ? `${Math.round(sample.os_trt_um)} µm` : 'Sin OCT';
+    document.getElementById('val-oct-trt').textContent = `${odStr} / ${osStr}`;
+    document.getElementById('val-oct-delta').textContent = sample.od_delta_um !== null
+        ? `ΔTRT OD: ${sample.od_delta_um >= 0 ? '+' : ''}${Math.round(sample.od_delta_um)} µm (Base ${Math.round(sample.od_base_um)} µm)`
+        : 'Sin escaneo OCT en este corte';
+
+    const shiftVal = Number(sample.od_shift || 0);
+    document.getElementById('val-shift').textContent = (shiftVal >= 0 ? '+' : '') + shiftVal.toFixed(2) + ' D';
+    document.getElementById('val-snellen').textContent = sample.od_snellen || '20/20';
+    document.getElementById('val-logmar').textContent = 'LogMAR ' + Number(sample.od_logmar || 0).toFixed(3);
+    document.getElementById('val-iop').textContent = Number(sample.iop || 15).toFixed(1) + ' mmHg';
+
+    const frisen = Number(sample.frisen_grade || 0);
     document.getElementById('val-frisen').textContent = frisen === 0 ? 'Grado 0 (Normal)' : `Grado ${frisen} (Edema)`;
 
-    const isFlattening = Boolean(data.globe_flattening);
-    document.getElementById('val-flattening').textContent = isFlattening ? 'POSITIVO (Detectado)' : 'Ausente';
+    const isFlattening = Boolean(sample.globe_flattening);
+    document.getElementById('val-flattening').textContent = isFlattening ? 'Detectado' : 'Ausente';
 
-    const isFolds = Boolean(data.choroidal_folds);
-    document.getElementById('val-folds').textContent = isFolds ? 'PRESENTES (Detectados)' : 'No detectados';
+    const isFolds = Boolean(sample.choroidal_folds);
+    document.getElementById('val-folds').textContent = isFolds ? 'Pliegues presentes' : 'No detectados';
 
-    const rnflVal = Number(data.rnfl || 95);
-    document.getElementById('val-rnfl').textContent = rnflVal + ' \u00B5m';
+    document.getElementById('val-rnfl').textContent = sample.rnfl !== null ? `${sample.rnfl} µm` : 'Sin OCT';
 
-    // 2. Cálculo axial métrico de deformación
-    // En microgravedad prolongada, el aplanamiento reduce ~0.65 mm la longitud axial
-    const axialDeltaMm = isFlattening ? Math.min(0.85, 0.25 + (shiftVal * 0.4)) : 0.00;
-    const currentAxialLen = 24.20 - axialDeltaMm;
+    const currentAxialLen = Number(sample.axial_length_mm || 24.10);
+    const axialDeltaMm = Math.max(0, 24.10 - currentAxialLen);
     document.getElementById('val-axial-len').textContent = currentAxialLen.toFixed(2) + ' mm';
-    document.getElementById('val-axial-delta').textContent = axialDeltaMm > 0 ? `-${axialDeltaMm.toFixed(2)} mm de acortamiento axial` : 'Base pre-vuelo nominal';
+    document.getElementById('val-axial-delta').textContent = axialDeltaMm > 0.01
+        ? `-${axialDeltaMm.toFixed(2)} mm de acortamiento axial`
+        : 'Longitud axial basal nominal';
 
-    // 3. HUD status y coordenadas
+    // 4. HUD Aeroespacial 3D
+    document.getElementById('hud-sample-code').textContent = sample.code_label;
+    document.getElementById('hud-oct-pair').textContent = `${odStr} / ${osStr}`;
     const postZMm = (-12.10 + axialDeltaMm).toFixed(2);
     document.getElementById('hud-z-coord').textContent = postZMm + ' mm';
-    document.getElementById('hud-deform-mm').textContent = (axialDeltaMm > 0 ? '-' : '') + axialDeltaMm.toFixed(2) + ' mm';
-    
-    const retroIcp = (15.0 + (day > 0 ? (day * 0.04) : 0)).toFixed(1);
-    document.getElementById('hud-icp-val').textContent = retroIcp + ' mmHg';
+    document.getElementById('hud-deform-mm').textContent = (axialDeltaMm > 0.01 ? '-' : '') + axialDeltaMm.toFixed(2) + ' mm';
+    document.getElementById('hud-icp-val').textContent = Number(sample.iop || 15).toFixed(1) + ' mmHg';
 
     const hudBadge = document.getElementById('hud-tier-badge');
     const riskBadge = document.getElementById('twin-risk-badge');
     const vectorStatus = document.getElementById('hud-vector-status');
 
-    if (data.risk_tier === 'severe' || data.risk_tier === 'high') {
-        hudBadge.textContent = 'ALERTA SANS TIER 3';
-        riskBadge.textContent = 'RIESGO ALTO';
-        vectorStatus.textContent = 'SOBREPRESIÓN RETROBULBAR CRÍTICA';
+    if (sample.status_code === 'PRIORIZAR_REVISION') {
+        hudBadge.textContent = `PRIORIZAR REVISIÓN · ${sample.code_label}`;
+        riskBadge.textContent = 'PRIORIZAR REVISIÓN';
+        vectorStatus.textContent = 'ENGROSAMIENTO OCT / DESPLAZAMIENTO CEFÁLICO';
         vectorStatus.style.color = '#f87171';
-    } else if (data.risk_tier === 'moderate' || data.risk_tier === 'medium') {
-        hudBadge.textContent = 'ALERTA SANS TIER 2';
-        riskBadge.textContent = 'RIESGO MODERADO';
-        vectorStatus.textContent = 'INCREMENTO CEFÁLICO MODERADO';
+    } else if (sample.status_code === 'FALTAN_DATOS') {
+        hudBadge.textContent = `FALTAN DATOS · ${sample.code_label}`;
+        riskBadge.textContent = 'FALTAN DATOS';
+        vectorStatus.textContent = 'COBERTURA OCT INCOMPLETA EN CORTE';
         vectorStatus.style.color = '#fbbf24';
     } else {
-        hudBadge.textContent = 'NOMINAL FD' + day;
-        riskBadge.textContent = 'RIESGO BAJO';
-        vectorStatus.textContent = 'GRADIENTE ESTABLE (1G)';
+        hudBadge.textContent = `LISTO PARA REVISIÓN · ${sample.code_label}`;
+        riskBadge.textContent = 'ESTABLE / NOMINAL';
+        vectorStatus.textContent = 'ESTABILIDAD LONGITUDINAL';
         vectorStatus.style.color = '#4ade80';
     }
 
-    // 4. Curva OCT B-Scan Reactiva
-    const elevationUm = Math.round((rnflVal - 95) * 2.5);
-    document.getElementById('oct-elevation-val').textContent = `ELEVACIÓN PAPILAR: +${Math.max(0, elevationUm)} \u00B5m`;
-    const peakY = 32 - Math.min(22, (frisen * 8));
-    document.getElementById('octCurvePath').setAttribute('d', 
-        `M 0 34 Q 75 34 110 ${peakY + 4} Q 150 ${peakY} Q 190 ${peakY + 4} Q 225 34 300 34`
-    );
+    // 5. Mini curva B-Scan
+    const elevUm = sample.od_delta_um !== null ? Math.max(0, Math.round(sample.od_delta_um)) : 0;
+    document.getElementById('oct-elevation-val').textContent = hasOd ? `ΔTRT MUESTRA: +${elevUm} µm` : 'SIN ESCANEO OCT';
+    const peakY = hasOd ? (32 - Math.min(22, Math.round(elevUm * 0.75))) : 34;
+    const curveEl = document.getElementById('octCurvePath');
+    curveEl.setAttribute('d', `M 0 34 Q 75 34 110 ${peakY + 4} Q 150 ${peakY} Q 190 ${peakY + 4} Q 225 34 300 34`);
+    curveEl.setAttribute('stroke', !hasOd ? '#fbbf24' : (elevUm >= 20 ? '#ef4444' : (elevUm >= 10 ? '#eab308' : '#22c55e')));
 
-    // ======================================================================
-    // 5. DEFORMACIÓN DE VÉRTICES DE LA MALLA 3D (THREE.JS)
-    // ======================================================================
+    // 6. Deformación de malla 3D vinculada a la muestra
     if (scleraMesh) {
         const geo = scleraMesh.geometry;
         const posAttr = geo.attributes.position;
         const origPos = geo.userData.originalPositions;
-
-        // Factor de compresión escleral en el polo posterior (-X)
-        const flatteningScale = isFlattening ? (0.15 + (shiftVal * 0.12)) : 0.0;
+        const flatteningScale = isFlattening ? (0.14 + (shiftVal * 0.14)) : (axialDeltaMm * 0.25);
 
         for (let i = 0; i < posAttr.count; i++) {
             const ox = origPos.getX(i);
-            const oy = origPos.getY(i);
-            const oz = origPos.getZ(i);
-
-            // Si el vértice está en el hemisferio posterior (X < 0)
             if (ox < 0) {
-                // Cuanto más posterior sea X, mayor es el aplastamiento hacia el centro
                 const weight = Math.abs(ox) / 7.5;
-                const newX = ox * (1.0 - (flatteningScale * weight));
-                posAttr.setX(i, newX);
+                posAttr.setX(i, ox * (1.0 - (flatteningScale * weight)));
             } else {
                 posAttr.setX(i, ox);
             }
@@ -1467,30 +1752,19 @@ function renderDay(index) {
         posAttr.needsUpdate = true;
         geo.computeVertexNormals();
 
-        // Mover el disco óptico y nervio de acuerdo a la pared posterior aplanada
         const newPostX = -7.5 * (1.0 - (flatteningScale * 0.8));
         opticDiscMesh.position.x = newPostX + 0.3;
         opticDiscMesh.scale.set(1, 1 + (frisen * 0.4), 1 + (frisen * 0.4));
         opticNerveMesh.position.x = newPostX - 3.8;
 
-        // Desplazar el punto focal: al aplanarse la retina hacia adelante (+X),
-        // el punto de foco de luz queda situado POR DETRÁS de la retina aplanada
         const focalObj = rayLinesGroup.getObjectByName('focalSphere');
         if (focalObj) {
-            focalObj.position.x = -7.2 + (shiftVal * 0.8);
+            focalObj.position.x = -7.2 + (shiftVal * 0.85);
         }
     }
 
-    // 6. Actualización Reactiva de la Estación Tomográfica ZEISS Cirrus HD-OCT
-    fetch(`{{ route('public.digital-twin.oct-telemetry') }}?code=${currentAstroCode}&name=${encodeURIComponent(currentAstroName)}&day=${day}&scenario=${currentScenario}`)
-        .then(res => res.json())
-        .then(octData => {
-            currentCirrusData = octData;
-            updateCirrusOctDisplay(octData);
-        })
-        .catch(err => {
-            console.debug('OCT telemetry fetch:', err);
-        });
+    // 7. Actualizar Consola ZEISS Cirrus HD-OCT con los valores exactos de esta muestra
+    renderSampleOnCirrusOct(sample);
 }
 
 function setSliderIndex(idx) {
@@ -1502,36 +1776,28 @@ document.getElementById('day-slider').addEventListener('input', function() {
     renderDay(parseInt(this.value));
 });
 
-// Control Play / Pause de Simulación Continua
 document.getElementById('play-pause-btn').addEventListener('click', function() {
     if (playInterval) {
         clearInterval(playInterval);
         playInterval = null;
         document.getElementById('play-icon').className = 'fa fa-play';
-        document.getElementById('play-text').textContent = 'Simular Misión';
+        document.getElementById('play-text').textContent = isEnLocale ? 'Play Samples' : 'Recorrer Muestras';
     } else {
         document.getElementById('play-icon').className = 'fa fa-pause';
-        document.getElementById('play-text').textContent = 'Pausar';
+        document.getElementById('play-text').textContent = isEnLocale ? 'Pause' : 'Pausar';
         playInterval = setInterval(() => {
-            let next = (currentIndex + 1) % timelineDays.length;
+            let next = (currentIndex + 1) % clinicalSamples.length;
             setSliderIndex(next);
         }, 1800);
     }
 });
 
-// Inicializar Three.js y marco basal inicial
 document.addEventListener('DOMContentLoaded', function() {
     initThreeEngine();
-    renderDay(0);
-    if (currentCirrusData) {
-        updateCirrusOctDisplay(currentCirrusData);
-    }
-    const initialMode = @json($initialMode ?? '3d');
+    renderDay(currentIndex);
     const urlParams = new URLSearchParams(window.location.search);
-    const mode = urlParams.get('mode') || initialMode;
-    if (mode === 'oct' || mode === 'dual') {
-        setWorkstationMode(mode);
-    }
+    const mode = urlParams.get('mode') || activeWorkstationMode || 'dual';
+    setWorkstationMode(mode);
 });
 </script>
 @endpush
