@@ -310,16 +310,19 @@
         {
             page: 'home',
             selector: '#cvCameraBox > div',
-            duration: 5500,
-            titleEn: '4. Live Camera App Modal (Reticle, Flip Camera & Flash)',
-            titleEs: '4. App de Cámara en Vivo (Retícula, Voltear Cámara y Flash)',
-            textEn: 'Opening the built-in Camera App modal automatically: includes an optic disc alignment reticle, Flip Camera for mobile devices, Flash toggle, and one-tap Capture & Scan in Python.',
-            textEs: 'Abriendo automáticamente la App de Cámara integrada: incluye retícula circular de alineación ocular, Voltear Cámara para celulares, Flash y disparo directo hacia Python CV.',
+            duration: 6500,
+            extraMs: 1000,
+            titleEn: '4. Demo Fundus Camera (Astronaut Eye Alignment)',
+            titleEs: '4. Cámara Demo de Fondo de Ojo (Alineación Ocular)',
+            textEn: 'Showing the demo sequence of an astronaut aligning their eye with the retinal fundus camera before capture—complete with optic disc reticle and direct scan into Python CV.',
+            textEs: 'Mostrando la secuencia demo de un astronauta acercando su ojo a la cámara de fondo de ojo antes de la captura, con retícula de alineación y envío directo a Python CV.',
             action: () => {
+                window.__svDemoCameraMode = true;
                 const openCam = document.getElementById('btnOpenCvCamera');
                 if (openCam) openCam.click();
             },
             cleanup: () => {
+                window.__svDemoCameraMode = false;
                 const closeCam = document.getElementById('btnCloseCvCamera');
                 if (closeCam) closeCam.click();
             }
@@ -670,7 +673,7 @@
 
         elapsed = 0;
         const baseDur = step.duration || 7500;
-        const dur = step.page === 'twin' ? baseDur : Math.max(2500, baseDur - 2000);
+        const dur = step.page === 'twin' ? baseDur : Math.max(2500, baseDur - 2000 + (step.extraMs || 0));
         if (progEl) progEl.style.width = '0%';
 
         tickTimer = setInterval(() => {

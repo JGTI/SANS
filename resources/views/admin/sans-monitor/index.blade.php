@@ -574,8 +574,50 @@
             </div>
 
             {{-- Viewfinder + Optic Reticle Overlay --}}
+            <style>
+                @keyframes svAstroApproachEye {
+                    0%   { transform: scale(1) translate(0%, 0%); opacity: 1; }
+                    55%  { transform: scale(1.62) translate(4%, 8%); opacity: 1; }
+                    72%  { transform: scale(1.85) translate(5%, 10%); opacity: 0.15; }
+                    100% { transform: scale(1.85) translate(5%, 10%); opacity: 0; }
+                }
+                @keyframes svFundusCaptureReveal {
+                    0%, 54% { opacity: 0; transform: scale(0.92); }
+                    70%     { opacity: 1; transform: scale(1.03); }
+                    100%    { opacity: 1; transform: scale(1); }
+                }
+                @keyframes svDemoFlashPulse {
+                    0%, 56% { opacity: 0; }
+                    62%     { opacity: 0.72; }
+                    72%     { opacity: 0; }
+                    100%    { opacity: 0; }
+                }
+                .sv-demo-astro-img {
+                    animation: svAstroApproachEye 4.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+                }
+                .sv-demo-fundus-img {
+                    animation: svFundusCaptureReveal 4.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+                }
+                .sv-demo-flash {
+                    animation: svDemoFlashPulse 4.6s ease-out infinite;
+                }
+            </style>
             <div style="position:relative;background:#000000;aspect-ratio:3/4;max-height:62vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;">
                 <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+                <div id="cvDemoReel" style="display:none;position:absolute;inset:0;overflow:hidden;background:#05070e;">
+                    <img src="{{ asset('images/sans/astronaut-fundus-camera-demo.jpg') }}"
+                         alt="{{ $isEn ? 'Astronaut aligning eye to retinal fundus camera' : 'Astronauta acercando su ojo a la cámara de fondo de ojo' }}"
+                         class="sv-demo-astro-img"
+                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+                    <img src="{{ asset('images/sans/fundus/fundus-edema.png') }}"
+                         alt="{{ $isEn ? 'Retinal fundus optical alignment' : 'Alineación óptica de fondo de ojo' }}"
+                         class="sv-demo-fundus-img"
+                         style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;">
+                    <div class="sv-demo-flash" style="position:absolute;inset:0;background:#ffffff;pointer-events:none;"></div>
+                    <span style="position:absolute;bottom:10px;left:12px;right:12px;text-align:center;font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:700;letter-spacing:0.06em;color:#EAFE07;background:rgba(5,7,14,0.72);padding:4px 8px;border-radius:6px;border:1px solid rgba(234,254,7,0.35);">
+                        {{ $isEn ? 'DEMO VIDEO · ASTRONAUT EYE ALIGNMENT → FUNDUS CAMERA' : 'VIDEO DEMO · ASTRONAUTA ACERCANDO OJO AL RETINÓGRAFO' }}
+                    </span>
+                </div>
                 {{-- Retícula circular de alineación ocular --}}
                 <div style="pointer-events:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
                     <div style="width:58%;aspect-ratio:1/1;border-radius:50%;border:1.5px dashed rgba(234,254,7,0.65);box-shadow:0 0 0 9999px rgba(0,0,0,0.22);position:relative;">
@@ -840,6 +882,7 @@
 
     const camBox = document.getElementById('cvCameraBox');
     const camVideo = document.getElementById('cvCameraVideo');
+    const camDemoReel = document.getElementById('cvDemoReel');
     const camErr = document.getElementById('cvCameraError');
     const btnFlash = document.getElementById('btnToggleCvFlash');
     let camStream = null;
@@ -866,6 +909,8 @@
 
     function stopCvCamera() {
         stopCvStream();
+        if (camDemoReel) camDemoReel.style.display = 'none';
+        if (camVideo) camVideo.style.display = 'block';
         if (camBox) camBox.style.display = 'none';
     }
 
@@ -873,6 +918,16 @@
         if (!camBox || !camVideo) return;
         camBox.style.display = 'flex';
         if (camErr) { camErr.style.display = 'none'; camErr.textContent = ''; }
+
+        const isDemoTourMode = window.__svDemoCameraMode === true || sessionStorage.getItem('sv_demo_active') === '1';
+        if (isDemoTourMode && camDemoReel && !forceSwitch) {
+            stopCvStream();
+            camVideo.style.display = 'none';
+            camDemoReel.style.display = 'block';
+            return;
+        }
+        if (camDemoReel) camDemoReel.style.display = 'none';
+        camVideo.style.display = 'block';
         const prevTrack = camStream?.getVideoTracks?.()?.[0];
         const prevDeviceId = prevTrack?.getSettings?.()?.deviceId || null;
         stopCvStream();
@@ -970,6 +1025,18 @@
     });
 
     document.getElementById('btnCaptureCvFrame')?.addEventListener('click', () => {
+        if (camDemoReel && camDemoReel.style.display !== 'none') {
+            stopCvCamera();
+            activeCapture = {
+                ...activeCapture,
+                preset: 'edema',
+                filename: 'fundus-edema.png',
+                src: @json(asset('images/sans/fundus/fundus-edema.png')),
+                image_data_url: null,
+            };
+            runFundusScan();
+            return;
+        }
         if (!camVideo || !camVideo.videoWidth) return;
         const c = document.createElement('canvas');
         c.width = camVideo.videoWidth;
