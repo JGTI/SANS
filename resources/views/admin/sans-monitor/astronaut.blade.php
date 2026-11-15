@@ -111,8 +111,8 @@
                         {{ $isEn ? 'Open Full 3D + OCT →' : 'Abrir 3D + OCT →' }}
                     </a>
                 </div>
-                <div id="crewThreeContainer" style="width:100%;height:230px;position:relative;cursor:grab;">
-                    <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,monospace;font-size:10.5px;background:rgba(9,9,11,0.85);padding:5px 9px;border-radius:6px;border:1px solid #3f3f46;color:#d4d4d8;pointer-events:none;">
+                <div id="crewThreeContainer" style="width:100%;height:230px;position:relative;cursor:grab;background:#09090b;">
+                    <div style="position:absolute;bottom:10px;left:12px;z-index:2;font-family:ui-monospace,monospace;font-size:10.5px;background:rgba(9,9,11,0.85);padding:5px 9px;border-radius:6px;border:1px solid #3f3f46;color:#d4d4d8;pointer-events:none;">
                         {{ $isEn ? 'Drag to inspect 3D eye · 0G Cephalic Shift' : 'Arrastra para rotar ojo 3D · Empuje cefálico 0G' }}
                     </div>
                 </div>
@@ -765,91 +765,178 @@
 <script>
 (() => {
     const mount = document.getElementById('crewThreeContainer');
-    if (!mount || typeof THREE === 'undefined') return;
+    if (!mount) return;
 
-    const w = mount.clientWidth || 420;
-    const h = mount.clientHeight || 240;
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x05070d);
-
-    const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 200);
-    camera.position.set(16, 5, 16);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    mount.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 1.4;
-    controls.enableZoom = false;
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
-    const keyLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
-    keyLight.position.set(15, 20, 15);
-    scene.add(keyLight);
-
-    const eyeGroup = new THREE.Group();
-    const sclera = new THREE.Mesh(
-        new THREE.SphereGeometry(5.2, 36, 36),
-        new THREE.MeshPhysicalMaterial({ color: 0xf1f5f9, roughness: 0.3, transmission: 0.15, transparent: true, opacity: 0.92 })
-    );
-    eyeGroup.add(sclera);
-
-    const iris = new THREE.Mesh(
-        new THREE.RingGeometry(0.9, 2.3, 32),
-        new THREE.MeshStandardMaterial({ color: 0x0042A6, side: THREE.DoubleSide })
-    );
-    iris.rotation.y = Math.PI / 2;
-    iris.position.x = 4.6;
-    eyeGroup.add(iris);
-
-    const nerve = new THREE.Mesh(
-        new THREE.CylinderGeometry(1.1, 1.3, 5.5, 24),
-        new THREE.MeshStandardMaterial({ color: 0x334155 })
-    );
-    nerve.rotation.z = Math.PI / 2;
-    nerve.position.x = -7.2;
-    eyeGroup.add(nerve);
-
-    const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(6.8, 0.06, 12, 64),
-        new THREE.MeshBasicMaterial({ color: 0x2E96F5 })
-    );
-    ring.rotation.x = Math.PI / 2.4;
-    eyeGroup.add(ring);
-
-    const arrow1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, 1.6, 0), 2.8, 0xEAFE07, 0.6, 0.3);
-    const arrow2 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, -1.6, 0), 2.8, 0xEAFE07, 0.6, 0.3);
-    eyeGroup.add(arrow1, arrow2);
-    scene.add(eyeGroup);
-
-    const resize = () => {
-        const nw = mount.clientWidth;
-        const nh = mount.clientHeight;
-        if (nw > 0 && nh > 0) {
-            camera.aspect = nw / nh;
-            camera.updateProjectionMatrix();
-            renderer.setSize(nw, nh);
+    function renderFallbackCanvas() {
+        const cvs = document.createElement('canvas');
+        cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;';
+        mount.appendChild(cvs);
+        const ctx = cvs.getContext('2d');
+        if (!ctx) return;
+        let t = 0;
+        function draw() {
+            const w = mount.clientWidth || 420;
+            const h = mount.clientHeight || 230;
+            if (cvs.width !== w || cvs.height !== h) { cvs.width = w; cvs.height = h; }
+            ctx.fillStyle = '#09090b';
+            ctx.fillRect(0, 0, w, h);
+            const cx = w * 0.52, cy = h * 0.48, r = Math.min(w, h) * 0.28;
+            const bob = Math.sin(t * 0.04) * 3;
+            // Subtle telemetry grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 1;
+            for (let gx = 0; gx < w; gx += 28) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+            for (let gy = 0; gy < h; gy += 28) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+            // Orbital ring
+            ctx.save();
+            ctx.translate(cx, cy + bob);
+            ctx.rotate(Math.sin(t * 0.015) * 0.22);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, r * 1.48, r * 0.46, -0.25, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+            // Optic nerve
+            ctx.fillStyle = '#334155';
+            ctx.fillRect(cx - r * 1.45, cy + bob - r * 0.22, r * 0.65, r * 0.44);
+            // Sclera globe
+            const grad = ctx.createRadialGradient(cx - r * 0.25, cy + bob - r * 0.25, r * 0.15, cx, cy + bob, r);
+            grad.addColorStop(0, '#ffffff');
+            grad.addColorStop(0.75, '#cbd5e1');
+            grad.addColorStop(1, '#64748b');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(cx, cy + bob, r, 0, Math.PI * 2);
+            ctx.fill();
+            // Iris + pupil
+            const ix = cx + r * 0.55 + Math.cos(t * 0.025) * 6;
+            const iy = cy + bob + Math.sin(t * 0.02) * 3;
+            ctx.fillStyle = '#1d4ed8';
+            ctx.beginPath();
+            ctx.ellipse(ix, iy, r * 0.22, r * 0.42, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#09090b';
+            ctx.beginPath();
+            ctx.ellipse(ix + 2, iy, r * 0.1, r * 0.2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // 0G cephalic shift vectors
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 2;
+            [-18, 18].forEach(dy => {
+                const ax = cx - r * 1.9 + (t % 24) * 0.4;
+                ctx.beginPath();
+                ctx.moveTo(ax, cy + bob + dy);
+                ctx.lineTo(ax + 24, cy + bob + dy);
+                ctx.stroke();
+            });
+            t++;
+            requestAnimationFrame(draw);
         }
-    };
-    window.addEventListener('resize', resize);
-
-    function loop() {
-        requestAnimationFrame(loop);
-        controls.update();
-        const t = Date.now() * 0.002;
-        if (typeof eye !== 'undefined' && eye) {
-            eye.rotation.y += 0.004;
-            eye.rotation.x = Math.sin(t * 0.6) * 0.16;
-            eye.rotation.z = Math.cos(t * 0.4) * 0.07;
-            eye.position.y = Math.sin(t * 0.9) * 0.1;
-        }
-        ring.rotation.z += 0.008;
-        renderer.render(scene, camera);
+        draw();
     }
-    loop();
+
+    if (typeof THREE === 'undefined') {
+        renderFallbackCanvas();
+        return;
+    }
+
+    try {
+        const w = mount.clientWidth || 420;
+        const h = mount.clientHeight || 230;
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x09090b);
+
+        const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 200);
+        camera.position.set(16, 5, 16);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;';
+        mount.appendChild(renderer.domElement);
+
+        const controls = typeof THREE.OrbitControls === 'function' ? new THREE.OrbitControls(camera, renderer.domElement) : null;
+        if (controls) {
+            controls.enableDamping = true;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.4;
+            controls.enableZoom = false;
+        }
+
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x1e293b, 1.1));
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+        keyLight.position.set(15, 20, 15);
+        scene.add(keyLight);
+
+        const eyeGroup = new THREE.Group();
+        const sclera = new THREE.Mesh(
+            new THREE.SphereGeometry(5.2, 36, 36),
+            new THREE.MeshPhongMaterial({ color: 0xf8fafc, shininess: 65, specular: 0x94a3b8 })
+        );
+        eyeGroup.add(sclera);
+
+        const iris = new THREE.Mesh(
+            new THREE.RingGeometry(0.9, 2.3, 32),
+            new THREE.MeshStandardMaterial({ color: 0x1d4ed8, side: THREE.DoubleSide })
+        );
+        iris.rotation.y = Math.PI / 2;
+        iris.position.x = 4.95;
+        eyeGroup.add(iris);
+
+        const pupil = new THREE.Mesh(
+            new THREE.CircleGeometry(0.95, 24),
+            new THREE.MeshBasicMaterial({ color: 0x09090b, side: THREE.DoubleSide })
+        );
+        pupil.rotation.y = Math.PI / 2;
+        pupil.position.x = 5.0;
+        eyeGroup.add(pupil);
+
+        const nerve = new THREE.Mesh(
+            new THREE.CylinderGeometry(1.1, 1.3, 5.5, 24),
+            new THREE.MeshStandardMaterial({ color: 0x475569 })
+        );
+        nerve.rotation.z = Math.PI / 2;
+        nerve.position.x = -7.2;
+        eyeGroup.add(nerve);
+
+        const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(6.8, 0.07, 12, 64),
+            new THREE.MeshBasicMaterial({ color: 0x38bdf8 })
+        );
+        ring.rotation.x = Math.PI / 2.4;
+        eyeGroup.add(ring);
+
+        const arrow1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, 1.6, 0), 2.8, 0xfacc15, 0.6, 0.3);
+        const arrow2 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, -1.6, 0), 2.8, 0xfacc15, 0.6, 0.3);
+        eyeGroup.add(arrow1, arrow2);
+        scene.add(eyeGroup);
+
+        const resize = () => {
+            const nw = mount.clientWidth;
+            const nh = mount.clientHeight;
+            if (nw > 0 && nh > 0) {
+                camera.aspect = nw / nh;
+                camera.updateProjectionMatrix();
+                renderer.setSize(nw, nh);
+            }
+        };
+        window.addEventListener('resize', resize);
+
+        function loop() {
+            requestAnimationFrame(loop);
+            if (controls) controls.update();
+            const t = Date.now() * 0.002;
+            eyeGroup.rotation.y += 0.004;
+            eyeGroup.rotation.x = Math.sin(t * 0.6) * 0.16;
+            eyeGroup.rotation.z = Math.cos(t * 0.4) * 0.07;
+            eyeGroup.position.y = Math.sin(t * 0.9) * 0.1;
+            ring.rotation.z += 0.008;
+            renderer.render(scene, camera);
+        }
+        loop();
+    } catch (e) {
+        renderFallbackCanvas();
+    }
 })();
 </script>
