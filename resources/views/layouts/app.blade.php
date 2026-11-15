@@ -33,7 +33,7 @@
             </a>
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
-                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
+                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['astronauta', 'poblacion'], true) ? 'active' : '' }}" href="{{ route('home') }}">
                     <i class="fa fa-flask"></i>
                     <span>{{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}</span>
                 </a>
@@ -44,6 +44,10 @@
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                     <i class="fa fa-eye"></i>
                     <span>{{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}</span>
+                </a>
+                <a class="{{ request('tab') === 'poblacion' ? 'active' : '' }}" href="{{ route('home', ['tab' => 'poblacion']) }}">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>{{ $isEn ? 'Population Dashboard' : 'Dashboard Poblacional' }}</span>
                 </a>
             </nav>
 
@@ -255,6 +259,7 @@
         home: @json(route('home')),
         astronaut: @json(route('public.astronaut')),
         twin: @json(route('public.digital-twin', ['mode' => 'dual'])),
+        population: @json(route('home', ['tab' => 'poblacion'])),
     };
 
     const steps = [
@@ -364,19 +369,6 @@
             textEs: 'Comparando los 3 escenarios canónicos: Estable, Empeora y No se Escanea, garantizando que la ausencia de OCT nunca se asuma como estable aunque la presión intraocular (PIO) sea normal.',
             action: () => {
                 const tab = document.querySelector('[data-wizard-tab="escenarios"]');
-                if (tab) tab.click();
-            }
-        },
-        {
-            page: 'home',
-            selector: '#wizard-panel-poblacion',
-            duration: 8500,
-            titleEn: '9. Integrated Population Dashboard & Predictive Conclusion',
-            titleEs: '9. Dashboard Integral de Poblaciones y Conclusión Predictiva',
-            textEn: 'Synthesizing all 3 populations (Orbital Astronauts, Terrestrial Controls 0°, and -6° HDT Analog): confirms ΔTRT OCT + -6° HDT + short axial length show the highest predictive value, whereas IOP alone is not predictive.',
-            textEs: 'Sintetiza las 3 poblaciones (Astronautas, Terrestres 0° y Terrestres -6° HDT): concluye que ΔTRT OCT + respuesta -6° HDT + longitud axial corta poseen el mayor valor predictivo, mientras la PIO sola no es predictiva.',
-            action: () => {
-                const tab = document.querySelector('[data-wizard-tab="poblacion"]');
                 if (tab) tab.click();
             }
         },
@@ -512,14 +504,27 @@
         {
             page: 'twin',
             selector: '#panel-cirrus-oct',
-            duration: 9000,
-            titleEn: '16. Cirrus SD-OCT Workstation & ETDRS 9-Sector Map (Final Summary)',
-            titleEs: '16. Estación Cirrus SD-OCT y Mapa ETDRS de 9 Sectores (Cierre)',
-            textEn: 'Below is the synchronized SD-OCT B-Scan workstation for OD & OS, ETDRS 9-sector retinal thickness maps, Frisén grade, and choroidal fold status. End-to-end SPACE VISION automatic tour complete!',
-            textEs: 'Abajo se muestra la estación SD-OCT B-Scan sincronizada para OD y OS, mapas ETDRS de 9 sectores, grado Frisén y estado de pliegues coroideos. ¡Recorrido automático completo de SPACE VISION finalizado!',
+            duration: 8500,
+            titleEn: 'Cirrus SD-OCT Workstation & ETDRS 9-Sector Map',
+            titleEs: 'Estación Cirrus SD-OCT y Mapa ETDRS de 9 Sectores',
+            textEn: 'Synchronized SD-OCT B-Scan workstation for OD & OS, ETDRS 9-sector retinal thickness maps, Frisén grade, and choroidal fold status.',
+            textEs: 'Estación SD-OCT B-Scan sincronizada para OD y OS, mapas ETDRS de 9 sectores, grado Frisén y estado de pliegues coroideos.',
             action: () => {
                 const etdrs = document.getElementById('etdrsSvgOd');
-                if (etdrs) setTimeout(() => etdrs.scrollIntoView({ behavior: 'smooth', block: 'center' }), 3200);
+                if (etdrs) setTimeout(() => etdrs.scrollIntoView({ behavior: 'smooth', block: 'center' }), 2600);
+            }
+        },
+        {
+            page: 'population',
+            selector: '#wizard-panel-poblacion',
+            duration: 10000,
+            titleEn: 'FINAL SCREEN · Integrated Population Dashboard & Predictive Conclusion',
+            titleEs: 'PANTALLA FINAL · Dashboard Poblacional Integral y Conclusión Predictiva',
+            textEn: 'Closing on the 4th screen: synthesizes Orbital Astronauts, Terrestrial Controls (0°), and -6° HDT Analog. Confirms ΔTRT OCT + -6° HDT + short axial length show the highest predictive value, while IOP alone is NOT predictive. Tour complete!',
+            textEs: 'Cerramos en la 4.ª pantalla: sintetiza Astronautas, Terrestres (0°) y Terrestres a -6° HDT. Concluye que ΔTRT OCT + respuesta -6° HDT + longitud axial corta poseen el mayor valor predictivo, mientras la PIO sola NO es predictiva. ¡Demo finalizado!',
+            action: () => {
+                const tab = document.querySelector('[data-wizard-tab="poblacion"]');
+                if (tab) tab.click();
             }
         }
     ];
@@ -543,6 +548,7 @@
         const p = window.location.pathname;
         if (p.includes('astronaut-check')) return 'astronaut';
         if (p.includes('digital-twin') || p.includes('oct-analysis')) return 'twin';
+        if (window.location.search.includes('tab=poblacion')) return 'population';
         return 'home';
     }
 
