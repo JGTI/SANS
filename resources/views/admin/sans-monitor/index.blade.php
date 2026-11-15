@@ -2138,11 +2138,11 @@ window.runCandidatePredictor = async function (e) {
         [
             'num' => 1,
             'name' => 'Ing. José Guadalupe García Espinosa',
-            'role_en' => 'Team Leader',
-            'role_es' => 'Líder del equipo',
-            'bio_en' => 'Computer Systems Engineer (Ingeniero en Sistemas Computacionales) · Project Architect & Scientific Computing Lead',
+            'role_en' => 'Computer Systems Engineer',
+            'role_es' => 'Ingeniero en Sistemas Computacionales',
+            'bio_en' => 'Computer Systems Engineer · Project Architecture & Scientific Computing',
             'bio_es' => 'Ingeniero en Sistemas Computacionales · Arquitectura del Proyecto y Cómputo Científico',
-            'is_leader' => true,
+            'is_leader' => false,
             'nasa_user' => '@gitti',
             'emails' => [
                 ['label_en' => 'NASA Email', 'label_es' => 'Correo NASA', 'email' => 'github.jgge@gmail.com'],
