@@ -280,8 +280,26 @@
         </div>
     </div>
 
-    <div class="crew-check-flow" data-check-flow hidden aria-live="polite">
-        <div class="crew-flow-topbar"><button type="button" class="crew-close-flow" data-close-flow><i class="fa fa-times"></i><span>{{ $isEn ? 'Exit check' : 'Salir de la revisión' }}</span></button><div class="crew-progress-track"><span data-progress-bar></span></div><span data-progress-label>1 / 4</span></div>
+    <div class="crew-check-flow" data-check-flow hidden aria-live="polite" style="max-width:1180px;width:100%;">
+        <style>
+            .crew-check-flow { max-width:1180px !important; width:100%; }
+            .crew-check-flow .crew-step { max-width:100% !important; }
+            .crew-sci-banner { background:#09090b; color:#ffffff; border:1px solid #27272a; border-radius:10px; padding:10px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; font-family:ui-monospace,monospace; font-size:11.5px; }
+            .crew-check-flow .crew-guided-test { border:1px solid #d4d4d8; border-radius:14px; overflow:hidden; background:#ffffff; box-shadow:0 8px 24px rgba(9,9,11,0.06); }
+            .crew-check-flow .crew-guided-test header { background:#09090b; color:#ffffff; padding:14px 20px; border-bottom:1px solid #27272a; }
+            .crew-check-flow .crew-guided-test header .crew-test-number { background:#ffffff; color:#09090b; font-family:ui-monospace,monospace; }
+            .crew-check-flow .crew-guided-test header .crew-test-title strong { color:#ffffff; font-size:1.05rem; }
+            .crew-check-flow .crew-guided-test header .crew-test-title small { color:#a1a1aa; font-family:ui-monospace,monospace; }
+            .crew-check-flow .crew-guided-test .crew-test-body { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr); gap:24px; padding:24px; align-items:center; }
+            .crew-check-flow .crew-test-stage { min-height:270px; background:#09090b; color:#ffffff; border:1px solid #27272a; border-radius:12px; display:grid; place-items:center; padding:24px; }
+            .crew-check-flow .crew-optotype b { font-size:4.2rem; color:#ffffff; }
+            .crew-check-flow .crew-optotype span { font-size:2.2rem; color:#e4e4e7; }
+            .crew-check-flow .crew-optotype small { font-size:1.25rem; color:#a1a1aa; }
+            .crew-check-flow .crew-eye-responses select { min-height:46px; font-size:0.95rem; font-weight:700; border:1.5px solid #d4d4d8; border-radius:8px; background:#fafafa; color:#09090b; }
+            .crew-check-flow .crew-eye-responses select:focus { border-color:#09090b; outline:none; background:#ffffff; }
+            @media (max-width:860px) { .crew-check-flow .crew-guided-test .crew-test-body { grid-template-columns:1fr; } }
+        </style>
+        <div class="crew-flow-topbar"><button type="button" class="crew-close-flow" data-close-flow><i class="fa fa-times"></i><span>{{ $isEn ? 'Exit check' : 'Salir de la revisión' }}</span></button><div class="crew-progress-track"><span data-progress-bar style="background:#09090b;"></span></div><span data-progress-label>1 / 4</span></div>
         <form data-check-form>
             <section class="crew-step is-active" data-step="0">
                 <p class="crew-eyebrow">{{ $isEn ? 'SYMPTOMS' : 'SÍNTOMAS' }}</p><h2>{{ $isEn ? 'How do you feel right now?' : '¿Cómo te sientes en este momento?' }}</h2><p>{{ $isEn ? 'Choose every symptom you have noticed since your last check.' : 'Selecciona todos los síntomas que hayas notado desde tu última revisión.' }}</p>
@@ -289,15 +307,19 @@
                 <p class="crew-step-feedback" data-step-feedback="0" hidden></p>
             </section>
             <section class="crew-step" data-step="1" hidden>
-                <p class="crew-eyebrow">{{ $isEn ? 'GUIDED VISUAL WIZARD' : 'ASISTENTE VISUAL GUIADO' }}</p><h2>{{ $isEn ? 'Step through the six screen checks' : 'Completa paso a paso las seis pruebas' }}</h2><p>{{ $isEn ? 'One check at a time. Follow the distance shown and cover one eye only when instructed.' : 'Una prueba a la vez. Sigue la distancia indicada y cubre un ojo solo cuando se indique.' }}</p>
+                <div class="crew-sci-banner">
+                    <span><i class="fa fa-crosshairs"></i> {{ $isEn ? 'ORBITAL OPTICAL WORKSTATION · PROTOCOL ISS-OPT-01' : 'ESTACIÓN ÓPTICA ORBITAL · PROTOCOLO ISS-OPT-01' }}</span>
+                    <span style="color:#a1a1aa;">{{ $isEn ? 'RECORD: ' . $activeCase->case_id . ' · CALIBRATED DISPLAY' : 'EXPEDIENTE: ' . $activeCase->case_id . ' · PANTALLA CALIBRADA' }}</span>
+                </div>
+                <p class="crew-eyebrow">{{ $isEn ? 'SCIENTIFIC VISUAL WIZARD' : 'ASISTENTE CIENTÍFICO VISUAL' }}</p><h2>{{ $isEn ? 'Optical Biomarker & Function Console' : 'Consola de Función Óptica y Biomarcadores' }}</h2><p>{{ $isEn ? 'One calibrated optical instrument at a time. Follow the target distance and occlude one eye only when prompted.' : 'Un instrumento óptico calibrado a la vez. Sigue la distancia indicada y ocluye un ojo solo cuando se solicite.' }}</p>
                 <div class="crew-tests-toolbar" aria-label="{{ $isEn ? 'Test progress' : 'Progreso de pruebas' }}">
                     <div class="crew-wiz-stepper" role="tablist" aria-label="{{ $isEn ? 'Visual check steps' : 'Pasos de prueba visual' }}">
-                        <button type="button" class="crew-wiz-pill is-active" data-wiz-jump="0">01</button><i></i>
-                        <button type="button" class="crew-wiz-pill" data-wiz-jump="1">02</button><i></i>
-                        <button type="button" class="crew-wiz-pill" data-wiz-jump="2">03</button><i></i>
-                        <button type="button" class="crew-wiz-pill" data-wiz-jump="3">04</button><i></i>
-                        <button type="button" class="crew-wiz-pill" data-wiz-jump="4">05</button><i></i>
-                        <button type="button" class="crew-wiz-pill" data-wiz-jump="5">06</button>
+                        <button type="button" class="crew-wiz-pill is-active" data-wiz-jump="0">01 · {{ $isEn ? 'Distance' : 'Lejana' }}</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="1">02 · {{ $isEn ? 'Near' : 'Cercana' }}</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="2">03 · {{ $isEn ? 'Color' : 'Color' }}</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="3">04 · {{ $isEn ? 'Stereo' : 'Estereo' }}</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="4">05 · Amsler</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="5">06 · {{ $isEn ? 'Contrast' : 'Contraste' }}</button>
                     </div>
                     <output data-tests-progress>{{ $isEn ? '0 of 6 recorded' : '0 de 6 registradas' }}</output>
                 </div>
@@ -363,21 +385,6 @@
                         </div>
                     </article>
                 </div>
-                <div class="crew-wiz-nav" data-wiz-nav>
-                    <button type="button" class="crew-secondary-action" data-wiz-prev disabled><i class="fa fa-chevron-left"></i> {{ $isEn ? 'Previous check' : 'Prueba anterior' }}</button>
-                    <span class="crew-wiz-counter" data-wiz-counter>{{ $isEn ? 'Check 1 of 6' : 'Prueba 1 de 6' }}</span>
-                    <button type="button" class="crew-secondary-action" data-wiz-next>{{ $isEn ? 'Next check' : 'Siguiente prueba' }} <i class="fa fa-chevron-right"></i></button>
-                </div>
-                <style>
-                    .crew-wiz-stepper { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-                    .crew-wiz-pill { border:1px solid #d4d4d8; background:#ffffff; color:#09090b; font-family:ui-monospace,monospace; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
-                    .crew-wiz-pill:hover { border-color:#09090b; color:#09090b; background:#f4f4f5; }
-                    .crew-wiz-pill.is-active { background:#09090b; border-color:#09090b; color:#ffffff; box-shadow:0 0 0 3px rgba(9,9,11,0.12); }
-                    .crew-wiz-pill.is-done { background:#f4f4f5; border-color:#18181b; color:#09090b; }
-                    .crew-wiz-pill.is-active.is-done { background:#09090b; border-color:#09090b; color:#ffffff; }
-                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#fafafa; border:1px solid #e4e4e7; border-radius:10px; }
-                    .crew-wiz-counter { font-family:ui-monospace,monospace; font-size:12.5px; font-weight:700; color:#18181b; }
-                </style>
                 <div class="crew-wiz-nav" data-wiz-nav>
                     <button type="button" class="crew-secondary-action" data-wiz-prev disabled><i class="fa fa-chevron-left"></i> {{ $isEn ? 'Previous check' : 'Prueba anterior' }}</button>
                     <span class="crew-wiz-counter" data-wiz-counter>{{ $isEn ? 'Check 1 of 6' : 'Prueba 1 de 6' }}</span>
