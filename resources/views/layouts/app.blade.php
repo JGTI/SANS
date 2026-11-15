@@ -171,12 +171,12 @@
         bottom: 16px;
         left: 50%;
         transform: translateX(-50%);
-        width: min(760px, calc(100vw - 24px));
+        width: min(920px, calc(100vw - 24px));
         background: rgba(9, 9, 11, 0.96);
         color: #ffffff;
         border: 1.5px solid #EAFE07;
         border-radius: 14px;
-        padding: 0.85rem 1.05rem 0.75rem;
+        padding: 0.9rem 1.2rem 0.8rem;
         box-shadow: 0 22px 60px rgba(0, 0, 0, 0.65);
         z-index: 9998;
         display: none;
@@ -228,28 +228,28 @@
             page: 'home',
             selector: '#sans-monitor-workspace',
             duration: 7500,
-            titleEn: '1. Mission Overview & Crew Roster (Zero-Login)',
-            titleEs: '1. Visión de Misión y Tripulación (Acceso Directo)',
-            textEn: 'Welcome to SPACE VISION · SANS Monitor. Here flight surgeons and researchers inspect longitudinal astronaut ocular records (CDR Alex Mercer, Dr. Sara Lindqvist, Kenji Sato, etc.) without login barriers.',
-            textEs: 'Bienvenido a SPACE VISION · SANS Monitor. Aquí médicos aeroespaciales e investigadores revisan expedientes oculares longitudinales de astronautas (CDR Alex Mercer, Dra. Lindqvist, Kenji Sato) sin registro previo.',
+            titleEn: '1. Mission Overview, Bilingual EN/ES & Crew Roster (Zero-Login)',
+            titleEs: '1. Visión de Misión, Bilingüe EN/ES y Tripulación (Acceso Directo)',
+            textEn: 'Welcome to SPACE VISION · SANS Monitor (NEXUS × Visual Rehab Center). No login required, instant EN|ES switching and Day/Night mode. Inspect 6 longitudinal astronaut dossiers (CDR Alex Mercer, Dr. Lindqvist, Kenji Sato, etc.).',
+            textEs: 'Bienvenido a SPACE VISION · SANS Monitor (NEXUS × Visual Rehab Center). Acceso público sin login, cambio EN|ES y modo Día/Noche. Aquí seleccionas entre 6 expedientes longitudinales de astronautas (CDR Alex Mercer, Dra. Lindqvist, Kenji Sato).',
         },
         {
             page: 'home',
             selector: '[data-wizard-tab="ingreso"]',
-            duration: 7000,
-            titleEn: '2. Independent OD/OS Triage & 3-Stage Workflow',
-            titleEs: '2. Triaje Independiente OD/OS y Flujo en 3 Fases',
-            textEn: 'Each eye (OD / OS) is evaluated independently into Ready for review, Prioritize review, or Missing data—never issuing an automated fit-for-duty verdict. Use the 3 tabs: Intake & Predictor, Longitudinal Cuts, and Scenario Models.',
-            textEs: 'Cada ojo (OD / OS) se evalúa por separado en Listo para revisión, Priorizar revisión o Faltan datos, sin emitir veredictos automáticos de aptitud. Las 3 pestañas guían: Ingreso, Cortes en el Tiempo y Escenarios.',
+            duration: 7500,
+            titleEn: '2. Independent OD/OS Triage & 3-Stage Clinical Workflow',
+            titleEs: '2. Triaje Independiente OD/OS y Flujo Clínico en 3 Fases',
+            textEn: 'Right Eye (OD) and Left Eye (OS) are evaluated independently into Ready for review, Prioritize review, or Missing data—never issuing an automated fit-for-duty verdict. The 3 tabs organize Intake, Time Cuts, and Reference Scenarios.',
+            textEs: 'Ojo Derecho (OD) y Ojo Izquierdo (OS) se evalúan por separado en Listo para revisión, Priorizar revisión o Faltan datos, sin emitir veredictos automáticos de aptitud. Las 3 pestañas guían: Ingreso, Cortes en el Tiempo y Escenarios.',
         },
         {
             page: 'home',
             selector: '#btnRunFundusScanner',
             duration: 8500,
-            titleEn: '3. Live Python CV Fundus & Papilledema Scanner',
-            titleEs: '3. Escáner Python CV de Fondo de Ojo y Edema Papilar',
-            textEn: 'Running real computer vision in Python (Pillow + NumPy + SciPy): computes Retinal FOV mask, Optic Disc localization, Sobel rim sharpness, peripapillary halo, and choroidal folds. You can also upload a photo or use the live camera.',
-            textEs: 'Ejecutando visión por computadora real en Python (Pillow + NumPy + SciPy): calcula máscara retiniana, disco óptico, nitidez Sobel del borde, halo peripapilar y pliegues coroideos. También permite subir foto o usar cámara en vivo.',
+            titleEn: '3. Ground Fundus Scanner (Python CV) + Photo Upload & Live Camera App',
+            titleEs: '3. Escáner de Fondo de Ojo (Python CV) + Subir Foto y App de Cámara',
+            textEn: 'Running real Computer Vision in Python (Pillow + NumPy + SciPy): computes Retinal FOV mask, Optic Disc localization, Sobel rim sharpness, peripapillary halo, and choroidal folds. You can also upload any photo or open the Camera app (with reticle, Flip Camera, and Flash).',
+            textEs: 'Ejecutando Visión por Computadora real en Python (Pillow + NumPy + SciPy): calcula máscara retiniana, disco óptico, nitidez Sobel del borde, halo peripapilar y pliegues coroideos. También permite subir fotos o abrir la app de Cámara (con retícula, Voltear Cámara y Flash).',
             action: () => {
                 const btn = document.getElementById('btnRunFundusScanner');
                 if (btn) btn.click();
@@ -261,17 +261,17 @@
             duration: 7500,
             titleEn: '4. The 6 Core Ocular Biomarkers & Signal Index',
             titleEs: '4. Los 6 Biomarcadores Oculares Clave e Índice de Señal',
-            textEn: 'Evaluates OCT Total Retinal Thickness (TRT), Axial Length, Hyperopic Shift, Frisén Papilledema Grade, IOP, and -6° HDT analog exposure, displaying the weighted contribution of each biomarker.',
-            textEs: 'Evalúa Espesor Retiniano OCT (TRT), Longitud Axial, Cambio Hipermetrópico, Grado Frisén, PIO y exposición análoga -6° HDT, graficando el peso de cada biomarcador en el Índice de Señal.',
+            textEn: 'Interactive inputs for OCT Total Retinal Thickness (TRT), Axial Length, Hyperopic Shift, Frisén Papilledema Grade, IOP, and -6° HDT analog exposure. The bar chart quantifies each biomarker’s weight in the Signal Index.',
+            textEs: 'Campos editables para Espesor Retiniano OCT (TRT), Longitud Axial, Cambio Hipermetrópico, Grado Frisén, PIO y exposición análoga -6° HDT. La gráfica muestra el peso exacto de cada biomarcador en el Índice de Señal.',
         },
         {
             page: 'home',
             selector: '#candidate-predict-form',
             duration: 8500,
-            titleEn: '5. Future Mission Candidate Predictor (Scikit-learn)',
-            titleEs: '5. Modelo Predictivo para Futuros Candidatos (Scikit-learn)',
-            textEn: 'Executing the Python Scikit-learn model across 4 domains (Biometric, Ophthalmological, Neurological, and Metabolic 1-Carbon/CO₂) to estimate SANS susceptibility for future spaceflight candidates.',
-            textEs: 'Ejecutando el modelo Scikit-learn en Python sobre 4 perfiles (Biométrico, Oftalmológico, Neurológico y Metabólico 1-Carbono/CO₂) para estimar susceptibilidad al SANS en futuros candidatos espaciales.',
+            titleEn: '5. Future Mission Candidate Predictor (Python Scikit-learn)',
+            titleEs: '5. Simulador Predictivo para Futuros Candidatos (Python Scikit-learn)',
+            textEn: 'Executing the Python Scikit-learn model across 4 domains—Biometric, Ophthalmological, Neurological, and Metabolic (1-Carbon / Vit B / CO₂)—to estimate SANS susceptibility probability and recommended monitoring cadence for future astronauts.',
+            textEs: 'Ejecutando el modelo Scikit-learn en Python sobre 4 perfiles —Biométrico, Oftalmológico, Neurológico y Metabólico (1-Carbono / Vit B / CO₂)— para estimar la susceptibilidad al SANS y la cadencia de monitoreo en futuros candidatos.',
             action: () => {
                 const btn = document.getElementById('candidate-predict-btn');
                 if (btn) btn.click();
@@ -279,12 +279,25 @@
         },
         {
             page: 'home',
+            selector: 'details.collapsible-card',
+            duration: 6500,
+            titleEn: '6. New Subject / Dossier Registration Form',
+            titleEs: '6. Registro de Nueva Persona / Expediente Clínico',
+            textEn: 'Flight surgeons can register new subjects or mission dossiers at any time with mission phase, planned duration, prior flights, and initial review notes, immediately feeding the longitudinal monitor.',
+            textEs: 'Permite registrar nuevas personas o expedientes en cualquier fase (Pre-vuelo, En vuelo, Posvuelo), duración planeada, vuelos previos y motivo inicial para integrarlos de inmediato al monitor.',
+            action: () => {
+                const det = document.querySelector('details.collapsible-card');
+                if (det) det.open = true;
+            }
+        },
+        {
+            page: 'home',
             selector: '#wizard-panel-seguimiento',
             duration: 8000,
-            titleEn: '6. Longitudinal Cuts: Before · During · +30 / +60 / +90 Days',
-            titleEs: '6. Cortes en el Tiempo: Antes · Durante · +30 / +60 / +90 Días',
-            textEn: 'Switching to Longitudinal Cuts: tracks pre-flight baseline, in-flight shifts, and post-flight recovery milestones at +30, +60, and +90 days with historical playback.',
-            textEs: 'Abriendo Cortes en el Tiempo: compara línea base pre-vuelo, cambios durante la misión y recuperación posvuelo a +30, +60 y +90 días con reproducción histórica.',
+            titleEn: '7. Longitudinal Cuts: Before · During · +30 / +60 / +90 Days',
+            titleEs: '7. Cortes en el Tiempo: Antes · Durante · +30 / +60 / +90 Días',
+            textEn: 'Switching to Longitudinal Cuts: compares pre-flight baseline, in-flight shifts, -6° HDT ground analogs, and post-flight recovery milestones at +30, +60, and +90 days with interactive historical playback.',
+            textEs: 'Abriendo Cortes en el Tiempo: compara línea base pre-vuelo, evolución en vuelo, análogos -6° HDT y recuperación posvuelo a +30, +60 y +90 días con reproducción histórica por día.',
             action: () => {
                 const tab = document.querySelector('[data-wizard-tab="seguimiento"]');
                 if (tab) tab.click();
@@ -294,10 +307,10 @@
             page: 'home',
             selector: '#wizard-panel-escenarios',
             duration: 8000,
-            titleEn: '7. Canonical Scenarios: Stable · Worsens · Unscanned',
-            titleEs: '7. Escenarios Modelos: Estable · Empeora · No se Escanea',
-            textEn: 'Comparing the 3 reference archetypes: Stable, Worsens (active progression), and Unscanned—strictly enforcing that missing OCT is never assumed stable even if IOP looks normal.',
-            textEs: 'Comparando los 3 escenarios canónicos: Estable, Empeora y No se Escanea, garantizando que una falta de OCT jamás se asuma como estable aunque la PIO sea normal.',
+            titleEn: '8. Canonical Scenarios: Stable · Worsens · Unscanned',
+            titleEs: '8. Escenarios Modelos: Estable · Empeora · No se Escanea',
+            textEn: 'Comparing the 3 reference archetypes: Stable, Worsens (active progression), and Unscanned—strictly enforcing that missing OCT is never assumed stable even if intraocular pressure (IOP) looks normal.',
+            textEs: 'Comparando los 3 escenarios canónicos: Estable, Empeora y No se Escanea, garantizando que la ausencia de OCT nunca se asuma como estable aunque la presión intraocular (PIO) sea normal.',
             action: () => {
                 const tab = document.querySelector('[data-wizard-tab="escenarios"]');
                 if (tab) tab.click();
@@ -307,10 +320,10 @@
             page: 'home',
             selector: '#nasa-live-search-form',
             duration: 7500,
-            titleEn: '8. NASA OCHMO Protocols & Live OSDR / NTRS / DONKI / ISS APIs',
-            titleEs: '8. Protocolos NASA OCHMO y APIs en Vivo OSDR / NTRS / DONKI / ISS',
-            textEn: 'Retrieves applicable NASA OCHMO surveillance protocols, 7 peer-reviewed references, and live space-weather/telemetry data from NASA OSDR, NTRS, DONKI, and ISS.',
-            textEs: 'Consulta protocolos clínicos NASA OCHMO, 7 referencias científicas verificadas y telemetría/literatura en tiempo real desde NASA OSDR, NTRS, DONKI e ISS.',
+            titleEn: '9. NASA OCHMO Protocols & Live OSDR / NTRS / DONKI / ISS APIs',
+            titleEs: '9. Protocolos NASA OCHMO y APIs en Vivo OSDR / NTRS / DONKI / ISS',
+            textEn: 'Retrieves applicable NASA OCHMO clinical protocols (preserving prior versions alongside newer verified ones), 7 scientific references, and live NASA OSDR, NTRS, DONKI, and ISS telemetry.',
+            textEs: 'Consulta protocolos clínicos NASA OCHMO (sin sobrescribir versiones previas), 7 referencias científicas verificadas y búsqueda en vivo contra NASA OSDR, NTRS, DONKI e ISS.',
             action: () => {
                 const tab = document.querySelector('[data-wizard-tab="ingreso"]');
                 if (tab) tab.click();
@@ -319,29 +332,84 @@
         {
             page: 'astronaut',
             selector: 'main#main-content',
+            duration: 7500,
+            titleEn: '10. Astronaut View: Live ISS Telemetry & Daily Orbital Check',
+            titleEs: '10. Vista Astronauta: Telemetría ISS en Vivo y Chequeo Orbital',
+            textEn: 'Inside Astronaut Check, crew members view live ISS altitude, velocity, 0.00 G microgravity, DONKI space-weather alerts, and the 3D cephalic fluid-shift monitor before starting their 8-minute eye exam.',
+            textEs: 'En la Vista Astronauta, la tripulación ve altitud y velocidad de la ISS, microgravedad 0.00 G, alertas DONKI y el monitor 3D de desplazamiento cefálico antes de iniciar su chequeo ocular de 8 minutos.',
+        },
+        {
+            page: 'astronaut',
+            selector: '[data-step="0"]',
+            duration: 8000,
+            titleEn: '11. How the Astronaut Feels Today ("¿Cómo te sientes?")',
+            titleEs: '11. Estado Diario del Astronauta: "¿Cómo te sientes hoy?"',
+            textEn: 'Opening today’s guided check: the astronaut reports how they feel right now—blurred near vision, headaches, floaters, eye pressure, or light flashes—so Ground Control correlates subjective symptoms with objective biomarkers.',
+            textEs: 'Iniciando la revisión de hoy: el astronauta indica cómo se siente en este momento (visión borrosa cercana, cefalea, miodesopsias, presión ocular o destellos) para correlacionar síntomas con biomarcadores.',
+            action: () => {
+                const startBtn = document.querySelector('[data-start-check]');
+                if (startBtn) startBtn.click();
+            }
+        },
+        {
+            page: 'astronaut',
+            selector: '[data-step="1"]',
+            duration: 7500,
+            titleEn: '12. 6-Step Visual Exam: Acuity, Amsler Grid & Contrast Sensitivity',
+            titleEs: '12. Examen Visual: Agudeza, Rejilla de Amsler y Contraste',
+            textEn: 'Next in the wizard: interactive tumbling-E visual acuity, Amsler grid distortion test (detecting macular/choroidal fold metamorphopsia), and contrast sensitivity right inside the orbital browser.',
+            textEs: 'Siguiente paso del asistente: prueba interactiva de agudeza visual, rejilla de Amsler (para detectar metamorfopsias por pliegues coroideos) y sensibilidad al contraste directo en vuelo.',
+            action: () => {
+                const startBtn = document.querySelector('[data-start-check]');
+                const flow = document.querySelector('[data-check-flow]');
+                if (startBtn && flow && flow.hidden) startBtn.click();
+                const nextBtn = document.querySelector('[data-next-step]');
+                if (nextBtn) nextBtn.click();
+            }
+        },
+        {
+            page: 'astronaut',
+            selector: '[data-fundus-panel]',
             duration: 8500,
-            titleEn: '9. Astronaut Check & Orbital Fundus Downlink',
-            titleEs: '9. Vista Astronauta y Envío Orbital de Fondo de Ojo',
-            textEn: 'In the Astronaut Check module, crew members follow a guided 8-minute orbital exam, inspect their flight logbook, and transmit OD/OS fundus captures directly to Ground Control.',
-            textEs: 'En la Vista Astronauta, la tripulación sigue un chequeo guiado de 8 minutos, consulta su bitácora orbital y transmite capturas de fondo de ojo OD/OS directo a Control en Tierra.',
+            titleEn: '13. Bring the Eye Closer: Orbital Fundus Camera & Tonometer Downlink',
+            titleEs: '13. Acerca el Ojo: Cámara Orbital de Fondo de Ojo OD/OS y Tonómetro',
+            textEn: 'In step 3, the astronaut brings their eye close to the orbital fundus lens, records tonometer IOP (mmHg), attaches OD/OS fundus captures, and transmits them straight to the Ground Python CV Scanner.',
+            textEs: 'En el paso 3, el astronauta acerca el ojo al equipo de fondo de ojo orbital, registra la PIO del tonómetro (mmHg), adjunta sus capturas OD y OS y las transmite directo al Escáner Python CV en Tierra.',
+            action: () => {
+                const nextBtn = document.querySelector('[data-next-step]');
+                if (nextBtn) nextBtn.click();
+            }
+        },
+        {
+            page: 'astronaut',
+            selector: '[data-crew-tab="log"]',
+            duration: 7500,
+            titleEn: '14. Flight Logbook, Longitudinal Trends & Read-Only Pre-Flight Profile',
+            titleEs: '14. Bitácora Espacial, Tendencias y Perfil Basal Protegido',
+            textEn: 'Astronauts can also review their Flight Logbook, symptom/IOP Trends, and their read-only pre-flight baseline profile (append-only in flight to preserve medical integrity).',
+            textEs: 'La tripulación también consulta su Bitácora de Vuelo, gráficas de Tendencias y su Perfil Basal Pre-vuelo (protegido como solo lectura en vuelo para garantizar integridad clínica).',
+            action: () => {
+                const logTab = document.querySelector('[data-crew-tab="log"]');
+                if (logTab) logTab.click();
+            }
         },
         {
             page: 'twin',
             selector: 'main#main-content',
             duration: 8500,
-            titleEn: '10. Interactive 3D WebGL Eye Digital Twin + SD-OCT',
-            titleEs: '10. Gemelo Digital Ocular 3D WebGL + Capas SD-OCT',
-            textEn: 'The 3D Digital Twin renders real-time posterior globe flattening, optic disc protrusion, and choroidal folds synchronized with SD-OCT retinal thickness layers.',
-            textEs: 'El Gemelo Digital 3D renderiza en tiempo real el aplanamiento posterior del globo, protrusión del disco óptico y pliegues coroideos sincronizados con las capas SD-OCT.',
+            titleEn: '15. Interactive 3D WebGL Eye Digital Twin (Posterior Flattening & Folds)',
+            titleEs: '15. Gemelo Digital Ocular 3D WebGL (Aplanamiento y Pliegues)',
+            textEn: 'In the 3D Viewer + OCT module, inspect an interactive 3D WebGL ocular globe showing posterior globe flattening, optic disc protrusion, and choroidal folds—rotate and zoom freely.',
+            textEs: 'En el Visor 3D + OCT interactúas con el Gemelo Digital Ocular en WebGL 3D: muestra aplanamiento posterior del globo, protrusión del disco óptico y pliegues coroideos con rotación y zoom.',
         },
         {
             page: 'twin',
             selector: 'main#main-content',
-            duration: 7000,
-            titleEn: '11. Guided Demo Complete — Ready for Interactive Exploration',
-            titleEs: '11. Demo Guiado Completo — Listo para Exploración Libre',
-            textEn: 'End-to-end tour complete: Python CV Fundus Analysis, 6-Biomarker & 4-Domain Scikit-learn Prediction, Longitudinal +30/+60/+90d Cuts, NASA Protocols, Astronaut Downlink, and 3D WebGL Digital Twin.',
-            textEs: 'Recorrido completo finalizado: Visión por Computadora en Python, Predicción de 6 Biomarcadores y 4 Perfiles en Scikit-learn, Cortes +30/+60/+90d, Protocolos NASA, Enlace Astronauta y Gemelo 3D.',
+            duration: 8000,
+            titleEn: '16. Synchronized SD-OCT Cross-Section & Complete Platform Summary',
+            titleEs: '16. Corte SD-OCT Sincronizado y Resumen Completo de la Plataforma',
+            textEn: 'Paired with SD-OCT retinal layers (ILM, RNFL, RPE) and ΔTRT progression. Complete SPACE VISION tour finished! Use Prev/Next anytime or click Close to explore freely.',
+            textEs: 'Sincronizado con las capas SD-OCT (ILM, RNFL, RPE) y ΔTRT. ¡Recorrido completo de SPACE VISION finalizado! Puedes usar Anterior/Siguiente cuando quieras o Cerrar para explorar libremente.',
         }
     ];
 
@@ -373,12 +441,13 @@
         }
     }
 
-    function stopDemo() {
+    function stopDemo(dismiss = true) {
         clearTimeout(timer);
         clearInterval(tickTimer);
         clearSpotlight();
         sessionStorage.removeItem('sv_demo_active');
         sessionStorage.removeItem('sv_demo_step');
+        if (dismiss) sessionStorage.setItem('sv_demo_dismissed', '1');
         if (player) player.style.display = 'none';
     }
 
@@ -443,6 +512,7 @@
     }
 
     launchBtn?.addEventListener('click', () => {
+        sessionStorage.removeItem('sv_demo_dismissed');
         paused = false;
         if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         runStep(0);
@@ -459,11 +529,13 @@
         paused = !paused;
         pauseBtn.innerHTML = paused ? '<i class="fa fa-play"></i>' : '<i class="fa fa-pause"></i>';
     });
-    document.getElementById('sv-demo-stop')?.addEventListener('click', stopDemo);
+    document.getElementById('sv-demo-stop')?.addEventListener('click', () => stopDemo(true));
 
     if (sessionStorage.getItem('sv_demo_active') === '1') {
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
         setTimeout(() => runStep(savedIdx), 350);
+    } else if (sessionStorage.getItem('sv_demo_dismissed') !== '1') {
+        setTimeout(() => runStep(0), 650);
     }
 })();
 </script>
