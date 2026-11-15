@@ -340,4 +340,21 @@ class SansMonitorAcceptanceTest extends TestCase
         $resEnAgain->assertOk();
         $resEnAgain->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
     }
+
+    public function test_public_impact_simulator_works_without_login(): void
+    {
+        $this->assertGuest();
+
+        $resEn = $this->get('/impact');
+        $resEn->assertOk();
+        $resEn->assertSee('Through the Astronaut\'s Eyes');
+        $resEn->assertSee('7 - 4 - 9 - 2');
+        $resEn->assertSee('$2.5B+ USD');
+        $resEn->assertSee('80%');
+
+        $resEs = $this->get('/impact?lang=es');
+        $resEs->assertOk();
+        $resEs->assertSee('A Través de los Ojos del Astronauta');
+        $resEs->assertSee('Modo Juez / Negocio');
+    }
 }

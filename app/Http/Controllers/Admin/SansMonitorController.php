@@ -28,6 +28,28 @@ class SansMonitorController extends Controller
     }
 
     /**
+     * Public high-impact experience ("Through the Astronaut's Eyes + Mission & Earth ROI")
+     * designed so non-medical judges feel the problem in 15 seconds.
+     */
+    public function impact()
+    {
+        if (! Schema::hasTable('sans_cases')) {
+            Artisan::call('migrate', ['--force' => true]);
+        }
+        if (DB::table('sans_cases')->count() === 0) {
+            app(\Database\Seeders\SansMonitorSeeder::class)->run();
+        }
+
+        $cases = DB::table('sans_cases')->orderBy('case_id')->get();
+        $evaluations = [];
+        foreach ($cases as $c) {
+            $evaluations[$c->case_id] = $this->engine->evaluateCaseAtDay($c, null);
+        }
+
+        return view('admin.sans-monitor.impact', compact('cases', 'evaluations'));
+    }
+
+    /**
      * Workspace unificado de 3 pestañas principales de SANS Monitor:
      * 1. Predictor de 6 Biomarcadores
      * 2. Antes · Durante · Después (+30, +60, +90)
