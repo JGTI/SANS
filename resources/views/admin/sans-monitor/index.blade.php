@@ -2127,6 +2127,164 @@ window.runCandidatePredictor = async function (e) {
     </div>
 </details>
 
+{{-- SECCIÓN OFICIAL DE MIEMBROS DEL PROYECTO (NASA SPACE APPS CHALLENGE 2026) --}}
+@php
+    $teamMembers = [
+        [
+            'num' => 1,
+            'name' => 'José Guadalupe García Espinosa',
+            'role_en' => 'Team Leader',
+            'role_es' => 'Líder del equipo',
+            'is_leader' => true,
+            'nasa_user' => '@gitti',
+            'emails' => [
+                ['label_en' => 'NASA Email', 'label_es' => 'Correo NASA', 'email' => 'github.jgge@gmail.com'],
+                ['label_en' => 'Personal', 'label_es' => 'Personal', 'email' => 'josegarcia@nexusdigitaldb.com'],
+            ],
+            'photos' => ['jose.jpg', 'jose.jpeg', 'jose.png'],
+            'initials' => 'JG',
+        ],
+        [
+            'num' => 2,
+            'name' => 'Gloria Margarita Pérez Vallejo',
+            'role_en' => 'Research & Clinical Member',
+            'role_es' => 'Integrante del equipo',
+            'is_leader' => false,
+            'nasa_user' => '@gloriapervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
+            ],
+            'photos' => ['gloria.jpg', 'gloria.jpeg', 'gloria.png'],
+            'initials' => 'GM',
+        ],
+        [
+            'num' => 3,
+            'name' => 'Miguel Ángel García Espinosa',
+            'role_en' => 'Engineering Member',
+            'role_es' => 'Integrante del equipo',
+            'is_leader' => false,
+            'nasa_user' => '@gitmiguelti',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'miguelgarcia@nexusdigitaldb.com'],
+            ],
+            'photos' => ['miguel angel.jpeg', 'miguel.jpeg', 'miguel.jpg'],
+            'initials' => 'MA',
+        ],
+        [
+            'num' => 4,
+            'name' => 'Victoria Isabel Pérez Vallejo',
+            'role_en' => 'Clinical & Vision Member',
+            'role_es' => 'Integrante del equipo',
+            'is_leader' => false,
+            'nasa_user' => '@victoriaisabelpervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'victoriavallejo@visualrehabcenter.com'],
+            ],
+            'photos' => ['victoria.jpeg', 'victoria.jpg', 'victoria.png'],
+            'initials' => 'VI',
+        ],
+        [
+            'num' => 5,
+            'name' => 'Mónica Belem Pérez Vallejo',
+            'role_en' => 'Research Member',
+            'role_es' => 'Integrante del equipo',
+            'is_leader' => false,
+            'nasa_user' => '@monicapervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'monicavallejo@nexusdigitaldb.com'],
+            ],
+            'photos' => ['monica.jpeg', 'monica.jpg', 'monica.png'],
+            'initials' => 'MB',
+        ],
+        [
+            'num' => 6,
+            'name' => 'Alam Tinajero Palacios',
+            'role_en' => 'Engineering Member',
+            'role_es' => 'Integrante del equipo',
+            'is_leader' => false,
+            'nasa_user' => '@alamtpalacios',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'alampalacios@nexusdititaldb.com'],
+            ],
+            'photos' => ['Alam.jpeg', 'alam.jpeg', 'alam.jpg'],
+            'initials' => 'AT',
+        ],
+    ];
+@endphp
+<section id="project-team-section" class="card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <div>
+            <div style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);text-transform:uppercase;letter-spacing:0.06em;">
+                {{ $isEn ? 'NASA SPACE APPS CHALLENGE · NEXUS × VISUAL REHAB CENTER' : 'NASA SPACE APPS CHALLENGE · NEXUS × VISUAL REHAB CENTER' }}
+            </div>
+            <h2 style="font-size:1.12rem;font-weight:900;margin:0.15rem 0 0;">
+                <i class="fa fa-users" style="color:var(--interactive-text);"></i>
+                {{ $isEn ? 'Project Team Members (6 Members)' : 'Miembros del Proyecto (6 Integrantes)' }}
+            </h2>
+        </div>
+        <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;padding:0.28rem 0.7rem;border-radius:999px;background:var(--muted);border:1px solid var(--border);">
+            {{ $isEn ? 'Official Roster' : 'Equipo Oficial' }}
+        </span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0.85rem;">
+        @foreach($teamMembers as $member)
+            @php
+                $photoFile = null;
+                foreach ($member['photos'] as $candidate) {
+                    if (file_exists(public_path('images/users/' . $candidate))) {
+                        $photoFile = $candidate;
+                        break;
+                    }
+                }
+                $photoUrl = $photoFile ? request()->getBasePath() . '/images/users/' . rawurlencode($photoFile) : null;
+            @endphp
+            <article style="display:flex;gap:0.85rem;align-items:flex-start;padding:0.9rem;border:1px solid {{ $member['is_leader'] ? 'var(--space-blue)' : 'var(--border)' }};border-radius:10px;background:var(--muted);">
+                @if($photoUrl)
+                    <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
+                         style="width:68px;height:68px;border-radius:12px;object-fit:cover;border:2px solid {{ $member['is_leader'] ? '#EAFE07' : 'var(--border)' }};flex-shrink:0;background:var(--card);">
+                @else
+                    <div style="width:68px;height:68px;border-radius:12px;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.15rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
+                        {{ $member['initials'] }}
+                    </div>
+                @endif
+
+                <div style="min-width:0;flex:1;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.4rem;flex-wrap:wrap;">
+                        <h3 style="font-size:0.88rem;font-weight:800;margin:0;line-height:1.25;">
+                            {{ $member['num'] }}. {{ $member['name'] }}
+                        </h3>
+                    </div>
+
+                    <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;margin:0.3rem 0 0.45rem;">
+                        @if($member['is_leader'])
+                            <span style="background:#EAFE07;color:#09090b;border:1px solid #09090b;font-size:0.65rem;font-weight:900;padding:0.12rem 0.5rem;border-radius:999px;">
+                                {{ $isEn ? $member['role_en'] : $member['role_es'] }}
+                            </span>
+                        @else
+                            <span style="background:var(--card);color:var(--foreground);border:1px solid var(--border);font-size:0.65rem;font-weight:700;padding:0.12rem 0.5rem;border-radius:999px;">
+                                {{ $isEn ? $member['role_en'] : $member['role_es'] }}
+                            </span>
+                        @endif
+                        <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);">
+                            NASA: {{ $member['nasa_user'] }}
+                        </span>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:2px;font-size:0.72rem;color:var(--muted-foreground);">
+                        @foreach($member['emails'] as $em)
+                            <div style="word-break:break-all;">
+                                <strong style="color:var(--foreground);">{{ $isEn ? $em['label_en'] : $em['label_es'] }}:</strong>
+                                <a href="mailto:{{ $em['email'] }}" style="color:var(--interactive-text);text-decoration:none;">{{ $em['email'] }}</a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </article>
+        @endforeach
+    </div>
+</section>
+
 <script>
 window.runNasaLiveSearch = async function (e) {
     if (e) e.preventDefault();
