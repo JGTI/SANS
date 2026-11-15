@@ -171,13 +171,13 @@
         bottom: 16px;
         left: 50%;
         transform: translateX(-50%);
-        width: min(920px, calc(100vw - 24px));
+        width: min(960px, calc(100vw - 24px));
         background: rgba(9, 9, 11, 0.96);
         color: #ffffff;
-        border: 1.5px solid #EAFE07;
-        border-radius: 14px;
-        padding: 0.9rem 1.2rem 0.8rem;
-        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.65);
+        border: 2px solid #EAFE07;
+        border-radius: 16px;
+        padding: 1.05rem 1.35rem 0.9rem;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.72);
         z-index: 9998;
         display: none;
         backdrop-filter: blur(8px);
@@ -197,20 +197,46 @@
     }
 </style>
 
-<div id="sv-demo-player" role="region" aria-live="polite" aria-label="{{ $isEn ? 'Guided Demo Subtitles' : 'Subtítulos del Demo Guiado' }}">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.35rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-            <span id="sv-demo-badge" style="background:#EAFE07;color:#09090b;font-family:ui-monospace,monospace;font-size:0.68rem;font-weight:800;padding:0.18rem 0.55rem;border-radius:999px;">PASO 1 / 11</span>
-            <strong id="sv-demo-title" style="font-size:0.9rem;color:#ffffff;"></strong>
+{{-- Modal inicial grande para activar el Demo Automático --}}
+<div id="sv-demo-welcome-modal" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(5,5,7,0.84);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
+    <div style="width:100%;max-width:560px;background:#09090b;color:#ffffff;border:2px solid #EAFE07;border-radius:18px;padding:1.75rem 1.85rem;box-shadow:0 28px 80px rgba(0,0,0,0.75);text-align:center;">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(234,254,7,0.14);color:#EAFE07;border:1px solid rgba(234,254,7,0.4);padding:0.28rem 0.85rem;border-radius:999px;font-family:ui-monospace,monospace;font-size:0.75rem;font-weight:800;margin-bottom:0.85rem;">
+            <i class="fa fa-rocket"></i> SPACE VISION · SANS MONITOR
         </div>
-        <div style="display:flex;align-items:center;gap:0.35rem;">
-            <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:0.25rem 0.55rem;font-size:0.72rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
-            <button type="button" id="sv-demo-pause" title="{{ $isEn ? 'Pause / Resume' : 'Pausar / Reanudar' }}" style="background:#EAFE07;color:#09090b;border:1px solid #EAFE07;border-radius:6px;padding:0.25rem 0.65rem;font-size:0.72rem;font-weight:800;cursor:pointer;"><i class="fa fa-pause"></i></button>
-            <button type="button" id="sv-demo-next" title="{{ $isEn ? 'Next' : 'Siguiente' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:0.25rem 0.55rem;font-size:0.72rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-forward"></i></button>
-            <button type="button" id="sv-demo-stop" title="{{ $isEn ? 'Close Demo' : 'Cerrar Demo' }}" style="background:rgba(239,68,68,0.22);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);border-radius:6px;padding:0.25rem 0.55rem;font-size:0.72rem;font-weight:700;cursor:pointer;"><i class="fa fa-times"></i></button>
+        <h2 style="font-size:1.5rem;font-weight:900;margin:0 0 0.6rem;color:#ffffff;">
+            {{ $isEn ? 'Interactive Automatic Demo' : 'Demo Automático Interactivo' }}
+        </h2>
+        <p style="font-size:0.98rem;line-height:1.5;color:#d4d4d8;margin:0 0 1.35rem;">
+            {{ $isEn
+                ? 'Sit back and watch the full 16-step automated tour with large live subtitles across Python CV, 6 Biomarkers, Scikit-learn Candidate Predictor, Astronaut View, and 3D Digital Twin + SD-OCT.'
+                : 'Recorre automáticamente toda la plataforma en 16 pasos con subtítulos grandes en vivo: Escáner Python CV, 6 Biomarcadores, Predictor Scikit-learn, Vista Astronauta y Gemelo Digital 3D + SD-OCT.' }}
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.65rem;align-items:center;">
+            <button type="button" id="sv-welcome-start-btn" style="width:100%;background:#EAFE07;color:#09090b;border:none;border-radius:10px;padding:0.95rem 1.5rem;font-size:1.08rem;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 30px rgba(234,254,7,0.28);">
+                <i class="fa fa-play-circle" style="font-size:1.25rem;"></i>
+                <span>{{ $isEn ? 'ACTIVATE AUTOMATIC DEMO' : 'ACTIVAR DEMO AUTOMÁTICO' }}</span>
+            </button>
+            <button type="button" id="sv-welcome-skip-btn" style="background:transparent;color:#a1a1aa;border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.5rem 1.1rem;font-size:0.84rem;font-weight:700;cursor:pointer;">
+                {{ $isEn ? 'Explore on my own' : 'Explorar por mi cuenta' }}
+            </button>
         </div>
     </div>
-    <div id="sv-demo-subtitle" style="font-size:0.84rem;line-height:1.45;color:#e4e4e7;"></div>
+</div>
+
+<div id="sv-demo-player" role="region" aria-live="polite" aria-label="{{ $isEn ? 'Guided Demo Subtitles' : 'Subtítulos del Demo Guiado' }}">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.65rem;flex-wrap:wrap;margin-bottom:0.45rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+            <span id="sv-demo-badge" style="background:#EAFE07;color:#09090b;font-family:ui-monospace,monospace;font-size:0.78rem;font-weight:800;padding:0.22rem 0.65rem;border-radius:999px;">PASO 1 / 16</span>
+            <strong id="sv-demo-title" style="font-size:1.08rem;font-weight:800;color:#ffffff;"></strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.4rem;">
+            <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
+            <button type="button" id="sv-demo-pause" title="{{ $isEn ? 'Pause / Resume' : 'Pausar / Reanudar' }}" style="background:#EAFE07;color:#09090b;border:1px solid #EAFE07;border-radius:7px;padding:0.32rem 0.75rem;font-size:0.78rem;font-weight:800;cursor:pointer;"><i class="fa fa-pause"></i></button>
+            <button type="button" id="sv-demo-next" title="{{ $isEn ? 'Next' : 'Siguiente' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-forward"></i></button>
+            <button type="button" id="sv-demo-stop" title="{{ $isEn ? 'Close Demo' : 'Cerrar Demo' }}" style="background:rgba(239,68,68,0.22);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+    <div id="sv-demo-subtitle" style="font-size:1.02rem;line-height:1.52;color:#f4f4f5;"></div>
     <div class="sv-demo-progress-track"><div id="sv-demo-progress" class="sv-demo-progress-fill"></div></div>
 </div>
 
@@ -395,21 +421,25 @@
         },
         {
             page: 'twin',
-            selector: 'main#main-content',
+            selector: '#panel-3d-layout',
             duration: 8500,
             titleEn: '15. Interactive 3D WebGL Eye Digital Twin (Posterior Flattening & Folds)',
             titleEs: '15. Gemelo Digital Ocular 3D WebGL (Aplanamiento y Pliegues)',
-            textEn: 'In the 3D Viewer + OCT module, inspect an interactive 3D WebGL ocular globe showing posterior globe flattening, optic disc protrusion, and choroidal folds—rotate and zoom freely.',
-            textEs: 'En el Visor 3D + OCT interactúas con el Gemelo Digital Ocular en WebGL 3D: muestra aplanamiento posterior del globo, protrusión del disco óptico y pliegues coroideos con rotación y zoom.',
+            textEn: 'In the 3D Viewer + OCT module, inspect the interactive 3D WebGL ocular globe showing posterior globe flattening, optic disc protrusion, and choroidal folds—complete with orbital presets and real-time deformation.',
+            textEs: 'En el Visor 3D + OCT interactúas con el Gemelo Digital Ocular en WebGL 3D: muestra aplanamiento posterior del globo, protrusión del disco óptico y pliegues coroideos con vistas predefinidas y deformación en vivo.',
         },
         {
             page: 'twin',
-            selector: 'main#main-content',
-            duration: 8000,
-            titleEn: '16. Synchronized SD-OCT Cross-Section & Complete Platform Summary',
-            titleEs: '16. Corte SD-OCT Sincronizado y Resumen Completo de la Plataforma',
-            textEn: 'Paired with SD-OCT retinal layers (ILM, RNFL, RPE) and ΔTRT progression. Complete SPACE VISION tour finished! Use Prev/Next anytime or click Close to explore freely.',
-            textEs: 'Sincronizado con las capas SD-OCT (ILM, RNFL, RPE) y ΔTRT. ¡Recorrido completo de SPACE VISION finalizado! Puedes usar Anterior/Siguiente cuando quieras o Cerrar para explorar libremente.',
+            selector: '#panel-cirrus-oct',
+            duration: 9000,
+            titleEn: '16. Cirrus SD-OCT Workstation & ETDRS 9-Sector Map (Final Summary)',
+            titleEs: '16. Estación Cirrus SD-OCT y Mapa ETDRS de 9 Sectores (Cierre)',
+            textEn: 'Below is the synchronized SD-OCT B-Scan workstation for OD & OS, ETDRS 9-sector retinal thickness maps, Frisén grade, and choroidal fold status. End-to-end SPACE VISION automatic tour complete!',
+            textEs: 'Abajo se muestra la estación SD-OCT B-Scan sincronizada para OD y OS, mapas ETDRS de 9 sectores, grado Frisén y estado de pliegues coroideos. ¡Recorrido automático completo de SPACE VISION finalizado!',
+            action: () => {
+                const etdrs = document.getElementById('etdrsSvgOd');
+                if (etdrs) setTimeout(() => etdrs.scrollIntoView({ behavior: 'smooth', block: 'center' }), 3200);
+            }
         }
     ];
 
@@ -531,6 +561,19 @@
     });
     document.getElementById('sv-demo-stop')?.addEventListener('click', () => stopDemo(true));
 
+    const welcomeModal = document.getElementById('sv-demo-welcome-modal');
+    document.getElementById('sv-welcome-start-btn')?.addEventListener('click', () => {
+        if (welcomeModal) welcomeModal.style.display = 'none';
+        sessionStorage.removeItem('sv_demo_dismissed');
+        paused = false;
+        if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
+        runStep(0);
+    });
+    document.getElementById('sv-welcome-skip-btn')?.addEventListener('click', () => {
+        if (welcomeModal) welcomeModal.style.display = 'none';
+        sessionStorage.setItem('sv_demo_dismissed', '1');
+    });
+
     const forceDemoLink = window.location.pathname.endsWith('/demo') || new URLSearchParams(window.location.search).get('demo') === '1';
     if (forceDemoLink) {
         sessionStorage.removeItem('sv_demo_dismissed');
@@ -539,7 +582,7 @@
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
         setTimeout(() => runStep(savedIdx), 350);
     } else if (sessionStorage.getItem('sv_demo_dismissed') !== '1') {
-        setTimeout(() => runStep(0), 650);
+        if (welcomeModal) welcomeModal.style.display = 'flex';
     }
 })();
 </script>
