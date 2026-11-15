@@ -33,7 +33,11 @@
             </a>
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
-                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['astronauta', 'poblacion', 'team', 'equipo'], true) ? 'active' : '' }}" href="{{ route('home') }}">
+                <a class="{{ in_array(request('tab'), ['hub', 'inicio'], true) ? 'active' : '' }}" href="{{ route('home', ['tab' => 'hub']) }}">
+                    <i class="fa fa-th-large"></i>
+                    <span>{{ $isEn ? 'Modules Hub' : 'Centro de Módulos' }}</span>
+                </a>
+                <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && !in_array(request('tab'), ['astronauta', 'poblacion', 'team', 'equipo', 'hub', 'inicio'], true) ? 'active' : '' }}" href="{{ route('home') }}">
                     <i class="fa fa-flask"></i>
                     <span>{{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}</span>
                 </a>
@@ -260,10 +264,12 @@
 (function () {
     const isEn = @json($isEn);
     const routes = {
+        hub: @json(route('home', ['tab' => 'hub'])),
         home: @json(route('home')),
         astronaut: @json(route('public.astronaut')),
         twin: @json(route('public.digital-twin', ['mode' => 'dual'])),
         population: @json(route('home', ['tab' => 'poblacion'])),
+        team: @json(route('home', ['tab' => 'team'])),
     };
 
     const steps = [
@@ -521,15 +527,24 @@
         {
             page: 'population',
             selector: '#wizard-panel-poblacion',
-            duration: 10000,
-            titleEn: 'FINAL SCREEN · Integrated Population Dashboard & Predictive Conclusion',
-            titleEs: 'PANTALLA FINAL · Dashboard Poblacional Integral y Conclusión Predictiva',
-            textEn: 'Closing on the 4th screen: synthesizes Orbital Astronauts, Terrestrial Controls (0°), and -6° HDT Analog. Confirms ΔTRT OCT + -6° HDT + short axial length show the highest predictive value, while IOP alone is NOT predictive. Tour complete!',
-            textEs: 'Cerramos en la 4.ª pantalla: sintetiza Astronautas, Terrestres (0°) y Terrestres a -6° HDT. Concluye que ΔTRT OCT + respuesta -6° HDT + longitud axial corta poseen el mayor valor predictivo, mientras la PIO sola NO es predictiva. ¡Demo finalizado!',
+            duration: 9000,
+            titleEn: 'Integrated Population Dashboard & Predictive Conclusion',
+            titleEs: 'Dashboard Poblacional Integral y Conclusión Predictiva',
+            textEn: 'Synthesizes Orbital Astronauts, Terrestrial Controls (0°), and -6° HDT Analog. Confirms ΔTRT OCT + -6° HDT + short axial length show the highest predictive value, while IOP alone is NOT predictive.',
+            textEs: 'Sintetiza Astronautas, Terrestres (0°) y Terrestres a -6° HDT. Concluye que ΔTRT OCT + respuesta -6° HDT + longitud axial corta poseen el mayor valor predictivo, mientras la PIO sola NO es predictiva.',
             action: () => {
                 const tab = document.querySelector('[data-wizard-tab="poblacion"]');
                 if (tab) tab.click();
             }
+        },
+        {
+            page: 'team',
+            selector: '#project-team-section',
+            duration: 8500,
+            titleEn: 'FINAL SCREEN · Multidisciplinary Project Team',
+            titleEs: 'PANTALLA FINAL · Equipo Multidisciplinario del Proyecto',
+            textEn: 'Meet the clinical, engineering, and legal specialists behind SPACE VISION (Optometry, Software Engineering, Computer Systems, International Relations, and Law). Tour complete!',
+            textEs: 'Conoce a los especialistas clínicos, de ingeniería y del área legal detrás de SPACE VISION (Optometría, Ingeniería de Software, Sistemas Computacionales, Relaciones Internacionales y Derecho). ¡Demo finalizado!',
         }
     ];
 
@@ -550,9 +565,12 @@
 
     function currentPageKey() {
         const p = window.location.pathname;
+        const s = window.location.search;
         if (p.includes('astronaut-check')) return 'astronaut';
         if (p.includes('digital-twin') || p.includes('oct-analysis')) return 'twin';
-        if (window.location.search.includes('tab=poblacion')) return 'population';
+        if (s.includes('tab=team') || s.includes('tab=equipo')) return 'team';
+        if (s.includes('tab=hub') || s.includes('tab=inicio')) return 'hub';
+        if (s.includes('tab=poblacion')) return 'population';
         return 'home';
     }
 

@@ -26,6 +26,7 @@
 
     // Normalizar las 4 pestañas principales manteniendo compatibilidad con enlaces directos
     $normalizedTab = match($activeTab) {
+        'hub', 'inicio' => 'hub',
         'seguimiento', 'inclinacion' => 'seguimiento',
         'escenarios', 'simulador', 'estudios' => 'escenarios',
         'poblacion', 'cohortes', 'conclusion' => 'poblacion',
@@ -169,6 +170,11 @@
         </div>
 
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            @if($normalizedTab !== 'hub')
+                <a href="{{ route('home', ['tab' => 'hub']) }}" class="btn btn-outline" style="justify-content:center;padding:0.48rem 0.7rem;font-size:0.78rem;" title="{{ $isEn ? 'All Modules Hub' : 'Centro de Módulos' }}">
+                    <i class="fa fa-th-large"></i> {{ $isEn ? 'Hub' : 'Módulos' }}
+                </a>
+            @endif
             <a href="{{ route('public.astronaut') }}" class="btn btn-outline" style="flex:1;justify-content:center;padding:0.48rem 0.75rem;font-size:0.78rem;">
                 <i class="fa fa-user-md"></i> {{ $isEn ? 'Astronaut View' : 'Vista Astronauta' }}
             </a>
@@ -178,6 +184,123 @@
         </div>
     </div>
 </section>
+
+@if($normalizedTab === 'hub')
+{{-- PANTALLA CENTRAL DE GUÍA DE MÓDULOS (USER-FRIENDLY HUB) --}}
+@php
+    $hubModules = [
+        [
+            'icon' => 'fa-flask',
+            'badge_en' => 'MODULE 01 · CLINICAL CORE',
+            'badge_es' => 'MÓDULO 01 · NÚCLEO CLÍNICO',
+            'title_en' => 'Scientific Module (SANS)',
+            'title_es' => 'Módulo Científico (SANS)',
+            'desc_en' => 'Evaluate the 6 core ocular biomarkers, longitudinal cuts (Before, In-flight, +30/+60/+90d), and the 3 canonical scenario models (Stable, Worsens, Unscanned).',
+            'desc_es' => 'Evalúa los 6 biomarcadores oculares clave, cortes longitudinales (Previo, En vuelo, +30/+60/+90d) y los 3 modelos de escenario (Estable, Empeora, Sin escanear).',
+            'cta_en' => 'Open Scientific Module',
+            'cta_es' => 'Abrir Módulo Científico',
+            'url' => route('home'),
+            'accent' => '#0042A6',
+        ],
+        [
+            'icon' => 'fa-user-md',
+            'badge_en' => 'MODULE 02 · ORBITAL CREW',
+            'badge_es' => 'MÓDULO 02 · TRIPULACIÓN EN ÓRBITA',
+            'title_en' => 'Astronaut Check',
+            'title_es' => 'Vista Astronauta',
+            'desc_en' => 'Task-first eye check for astronauts in orbit: symptom logbook, retinal fundus capture downlink, and ground Python CV scanner analysis.',
+            'desc_es' => 'Chequeo visual guiado para astronautas en órbita: bitácora de síntomas, captura de fondo de ojo y análisis terrestre con escáner CV en Python.',
+            'cta_en' => 'Open Astronaut Check',
+            'cta_es' => 'Abrir Vista Astronauta',
+            'url' => route('public.astronaut'),
+            'accent' => '#0284c7',
+        ],
+        [
+            'icon' => 'fa-eye',
+            'badge_en' => 'MODULE 03 · 3D & SD-OCT',
+            'badge_es' => 'MÓDULO 03 · 3D Y SD-OCT',
+            'title_en' => '3D Viewer + OCT',
+            'title_es' => 'Visor 3D + OCT',
+            'desc_en' => 'Interactive WebGL 3D ocular digital twin showing posterior globe flattening, optic disc protrusion, choroidal folds, and Cirrus SD-OCT ETDRS maps.',
+            'desc_es' => 'Gemelo digital ocular 3D en WebGL con aplanamiento posterior, protrusión del disco óptico, pliegues coroideos y mapas Cirrus SD-OCT ETDRS.',
+            'cta_en' => 'Open 3D Viewer + OCT',
+            'cta_es' => 'Abrir Visor 3D + OCT',
+            'url' => route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]),
+            'accent' => '#7c3aed',
+        ],
+        [
+            'icon' => 'fa-bar-chart',
+            'badge_en' => 'MODULE 04 · COHORTS',
+            'badge_es' => 'MÓDULO 04 · COHORTES',
+            'title_en' => 'Population Dashboard',
+            'title_es' => 'Dashboard Poblacional',
+            'desc_en' => 'Cross-cohort synthesis comparing Orbital Astronauts, Terrestrial Controls (0°), and -6° HDT Analog to validate biomarker predictive value.',
+            'desc_es' => 'Síntesis comparativa entre Astronautas, Controles Terrestres (0°) y Análogo -6° HDT para validar el valor predictivo de cada biomarcador.',
+            'cta_en' => 'Open Population Dashboard',
+            'cta_es' => 'Abrir Dashboard Poblacional',
+            'url' => route('home', ['tab' => 'poblacion']),
+            'accent' => '#059669',
+        ],
+        [
+            'icon' => 'fa-users',
+            'badge_en' => 'MODULE 05 · CREDITS',
+            'badge_es' => 'MÓDULO 05 · INTEGRANTES',
+            'title_en' => 'Our Team',
+            'title_es' => 'Nuestro Equipo',
+            'desc_en' => 'Meet the multidisciplinary team behind SPACE VISION across clinical optometry, software engineering, computer systems, international relations, and law.',
+            'desc_es' => 'Conoce al equipo multidisciplinario detrás de SPACE VISION en optometría clínica, ingeniería de software, sistemas computacionales, relaciones internacionales y derecho.',
+            'cta_en' => 'Meet the Team',
+            'cta_es' => 'Ver Equipo',
+            'url' => route('home', ['tab' => 'team']),
+            'accent' => '#d97706',
+        ],
+    ];
+@endphp
+<section id="modules-hub-section" class="card" style="padding:1.35rem 1.4rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.1rem;">
+        <div>
+            <h2 style="font-size:1.2rem;font-weight:800;margin:0;">
+                {{ $isEn ? 'Platform Modules Guide' : 'Guía Central de Módulos' }}
+            </h2>
+            <p style="margin:0.2rem 0 0;font-size:0.82rem;color:var(--muted-foreground);">
+                {{ $isEn
+                    ? 'Choose any module below to explore clinical biomarkers, orbital crew tools, 3D ocular imaging, cohort statistics, or our team.'
+                    : 'Selecciona cualquier módulo para explorar biomarcadores clínicos, herramientas de tripulación, imagenología 3D, estadísticas de cohorte o nuestro equipo.' }}
+            </p>
+        </div>
+        <button type="button" onclick="document.getElementById('btn-guided-demo')?.click();" class="btn btn-primary" style="padding:0.48rem 0.9rem;font-size:0.78rem;background:#EAFE07;color:#09090b;border-color:#09090b;font-weight:800;">
+            <i class="fa fa-play-circle"></i> {{ $isEn ? 'Start Guided Tour' : 'Iniciar Tour Guiado' }}
+        </button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.9rem;">
+        @foreach($hubModules as $mod)
+            <article style="display:flex;flex-direction:column;justify-content:space-between;gap:0.85rem;padding:1.05rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
+                <div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;margin-bottom:0.55rem;">
+                        <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;letter-spacing:0.05em;color:var(--interactive-text);">
+                            {{ $isEn ? $mod['badge_en'] : $mod['badge_es'] }}
+                        </span>
+                        <span style="width:32px;height:32px;border-radius:8px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;color:var(--interactive-text);">
+                            <i class="fa {{ $mod['icon'] }}"></i>
+                        </span>
+                    </div>
+                    <h3 style="font-size:1rem;font-weight:800;margin:0 0 0.35rem;">
+                        {{ $isEn ? $mod['title_en'] : $mod['title_es'] }}
+                    </h3>
+                    <p style="margin:0;font-size:0.78rem;line-height:1.45;color:var(--muted-foreground);">
+                        {{ $isEn ? $mod['desc_en'] : $mod['desc_es'] }}
+                    </p>
+                </div>
+                <a href="{{ $mod['url'] }}" class="btn btn-outline" style="justify-content:space-between;padding:0.5rem 0.8rem;font-size:0.78rem;font-weight:700;background:var(--card);">
+                    <span>{{ $isEn ? $mod['cta_en'] : $mod['cta_es'] }}</span>
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </article>
+        @endforeach
+    </div>
+</section>
+@else
 
 @if(session('status'))
     <div class="card" style="padding:0.85rem 1rem;margin-bottom:1rem;border-left:4px solid var(--space-blue);">
@@ -2198,6 +2321,7 @@ window.runCandidatePredictor = async function (e) {
         </div>
     </div>
 </details>
+@endif
 @endif
 
 @if($normalizedTab === 'team')
