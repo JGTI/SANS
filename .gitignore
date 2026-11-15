@@ -39,3 +39,4 @@ __pycache__/
 *.pyc
 .pytest_cache/
 scientific_engine/.pytest_cache/
+/docs/
