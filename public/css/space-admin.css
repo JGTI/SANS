@@ -1009,7 +1009,8 @@ details.collapsible-card > summary::-webkit-details-marker {
 .crew-primary-action { color:#fff; background:var(--crew-primary); border:1px solid var(--crew-primary); }
 .crew-primary-action:hover { background:#27272a; border-color:#27272a; }
 .crew-secondary-action { color:var(--crew-ink); background:#fff; border:1px solid #d4d4d8; }
-.crew-secondary-action:hover { background:var(--crew-soft); border-color:#09090b; }
+.crew-secondary-action:hover:not(:disabled) { background:var(--crew-soft); border-color:#09090b; }
+.crew-primary-action:disabled, .crew-secondary-action:disabled { opacity:.42; cursor:not-allowed; pointer-events:none; }
 .crew-action-note { margin:12px 0 0; color:var(--crew-muted); font-size:.74rem; }
 .crew-side-panel { padding:22px 24px; }
 .crew-side-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
