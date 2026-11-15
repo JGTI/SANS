@@ -666,7 +666,7 @@
         }, 120);
 
         const speedSel = document.getElementById('sv-demo-speed');
-        let demoSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '1') || 1;
+        let demoSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '2') || 2;
         if (speedSel && speedSel.value !== String(demoSpeed)) {
             speedSel.value = String(demoSpeed);
         }
