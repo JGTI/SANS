@@ -2244,7 +2244,30 @@ window.runCandidatePredictor = async function (e) {
         </span>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;">
+    <style>
+        .team-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+        @media (max-width: 1180px) {
+            .team-grid-6 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 720px) {
+            .team-grid-6 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 480px) {
+            .team-grid-6 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="team-grid-6">
         @foreach($teamMembers as $member)
             @php
                 $photoFile = null;
@@ -2256,12 +2279,12 @@ window.runCandidatePredictor = async function (e) {
                 }
                 $photoUrl = $photoFile ? request()->getBasePath() . '/images/users/' . rawurlencode($photoFile) : null;
             @endphp
-            <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.65rem;padding:1.1rem 0.95rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
+            <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.55rem;padding:0.9rem 0.65rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
                 @if($photoUrl)
                     <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
-                         style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
+                         style="width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
                 @else
-                    <div style="width:96px;height:96px;border-radius:50%;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.35rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
+                    <div style="width:84px;height:84px;border-radius:50%;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.25rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
                         {{ $member['initials'] }}
                     </div>
                 @endif
