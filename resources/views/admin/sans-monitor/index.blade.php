@@ -2210,6 +2210,7 @@ window.runCandidatePredictor = async function (e) {
                 ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'miguelgarcia@nexusdigitaldb.com'],
             ],
             'photos' => ['miguel angel.jpeg', 'miguel.jpeg', 'miguel.jpg'],
+            'photo_style' => 'transform:scale(1.65);transform-origin:center 20%;',
             'initials' => 'MA',
         ],
         [
@@ -2272,8 +2273,10 @@ window.runCandidatePredictor = async function (e) {
             @endphp
             <article style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.55rem;padding:0.9rem 0.65rem;border:1px solid var(--border);border-radius:12px;background:var(--muted);">
                 @if($photoUrl)
-                    <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
-                         style="width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
+                    <div style="width:84px;height:84px;border-radius:50%;overflow:hidden;border:2px solid var(--border);flex-shrink:0;background:var(--card);">
+                        <img src="{{ $photoUrl }}" alt="{{ $member['name'] }}" loading="lazy"
+                             style="width:100%;height:100%;object-fit:cover;display:block;{{ $member['photo_style'] ?? '' }}">
+                    </div>
                 @else
                     <div style="width:84px;height:84px;border-radius:50%;background:#0042A6;color:#ffffff;font-weight:900;font-size:1.25rem;display:grid;place-items:center;border:2px solid var(--border);flex-shrink:0;">
                         {{ $member['initials'] }}
