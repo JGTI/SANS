@@ -3,6 +3,27 @@
 @endphp
 
 <section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
+    {{-- Orbital Flight Logbook Telemetry Strip --}}
+    <div style="background:#07173F;color:#f8fafc;border:1.5px solid #2E96F5;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;">
+        <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+            <span style="background:#EAFE07;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
+                <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
+            </span>
+            <span style="color:#93c5fd;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
+            <span style="color:#93c5fd;">GRAVITY: <strong style="color:#EAFE07;">0.00 G (Microgravity)</strong></span>
+            <span style="color:#93c5fd;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
+            @foreach($cases as $cItem)
+                @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
+                <a href="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}"
+                   style="padding:0.2rem 0.5rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#EAFE07' : '#1e3a8a' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#0042A6' : 'rgba(255,255,255,0.06)' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#EAFE07' : '#cbd5e1' }};">
+                    {{ explode(' ', $cMeta['name'])[1] ?? $cMeta['name'] }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+
     <header class="crew-hero">
         <div class="crew-identity">
             <img src="{{ $crew['avatar'] }}" alt="{{ $crew['name'] }}" class="crew-avatar">
@@ -64,6 +85,49 @@
         <div class="crew-guidance">
             <i class="fa fa-info-circle" aria-hidden="true"></i>
             <div><strong>{{ $isEn ? 'Before you begin' : 'Antes de comenzar' }}</strong><span>{{ $isEn ? 'Use the calibrated tablet stand, sit in the indicated position and have the rebound tonometer ready.' : 'Usa el soporte calibrado de la tableta, adopta la posición indicada y ten listo el tonómetro de rebote.' }}</span></div>
+        </div>
+
+        {{-- Live 3D Orbital Microgravity Eye & Flight Log Telemetry Card --}}
+        <div style="margin-top:18px;background:#05070d;border:1.5px solid #1e3a8a;border-radius:12px;overflow:hidden;color:#f8fafc;">
+            <div style="padding:10px 16px;background:#07173F;border-bottom:1px solid #1e3a8a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#EAFE07;display:inline-block;"></span>
+                    <strong>{{ $isEn ? '3D Orbital Eye Telemetry & Fluid-Shift Monitor (ISS Flight Log)' : 'Monitor 3D Orbital de Fluido Cefálico y Globo Ocular (Bitácora ISS)' }}</strong>
+                </div>
+                <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id]) }}"
+                   style="color:#EAFE07;font-weight:800;font-size:11.5px;text-decoration:none;">
+                    {{ $isEn ? 'Open Full 3D + OCT Console →' : 'Abrir Visor 3D + Consola OCT →' }}
+                </a>
+            </div>
+            <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,1fr);align-items:center;">
+                <div id="crewThreeContainer" style="width:100%;height:240px;position:relative;cursor:grab;">
+                    <div style="position:absolute;bottom:10px;left:12px;font-family:ui-monospace,monospace;font-size:10.5px;background:rgba(7,23,63,0.85);padding:5px 9px;border-radius:6px;border:1px solid #1e3a8a;color:#93c5fd;pointer-events:none;">
+                        {{ $isEn ? 'Drag to inspect 3D eye · 0G Cephalic Shift' : 'Arrastra para rotar ojo 3D · Empuje cefálico 0G' }}
+                    </div>
+                </div>
+                <div style="padding:16px 18px;border-left:1px solid #1e293b;display:flex;flex-direction:column;gap:10px;font-family:ui-monospace,monospace;font-size:12px;">
+                    <div style="color:#38bdf8;font-size:10.5px;font-weight:800;letter-spacing:0.06em;">
+                        {{ $isEn ? 'LIVE IN-FLIGHT LOGBOOK TELEMETRY' : 'TELEMETRÍA DE BITÁCORA EN ÓRBITA' }}
+                    </div>
+                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
+                        <span style="color:#94a3b8;">{{ $isEn ? 'Cephalic Fluid Shift' : 'Desplazamiento Fluidos' }}</span>
+                        <strong style="color:#EAFE07;">~2,000 mL (0G)</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
+                        <span style="color:#94a3b8;">{{ $isEn ? 'Baseline OCT (OD)' : 'Línea Base OCT (OD)' }}</span>
+                        <strong>{{ $caseEvaluation['eyes']['OD']['baseline_trt'] !== null ? $caseEvaluation['eyes']['OD']['baseline_trt'].' µm' : ($isEn ? 'Unscanned' : 'Sin escaneo') }}</strong>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;border-bottom:1px solid #1e293b;padding-bottom:6px;">
+                        <span style="color:#94a3b8;">{{ $isEn ? 'Max ΔTRT Recorded' : 'Cambio Máx ΔTRT' }}</span>
+                        <strong style="color:{{ ($caseEvaluation['eyes']['OD']['max_delta_trt'] ?? 0) >= 20 ? '#f87171' : '#4ade80' }};">
+                            {{ $caseEvaluation['eyes']['OD']['max_delta_trt'] !== null ? sprintf('%+d µm', $caseEvaluation['eyes']['OD']['max_delta_trt']) : ($isEn ? 'Unmeasured' : 'Sin medición') }}
+                        </strong>
+                    </div>
+                    <div style="font-size:10.5px;color:#94a3b8;line-height:1.4;">
+                        {{ $isEn ? 'Every flight log check is timestamped and linked to your ground specialist dossier.' : 'Cada registro de bitácora se sella con tiempo de misión y se vincula a tu expediente en Tierra.' }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -388,5 +452,91 @@
             clearFeedback(2);
         }, 1400);
     }));
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+    const mount = document.getElementById('crewThreeContainer');
+    if (!mount || typeof THREE === 'undefined') return;
+
+    const w = mount.clientWidth || 420;
+    const h = mount.clientHeight || 240;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x05070d);
+
+    const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 200);
+    camera.position.set(16, 5, 16);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    mount.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.4;
+    controls.enableZoom = false;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const keyLight = new THREE.DirectionalLight(0x38bdf8, 1.2);
+    keyLight.position.set(15, 20, 15);
+    scene.add(keyLight);
+
+    const eyeGroup = new THREE.Group();
+    const sclera = new THREE.Mesh(
+        new THREE.SphereGeometry(5.2, 36, 36),
+        new THREE.MeshPhysicalMaterial({ color: 0xf1f5f9, roughness: 0.3, transmission: 0.15, transparent: true, opacity: 0.92 })
+    );
+    eyeGroup.add(sclera);
+
+    const iris = new THREE.Mesh(
+        new THREE.RingGeometry(0.9, 2.3, 32),
+        new THREE.MeshStandardMaterial({ color: 0x0042A6, side: THREE.DoubleSide })
+    );
+    iris.rotation.y = Math.PI / 2;
+    iris.position.x = 4.6;
+    eyeGroup.add(iris);
+
+    const nerve = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.1, 1.3, 5.5, 24),
+        new THREE.MeshStandardMaterial({ color: 0x334155 })
+    );
+    nerve.rotation.z = Math.PI / 2;
+    nerve.position.x = -7.2;
+    eyeGroup.add(nerve);
+
+    const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(6.8, 0.06, 12, 64),
+        new THREE.MeshBasicMaterial({ color: 0x2E96F5 })
+    );
+    ring.rotation.x = Math.PI / 2.4;
+    eyeGroup.add(ring);
+
+    const arrow1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, 1.6, 0), 2.8, 0xEAFE07, 0.6, 0.3);
+    const arrow2 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-10.5, -1.6, 0), 2.8, 0xEAFE07, 0.6, 0.3);
+    eyeGroup.add(arrow1, arrow2);
+    scene.add(eyeGroup);
+
+    const resize = () => {
+        const nw = mount.clientWidth;
+        const nh = mount.clientHeight;
+        if (nw > 0 && nh > 0) {
+            camera.aspect = nw / nh;
+            camera.updateProjectionMatrix();
+            renderer.setSize(nw, nh);
+        }
+    };
+    window.addEventListener('resize', resize);
+
+    function loop() {
+        requestAnimationFrame(loop);
+        controls.update();
+        ring.rotation.z += 0.008;
+        renderer.render(scene, camera);
+    }
+    loop();
 })();
 </script>

@@ -341,20 +341,22 @@ class SansMonitorAcceptanceTest extends TestCase
         $resEnAgain->assertSee('SANS Biomarker Predictor & Longitudinal Follow-up');
     }
 
-    public function test_public_impact_simulator_works_without_login(): void
+    public function test_astronaut_flight_logbook_includes_3d_orbital_telemetry_without_login(): void
     {
         $this->assertGuest();
 
-        $resEn = $this->get('/impact');
-        $resEn->assertOk();
-        $resEn->assertSee('Through the Astronaut\'s Eyes');
-        $resEn->assertSee('7 - 4 - 9 - 2');
-        $resEn->assertSee('$2.5B+ USD');
-        $resEn->assertSee('80%');
+        $redirect = $this->get('/impact');
+        $redirect->assertRedirect(route('public.astronaut'));
 
-        $resEs = $this->get('/impact?lang=es');
+        $resEn = $this->get('/astronaut-check?lang=en');
+        $resEn->assertOk();
+        $resEn->assertSee('ORBITAL FLIGHT LOG');
+        $resEn->assertSee('408 km');
+        $resEn->assertSee('crewThreeContainer');
+
+        $resEs = $this->get('/astronaut-check?lang=es');
         $resEs->assertOk();
-        $resEs->assertSee('A Través de los Ojos del Astronauta');
-        $resEs->assertSee('Modo Juez / Negocio');
+        $resEs->assertSee('BITÁCORA ESPACIAL DE VUELO');
+        $resEs->assertSee('Monitor 3D Orbital de Fluido Cefálico');
     }
 }

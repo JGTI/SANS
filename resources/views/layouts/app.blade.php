@@ -56,12 +56,6 @@
                             {{ $isEn ? '3D Viewer + OCT Console' : 'Visor 3D + Consola OCT' }}
                         </a>
                     </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('public.impact') ? 'active' : '' }}" href="{{ route('public.impact') }}">
-                            <i class="fa fa-bolt" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? 'Astronaut Eyes & ROI' : 'Ojos del Astronauta e Impacto' }}
-                        </a>
-                    </li>
                 </ul>
             </nav>
 
@@ -145,9 +139,6 @@
                 </a>
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                     <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
-                </a>
-                <a class="{{ request()->routeIs('public.impact') ? 'active' : '' }}" href="{{ route('public.impact') }}">
-                    <i class="fa fa-bolt"></i> {{ $isEn ? 'Astronaut Eyes & Impact' : 'Ojos e Impacto' }}
                 </a>
 
                 <details style="position:relative;display:inline-block;">
