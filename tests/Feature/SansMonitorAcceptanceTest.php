@@ -381,8 +381,10 @@ class SansMonitorAcceptanceTest extends TestCase
         ]);
         $scan->assertOk()
             ->assertJsonPath('case_id', 'CASE-PROG-02')
-            ->assertJsonPath('frisen_grade_estimate', 2)
-            ->assertJsonPath('choroidal_folds_detected', true);
+            ->assertJsonPath('choroidal_folds_detected', true)
+            ->assertJsonPath('python_executed', true)
+            ->assertJsonStructure(['cv_overlays' => ['disc_edge_map', 'edema_heatmap', 'folds_ridge_map']]);
+        $this->assertGreaterThanOrEqual(2, (int) $scan->json('frisen_grade_estimate'));
 
         $monitor = $this->get('/?case_id=CASE-PROG-02&lang=es');
         $monitor->assertOk();

@@ -293,57 +293,114 @@
 {{-- PESTAÑA 1: FORMULARIO INICIAL DE LA PERSONA + LOS 6 BIOMARCADORES Y PREDICTOR EN VIVO            --}}
 {{-- =============================================================================================== --}}
 <div id="wizard-panel-biomarcadores" data-wizard-panel="biomarcadores" style="{{ $normalizedTab === 'biomarcadores' ? '' : 'display:none;' }}">
-{{-- ESCÁNER DE FONDO DE OJO & EDEMA PAPILAR (DOWNLINK DESDE ASTRONAUTA -> PYTHON CV) --}}
-<div class="card" style="padding:1.25rem;border:1px solid #e4e4e7;border-radius:10px;margin-bottom:1.25rem;background:#ffffff;" data-fundus-scanner>
+{{-- ESCÁNER DE FONDO DE OJO & EDEMA PAPILAR (DOWNLINK DESDE ASTRONAUTA -> PYTHON CV REAL) --}}
+<div class="card" style="padding:1.25rem;border:1px solid #d4d4d8;border-radius:10px;margin-bottom:1.25rem;background:#ffffff;" data-fundus-scanner>
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;border-bottom:1px solid #e4e4e7;padding-bottom:0.85rem;margin-bottom:1rem;">
         <div>
             <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:#52525b;letter-spacing:0.06em;">
-                {{ $isEn ? 'ORBITAL DOWNLINK · FUNDUS PHOTOGRAPHY + TONOMETER IOP' : 'RECEPCIÓN ORBITAL · FOTOS FONDO DE OJO + PIO TONÓMETRO' }}
+                {{ $isEn ? 'ORBITAL DOWNLINK · RETINAL FUNDUS CV WORKSTATION + TONOMETER IOP' : 'ENLACE ORBITAL · ESTACIÓN CV DE FONDO DE OJO + PIO TONÓMETRO' }}
             </span>
-            <h2 style="font-size:1.1rem;font-weight:800;margin:2px 0 0;color:#09090b;">
+            <h2 style="font-size:1.15rem;font-weight:800;margin:2px 0 0;color:#09090b;">
                 <i class="fa fa-bullseye"></i>
                 {{ $isEn ? 'Ground Fundus Scanner & Papilledema Analyzer (Python CV)' : 'Escáner Científico de Fondo de Ojo y Edema Papilar (Python CV)' }}
             </h2>
         </div>
         <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-            <span style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:4px 10px;border-radius:6px;background:#f4f4f5;border:1px solid #d4d4d8;color:#09090b;font-weight:700;">
+            <span id="fundusActiveIopBadge" style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:5px 11px;border-radius:6px;background:#f4f4f5;border:1px solid #d4d4d8;color:#09090b;font-weight:700;">
                 {{ $isEn ? 'Tonometer IOP:' : 'PIO Tonómetro:' }} {{ $orbitalTransmission['iop_od'] }} / {{ $orbitalTransmission['iop_os'] }} mmHg
             </span>
-            <button type="button" id="btnRunFundusScanner" style="background:#09090b;color:#ffffff;border:1px solid #09090b;border-radius:7px;padding:0.5rem 1rem;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
+            <button type="button" id="btnRunFundusScanner" style="background:#09090b;color:#ffffff;border:1px solid #09090b;border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="fa fa-crosshairs"></i> {{ $isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV' }}
             </button>
         </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;align-items:start;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-            <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.6rem;color:#ffffff;position:relative;overflow:hidden;">
-                <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.7rem;margin-bottom:0.4rem;">
-                    <strong>OD · {{ $isEn ? 'Right Eye' : 'Ojo Derecho' }}</strong>
-                    <span style="color:#a1a1aa;">{{ $orbitalTransmission['iop_od'] }} mmHg</span>
-                </div>
-                <img src="{{ asset($orbitalTransmission['od_image']) }}" alt="OD Fundus" style="width:100%;height:155px;object-fit:contain;border-radius:6px;display:block;background:#000;">
-                <div class="sv-scan-laser" style="display:none;position:absolute;left:0;right:0;height:2px;background:#ffffff;box-shadow:0 0 10px #ffffff;top:25%;"></div>
-            </div>
-            <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.6rem;color:#ffffff;position:relative;overflow:hidden;">
-                <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.7rem;margin-bottom:0.4rem;">
-                    <strong>OS · {{ $isEn ? 'Left Eye' : 'Ojo Izquierdo' }}</strong>
-                    <span style="color:#a1a1aa;">{{ $orbitalTransmission['iop_os'] }} mmHg</span>
-                </div>
-                <img src="{{ asset($orbitalTransmission['os_image']) }}" alt="OS Fundus" style="width:100%;height:155px;object-fit:contain;border-radius:6px;display:block;background:#000;">
-                <div class="sv-scan-laser" style="display:none;position:absolute;left:0;right:0;height:2px;background:#ffffff;box-shadow:0 0 10px #ffffff;top:25%;"></div>
-            </div>
+    {{-- Galería longitudinal multi-foto (captura en vivo + archivo de misión) --}}
+    <div style="margin-bottom:1rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.45rem;flex-wrap:wrap;gap:0.5rem;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:#52525b;text-transform:uppercase;">
+                {{ $isEn ? 'Select Orbital Fundus Capture to Process in Python CV (8 captures)' : 'Selecciona Captura de Fondo de Ojo para Procesar en Python CV (8 capturas)' }}
+            </span>
+            <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:#71717a;">
+                {{ $isEn ? 'Click any capture to run Pillow + NumPy + SciPy pixel analysis' : 'Haz clic en cualquier captura para ejecutar análisis real en Pillow + NumPy + SciPy' }}
+            </span>
         </div>
+        <div id="fundusGalleryStrip" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.55rem;">
+            <button type="button" class="sv-fundus-thumb is-selected"
+                data-eye="OD" data-iop="{{ $orbitalTransmission['iop_od'] }}" data-preset="{{ $orbitalTransmission['od_preset'] }}"
+                data-filename="{{ $orbitalTransmission['od_image'] }}" data-src="{{ asset($orbitalTransmission['od_image']) }}"
+                style="text-align:left;background:#09090b;color:#fff;border:2px solid #09090b;border-radius:8px;padding:0.4rem;cursor:pointer;">
+                <img src="{{ asset($orbitalTransmission['od_image']) }}" alt="OD Live" style="width:100%;height:72px;object-fit:cover;border-radius:5px;display:block;background:#000;">
+                <div style="font-family:ui-monospace,monospace;font-size:10px;margin-top:4px;font-weight:700;">OD · {{ $isEn ? 'Live Downlink' : 'Enlace Vivo' }}</div>
+                <div style="font-family:ui-monospace,monospace;font-size:9.5px;color:#a1a1aa;">{{ $orbitalTransmission['iop_od'] }} mmHg</div>
+            </button>
+            <button type="button" class="sv-fundus-thumb"
+                data-eye="OS" data-iop="{{ $orbitalTransmission['iop_os'] }}" data-preset="{{ $orbitalTransmission['os_preset'] }}"
+                data-filename="{{ $orbitalTransmission['os_image'] }}" data-src="{{ asset($orbitalTransmission['os_image']) }}"
+                style="text-align:left;background:#18181b;color:#fff;border:1px solid #d4d4d8;border-radius:8px;padding:0.4rem;cursor:pointer;">
+                <img src="{{ asset($orbitalTransmission['os_image']) }}" alt="OS Live" style="width:100%;height:72px;object-fit:cover;border-radius:5px;display:block;background:#000;">
+                <div style="font-family:ui-monospace,monospace;font-size:10px;margin-top:4px;font-weight:700;">OS · {{ $isEn ? 'Live Downlink' : 'Enlace Vivo' }}</div>
+                <div style="font-family:ui-monospace,monospace;font-size:9.5px;color:#a1a1aa;">{{ $orbitalTransmission['iop_os'] }} mmHg</div>
+            </button>
+            @foreach($fundusGallery as $item)
+            <button type="button" class="sv-fundus-thumb"
+                data-eye="{{ $item['eye'] }}" data-iop="{{ $item['iop'] }}" data-preset="{{ $item['preset'] }}"
+                data-filename="{{ $item['filename'] }}" data-src="{{ asset($item['image']) }}"
+                style="text-align:left;background:#18181b;color:#fff;border:1px solid #d4d4d8;border-radius:8px;padding:0.4rem;cursor:pointer;">
+                <img src="{{ asset($item['image']) }}" alt="{{ $item['label_en'] }}" style="width:100%;height:72px;object-fit:cover;border-radius:5px;display:block;background:#000;">
+                <div style="font-family:ui-monospace,monospace;font-size:10px;margin-top:4px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $item['eye'] }} · {{ $isEn ? $item['label_en'] : $item['label_es'] }}</div>
+                <div style="font-family:ui-monospace,monospace;font-size:9.5px;color:#a1a1aa;">{{ $item['day'] }} · {{ $item['iop'] }} mmHg</div>
+            </button>
+            @endforeach
+        </div>
+    </div>
 
-        <div id="fundusScanResultBox" style="background:#fafafa;border:1px solid #e4e4e7;border-radius:8px;padding:0.9rem 1rem;font-size:0.82rem;">
-            <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:#52525b;margin-bottom:0.5rem;">
-                {{ $isEn ? 'PYTHON CV INTERPRETATION OUTPUT' : 'SALIDA DE INTERPRETACIÓN PYTHON CV' }}
+    {{-- Visor multi-canal de Computer Vision (Original + 3 Mapas Python SciPy/NumPy) --}}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.7rem;margin-bottom:1rem;">
+        <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;position:relative;overflow:hidden;">
+            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
+                <strong id="cvOriginalLabel">OD · {{ $isEn ? 'Original Fundus' : 'Fondo Original' }}</strong>
+                <span id="cvOriginalIop" style="color:#a1a1aa;">{{ $orbitalTransmission['iop_od'] }} mmHg</span>
             </div>
-            <div id="fundusScanPlaceholder" style="color:#52525b;line-height:1.5;">
-                {{ $isEn ? 'Click "Run Python CV Scanner" to analyze optic disc margins (Frisén papilledema grade), peripapillary halo, choroidal folds and correlate with tonometer IOP.' : 'Pulsa "Ejecutar Escáner Python CV" para analizar los bordes del disco óptico (grado Frisén de edema papilar), halo peripapilar, pliegues coroideos y correlacionar con la PIO del tonómetro.' }}
-            </div>
-            <div id="fundusScanMetrics" style="display:none;"></div>
+            <img id="cvOriginalImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Original Fundus" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
+            <div class="sv-scan-laser" style="display:none;position:absolute;left:0;right:0;height:2px;background:#38bdf8;box-shadow:0 0 12px #38bdf8;top:22%;"></div>
         </div>
+        <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
+            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
+                <strong>{{ $isEn ? '1. Sobel Disc Rim' : '1. Borde Sobel Papila' }}</strong>
+                <span style="color:#38bdf8;">SciPy</span>
+            </div>
+            <img id="cvEdgeImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Sobel Disc Edge Map" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
+        </div>
+        <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
+            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
+                <strong>{{ $isEn ? '2. Edema Halo Map' : '2. Mapa Halo Edema' }}</strong>
+                <span style="color:#facc15;">NumPy</span>
+            </div>
+            <img id="cvHeatmapImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Edema Elevation Heatmap" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
+        </div>
+        <div style="background:#09090b;border:1px solid #27272a;border-radius:8px;padding:0.55rem;color:#fff;">
+            <div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:0.68rem;margin-bottom:0.35rem;">
+                <strong>{{ $isEn ? '3. Choroidal Folds' : '3. Pliegues Coroideos' }}</strong>
+                <span style="color:#4ade80;">Bandpass</span>
+            </div>
+            <img id="cvFoldsImg" src="{{ asset($orbitalTransmission['od_image']) }}" alt="Choroidal Folds Ridge Map" style="width:100%;height:175px;object-fit:contain;border-radius:6px;display:block;background:#000;">
+        </div>
+    </div>
+
+    <div id="fundusScanResultBox" style="background:#fafafa;border:1px solid #e4e4e7;border-radius:8px;padding:0.95rem 1.05rem;font-size:0.82rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.6rem;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:#09090b;">
+                {{ $isEn ? 'PYTHON CV REAL-PIXEL INTERPRETATION OUTPUT' : 'SALIDA DE INTERPRETACIÓN PYTHON CV (PÍXELES REALES)' }}
+            </span>
+            <span id="fundusEngineTelemetry" style="font-family:ui-monospace,monospace;font-size:0.69rem;color:#52525b;">
+                {{ $isEn ? 'Initializing Python 3.14 + NumPy + SciPy scanner…' : 'Inicializando escáner Python 3.14 + NumPy + SciPy…' }}
+            </span>
+        </div>
+        <div id="fundusScanPlaceholder" style="color:#52525b;line-height:1.5;">
+            {{ $isEn ? 'Running real pixel-level CV analysis on orbital fundus capture…' : 'Ejecutando análisis real de píxeles en captura orbital de fondo de ojo…' }}
+        </div>
+        <div id="fundusScanMetrics" style="display:none;"></div>
     </div>
 </div>
 
@@ -353,12 +410,24 @@
     if (!btn || btn.dataset.bound === 'true') return;
     btn.dataset.bound = 'true';
     const isEn = @json($isEn);
-    btn.addEventListener('click', async () => {
+    const thumbs = [...document.querySelectorAll('#fundusGalleryStrip .sv-fundus-thumb')];
+    let activeCapture = {
+        eye: thumbs[0]?.dataset.eye || 'OD',
+        iop: Number(thumbs[0]?.dataset.iop || @json($orbitalTransmission['iop_od'])),
+        preset: thumbs[0]?.dataset.preset || @json($orbitalTransmission['od_preset']),
+        filename: thumbs[0]?.dataset.filename || @json($orbitalTransmission['od_image']),
+        src: thumbs[0]?.dataset.src || @json(asset($orbitalTransmission['od_image'])),
+    };
+
+    async function runFundusScan() {
         btn.disabled = true;
-        btn.innerHTML = `<i class="fa fa-spinner fa-spin"></i> ${isEn ? 'Scanning in Python CV…' : 'Escaneando en Python CV…'}`;
+        btn.innerHTML = `<i class="fa fa-spinner fa-spin"></i> ${isEn ? 'Processing pixels in Python CV…' : 'Procesando píxeles en Python CV…'}`;
+        document.getElementById('cvOriginalImg').src = activeCapture.src;
+        document.getElementById('cvOriginalLabel').textContent = `${activeCapture.eye} · ${isEn ? 'Original Fundus' : 'Fondo Original'}`;
+        document.getElementById('cvOriginalIop').textContent = `${activeCapture.iop.toFixed(1)} mmHg`;
         document.querySelectorAll('.sv-scan-laser').forEach(el => {
             el.style.display = 'block';
-            el.animate([{ top: '18%' }, { top: '88%' }, { top: '18%' }], { duration: 1100, iterations: 2 });
+            el.animate([{ top: '14%' }, { top: '88%' }, { top: '14%' }], { duration: 900, iterations: 2 });
         });
 
         try {
@@ -368,12 +437,24 @@
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
                 body: JSON.stringify({
                     case_id: @json($activeCase->case_id),
-                    eye: @json($selectedEye === 'OS' ? 'OS' : 'OD'),
-                    iop_mmhg: @json($selectedEye === 'OS' ? $orbitalTransmission['iop_os'] : $orbitalTransmission['iop_od']),
-                    demo_preset: @json($selectedEye === 'OS' ? $orbitalTransmission['os_preset'] : $orbitalTransmission['od_preset'])
+                    eye: activeCapture.eye,
+                    iop_mmhg: activeCapture.iop,
+                    demo_preset: activeCapture.preset,
+                    image_filename: activeCapture.filename,
                 })
             });
             const data = await res.json();
+            if (data.cv_overlays?.disc_edge_map) document.getElementById('cvEdgeImg').src = data.cv_overlays.disc_edge_map;
+            if (data.cv_overlays?.edema_heatmap) document.getElementById('cvHeatmapImg').src = data.cv_overlays.edema_heatmap;
+            if (data.cv_overlays?.folds_ridge_map) document.getElementById('cvFoldsImg').src = data.cv_overlays.folds_ridge_map;
+
+            const tel = document.getElementById('fundusEngineTelemetry');
+            if (tel) {
+                tel.textContent = data.python_executed
+                    ? `PYTHON EXECUTED · ${data.image_resolution || '384x384'} · ${(data.pixels_analyzed || 0).toLocaleString()} px · ${data.processing_ms} ms · Disc (${(data.disc_center_px || [0,0]).join(', ')})`
+                    : `${data.engine || 'Fallback PHP'}`;
+            }
+
             document.getElementById('fundusScanPlaceholder').style.display = 'none';
             const box = document.getElementById('fundusScanMetrics');
             box.style.display = 'block';
@@ -381,13 +462,16 @@
             const iopNote = isEn ? data.iop_interpretation?.en : data.iop_interpretation?.es;
             const safety = isEn ? data.safety_notice?.en : data.safety_notice?.es;
             box.innerHTML = `
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;font-family:ui-monospace,monospace;">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px;font-family:ui-monospace,monospace;">
                     <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">FRISÉN GRADE</small><strong style="font-size:14px;color:#09090b;">Grade ${data.frisen_grade_estimate}</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">DISC SHARPNESS</small><strong style="font-size:14px;color:#09090b;">${Math.round(data.disc_margin_sharpness_index * 100)}%</strong></div>
+                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">SOBEL RIM SHARPNESS</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.disc_margin_sharpness_index || 0) * 100)}%</strong></div>
+                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">PERIPAPILLARY HALO</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.peripapillary_edema_halo || 0) * 100)}%</strong></div>
                     <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">CHOROIDAL FOLDS</small><strong style="font-size:14px;color:#09090b;">${data.choroidal_folds_detected ? (isEn ? 'Detected' : 'Detectados') : (isEn ? 'None' : 'Ausentes')}</strong></div>
+                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">VESSEL TORTUOSITY</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.vessel_tortuosity_index || 0) * 100)}%</strong></div>
+                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">TONOMETER IOP</small><strong style="font-size:14px;color:#09090b;">${data.iop_mmhg} mmHg</strong></div>
                 </div>
                 <p style="margin:0 0 6px;color:#09090b;font-weight:700;">${interp}</p>
-                <p style="margin:0 0 6px;color:#52525b;font-size:12px;"><strong>${isEn ? 'Tonometer IOP' : 'PIO Tonómetro'} (${data.iop_mmhg} mmHg):</strong> ${iopNote}</p>
+                <p style="margin:0 0 6px;color:#52525b;font-size:12px;"><strong>${isEn ? 'Tonometer IOP Correlation' : 'Correlación PIO Tonómetro'} (${data.iop_mmhg} mmHg):</strong> ${iopNote}</p>
                 <div style="font-size:11px;color:#71717a;border-top:1px solid #e4e4e7;padding-top:6px;">${safety}</div>
             `;
         } finally {
@@ -395,7 +479,29 @@
             btn.disabled = false;
             btn.innerHTML = `<i class="fa fa-crosshairs"></i> ${isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV'}`;
         }
+    }
+
+    thumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            thumbs.forEach(t => {
+                t.style.border = '1px solid #d4d4d8';
+                t.style.background = '#18181b';
+            });
+            thumb.style.border = '2px solid #09090b';
+            thumb.style.background = '#09090b';
+            activeCapture = {
+                eye: thumb.dataset.eye,
+                iop: Number(thumb.dataset.iop),
+                preset: thumb.dataset.preset,
+                filename: thumb.dataset.filename,
+                src: thumb.dataset.src,
+            };
+            runFundusScan();
+        });
     });
+
+    btn.addEventListener('click', runFundusScan);
+    runFundusScan();
 })();
 </script>
 

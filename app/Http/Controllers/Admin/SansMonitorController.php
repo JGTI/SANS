@@ -178,6 +178,15 @@ class SansMonitorController extends Controller
             $defaultFundusByCase[$activeCase->case_id] ?? ['od_image' => 'images/sans/fundus/fundus-normal.jpg', 'os_image' => 'images/sans/fundus/fundus-normal.jpg', 'od_preset' => 'normal', 'os_preset' => 'normal', 'iop_od' => 15.5, 'iop_os' => 15.0]
         );
 
+        $fundusGallery = [
+            ['id' => 'fd0-od', 'eye' => 'OD', 'day' => 'FD0', 'label_en' => 'FD0 Baseline · Normal Disc', 'label_es' => 'FD0 Basal · Papila Normal', 'preset' => 'normal', 'iop' => 14.5, 'image' => 'images/sans/fundus/fundus-normal.jpg', 'filename' => 'fundus-normal.jpg'],
+            ['id' => 'fd0-os', 'eye' => 'OS', 'day' => 'FD0', 'label_en' => 'FD0 Baseline · Left Eye', 'label_es' => 'FD0 Basal · Ojo Izquierdo', 'preset' => 'os_baseline', 'iop' => 14.2, 'image' => 'images/sans/fundus/fundus-os-baseline.jpg', 'filename' => 'fundus-os-baseline.jpg'],
+            ['id' => 'fd15-od', 'eye' => 'OD', 'day' => 'FD15', 'label_en' => 'FD15 Early Nasal Blur', 'label_es' => 'FD15 Borramiento Nasal', 'preset' => 'grade1', 'iop' => 15.6, 'image' => 'images/sans/fundus/fundus-grade1.jpg', 'filename' => 'fundus-grade1.jpg'],
+            ['id' => 'fd30-os', 'eye' => 'OS', 'day' => 'FD30', 'label_en' => 'FD30 Choroidal Folds', 'label_es' => 'FD30 Pliegues Coroideos', 'preset' => 'folds', 'iop' => 15.1, 'image' => 'images/sans/fundus/fundus-folds.jpg', 'filename' => 'fundus-folds.jpg'],
+            ['id' => 'fd30-od', 'eye' => 'OD', 'day' => 'FD30', 'label_en' => 'FD30 Papilledema Edema', 'label_es' => 'FD30 Edema Papilar', 'preset' => 'edema', 'iop' => 16.4, 'image' => 'images/sans/fundus/fundus-edema.png', 'filename' => 'fundus-edema.png'],
+            ['id' => 'fd45-os', 'eye' => 'OS', 'day' => 'FD45', 'label_en' => 'FD45 Venous Engorgement', 'label_es' => 'FD45 Ingurgitación Venosa', 'preset' => 'venous', 'iop' => 17.1, 'image' => 'images/sans/fundus/fundus-venous.jpg', 'filename' => 'fundus-venous.jpg'],
+        ];
+
         return view('admin.sans-monitor.index', compact(
             'cases',
             'activeCase',
@@ -206,7 +215,8 @@ class SansMonitorController extends Controller
             'compareObsId',
             'exposureComparison',
             'biomarkerPredictor',
-            'orbitalTransmission'
+            'orbitalTransmission',
+            'fundusGallery'
         ));
     }
 
@@ -223,8 +233,11 @@ class SansMonitorController extends Controller
 
         $defaultMap = [
             'normal' => 'images/sans/fundus/fundus-normal.jpg',
+            'os_baseline' => 'images/sans/fundus/fundus-os-baseline.jpg',
+            'grade1' => 'images/sans/fundus/fundus-grade1.jpg',
             'folds' => 'images/sans/fundus/fundus-folds.jpg',
             'edema' => 'images/sans/fundus/fundus-edema.png',
+            'venous' => 'images/sans/fundus/fundus-venous.jpg',
         ];
 
         $odPath = $defaultMap[$presetOd] ?? $defaultMap['edema'];
@@ -277,13 +290,26 @@ class SansMonitorController extends Controller
      */
     public function scanFundus(Request $request)
     {
+        $imageFilename = $request->input('image_filename');
+        $imageDataUrl = $request->input('image_data_url');
+
+        if (! $imageDataUrl && is_string($imageFilename) && str_contains($imageFilename, 'uploads/fundus/')) {
+            $safeName = basename($imageFilename);
+            $uploadedPath = public_path('uploads/fundus/' . $safeName);
+            if (is_file($uploadedPath)) {
+                $mime = mime_content_type($uploadedPath) ?: 'image/png';
+                $imageDataUrl = 'data:' . $mime . ';base64,' . base64_encode((string) file_get_contents($uploadedPath));
+            }
+        }
+
         $service = app(\App\Services\ScientificEngineService::class);
         $result = $service->scanFundusPhoto([
             'case_id' => (string) $request->input('case_id', 'CASE-PROG-02'),
             'eye' => (string) $request->input('eye', 'OD'),
             'iop_mmhg' => (float) $request->input('iop_mmhg', 16.0),
             'demo_preset' => (string) $request->input('demo_preset', 'edema'),
-            'image_filename' => $request->input('image_filename'),
+            'image_filename' => $imageFilename ? basename((string) $imageFilename) : null,
+            'image_data_url' => $imageDataUrl,
         ]);
 
         return response()->json($result);
