@@ -2178,9 +2178,11 @@ window.runCandidatePredictor = async function (e) {
         ],
         [
             'num' => 4,
-            'name' => 'Victoria Isabel Pérez Vallejo',
-            'role_en' => 'Clinical & Vision Member',
-            'role_es' => 'Integrante del equipo',
+            'name' => 'Lic. Victoria Isabel Pérez Vallejo',
+            'role_en' => 'International Relations',
+            'role_es' => 'Lic. en Relaciones Internacionales',
+            'bio_en' => 'B.A. in International Relations (Lic. en Relaciones Internacionales) · Aerospace Cooperation & Outreach',
+            'bio_es' => 'Lic. en Relaciones Internacionales · Cooperación Aeroespacial y Vinculación Institucional',
             'is_leader' => false,
             'nasa_user' => '@victoriaisabelpervall',
             'emails' => [
