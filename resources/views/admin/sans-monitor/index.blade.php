@@ -1044,49 +1044,157 @@
     </div>
 
     {{-- Vistas Esquemáticas Anatómicas del Escenario Activo --}}
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
-        <div style="border:1px solid var(--border);border-radius:6px;padding:1rem;">
-            <h3 style="font-size:0.9rem;font-weight:700;margin:0 0 0.5rem;">
-                <i class="fa fa-circle-o"></i> {{ $isEn ? '1. Axial Length & Posterior Pole (Sagittal)' : '1. Longitud Axial y Polo Posterior (Sagital)' }}
+    @php
+        $isWorsening = $activeCase->scenario_archetype === 'EMPEORA';
+        $isUnscanned = $bp['inputs']['oct_trt_current_um'] === null;
+        $frisenVal = $bp['inputs']['papilledema_frisen'] ?? null;
+        $frisenHigh = ($frisenVal !== null && $frisenVal >= 2) || $isWorsening;
+        $deltaTrt = $bp['delta_trt_um'] ?? 0;
+        $accentColor = $isWorsening ? '#f59e0b' : ($isUnscanned ? '#94a3b8' : '#22c55e');
+    @endphp
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+        {{-- 1. Axial Length & Posterior Pole (Sagittal) --}}
+        <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
+            <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+                <span><i class="fa fa-circle-o"></i> {{ $isEn ? '1. Axial Length & Posterior Pole (Sagittal)' : '1. Longitud Axial y Polo Posterior (Sagital)' }}</span>
+                <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">{{ $isWorsening ? 'FLATTENING' : ($isUnscanned ? 'PENDING' : 'NOMINAL') }}</span>
             </h3>
-            <svg viewBox="0 0 260 140" style="width:100%;height:130px;background:#09090b;border-radius:4px;">
-                <ellipse cx="125" cy="70" rx="{{ $activeCase->scenario_archetype === 'EMPEORA' ? 50 : 56 }}" ry="52" fill="none" stroke="#ffffff" stroke-width="2"/>
-                <line x1="68" y1="70" x2="182" y2="70" stroke="#a1a1aa" stroke-dasharray="4 3" stroke-width="1.5"/>
-                <rect x="175" y="57" width="35" height="26" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-                <text x="14" y="22" fill="#ffffff" font-size="10" font-family="monospace">{{ $isEn ? 'AXIAL LENGTH' : 'LONGITUD AXIAL' }} · {{ $activeCase->case_id }}</text>
-                <text x="14" y="128" fill="#a1a1aa" font-size="9" font-family="monospace">{{ $isEn ? 'Simulated hyperopia:' : 'Hipermetropía simulada:' }} +{{ $bp['inputs']['hyperopia_sim_d'] }} D</text>
+            <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#070d1a 0%,#09090b 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
+                <defs>
+                    <pattern id="gridSagittal" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.6"/>
+                    </pattern>
+                    <radialGradient id="vitreousGrad" cx="45%" cy="50%" r="55%">
+                        <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.16"/>
+                        <stop offset="100%" stop-color="#020617" stop-opacity="0.05"/>
+                    </radialGradient>
+                </defs>
+                <rect width="320" height="175" fill="url(#gridSagittal)"/>
+                {{-- Baseline reference globe (dashed) --}}
+                <ellipse cx="145" cy="90" rx="64" ry="54" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="3 3"/>
+                {{-- Optic nerve & CSF sheath (distended if worsening) --}}
+                <path d="M 196 {{ $isWorsening ? 70 : 75 }} L 278 {{ $isWorsening ? 66 : 73 }} L 278 {{ $isWorsening ? 114 : 107 }} L 196 {{ $isWorsening ? 110 : 105 }} Z"
+                      fill="{{ $isWorsening ? 'rgba(56,189,248,0.18)' : 'rgba(148,163,184,0.12)' }}"
+                      stroke="{{ $isWorsening ? '#38bdf8' : '#64748b' }}" stroke-width="1.3"/>
+                <line x1="198" y1="90" x2="276" y2="90" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2 2"/>
+                {{-- Sclera / Choroid / Retina shell --}}
+                <ellipse cx="145" cy="90" rx="{{ $isWorsening ? 55 : 64 }}" ry="54" fill="url(#vitreousGrad)" stroke="#e2e8f0" stroke-width="2"/>
+                <ellipse cx="145" cy="90" rx="{{ $isWorsening ? 51 : 60 }}" ry="50" fill="none" stroke="{{ $accentColor }}" stroke-width="1.2" stroke-opacity="0.85"/>
+                {{-- Cornea & Lens (anterior left) --}}
+                <path d="M 85 68 Q 66 90 85 112" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.8"/>
+                <ellipse cx="97" cy="90" rx="7" ry="18" fill="rgba(226,232,240,0.2)" stroke="#cbd5e1" stroke-width="1.2"/>
+                {{-- Optical / Axial measurement axis --}}
+                <line x1="72" y1="90" x2="{{ $isWorsening ? 200 : 209 }}" y2="90" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="4 3"/>
+                <circle cx="{{ $isWorsening ? 198 : 207 }}" cy="90" r="3" fill="{{ $accentColor }}"/>
+                @if($isWorsening)
+                    {{-- Posterior flattening vector arrows --}}
+                    <line x1="226" y1="78" x2="205" y2="78" stroke="#f59e0b" stroke-width="1.6"/>
+                    <polygon points="205,78 211,75 211,81" fill="#f59e0b"/>
+                    <line x1="226" y1="102" x2="205" y2="102" stroke="#f59e0b" stroke-width="1.6"/>
+                    <polygon points="205,102 211,99 211,105" fill="#f59e0b"/>
+                @endif
+                {{-- Telemetry HUD --}}
+                <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'AXIAL LENGTH' : 'LONGITUD AXIAL' }} · {{ $activeCase->case_id }}</text>
+                <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'Simulated hyperopia:' : 'Hipermetropía simulada:' }} <tspan fill="{{ $accentColor }}" font-weight="700">+{{ $bp['inputs']['hyperopia_sim_d'] }} D</tspan></text>
+                <text x="236" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">AL {{ $bp['inputs']['axial_length_mm'] ?? '23.8' }}mm</text>
             </svg>
         </div>
 
-        <div style="border:1px solid var(--border);border-radius:6px;padding:1rem;">
-            <h3 style="font-size:0.9rem;font-weight:700;margin:0 0 0.5rem;">
-                <i class="fa fa-dot-circle-o"></i> {{ $isEn ? '2. Papilledema & Optic Disc (Fundus)' : '2. Edema Papilar y Disco Óptico (Fondo)' }}
+        {{-- 2. Papilledema & Optic Disc (Fundus) --}}
+        <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
+            <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+                <span><i class="fa fa-dot-circle-o"></i> {{ $isEn ? '2. Papilledema & Optic Disc (Fundus)' : '2. Edema Papilar y Disco Óptico (Fondo)' }}</span>
+                <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">FRISÉN {{ $frisenVal ?? 'N/E' }}</span>
             </h3>
-            <svg viewBox="0 0 260 140" style="width:100%;height:130px;background:#09090b;border-radius:4px;">
-                <circle cx="130" cy="70" r="52" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-                <circle cx="155" cy="70" r="{{ ($bp['inputs']['papilledema_frisen'] ?? 0) >= 2 || $activeCase->scenario_archetype === 'EMPEORA' ? 19 : 12 }}" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="{{ ($bp['inputs']['papilledema_frisen'] ?? 0) >= 2 || $activeCase->scenario_archetype === 'EMPEORA' ? '3 2' : 'none' }}"/>
-                <text x="14" y="22" fill="#ffffff" font-size="10" font-family="monospace">{{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $bp['inputs']['papilledema_frisen'] ?? 'N/E' }})</text>
-                <text x="14" y="128" fill="#a1a1aa" font-size="9" font-family="monospace">{{ $isEn ? 'IOP:' : 'PIO:' }} {{ $bp['inputs']['iop_mmhg'] }} mmHg</text>
+            <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#09090b 0%,#120806 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
+                <defs>
+                    <radialGradient id="fundusField" cx="52%" cy="52%" r="50%">
+                        <stop offset="0%" stop-color="#7c2d12" stop-opacity="0.58"/>
+                        <stop offset="65%" stop-color="#431407" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#09090b" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="edemaHalo" cx="50%" cy="50%" r="50%">
+                        <stop offset="30%" stop-color="{{ $frisenHigh ? '#f59e0b' : '#22c55e' }}" stop-opacity="{{ $frisenHigh ? '0.62' : '0.22' }}"/>
+                        <stop offset="100%" stop-color="{{ $frisenHigh ? '#ef4444' : '#22c55e' }}" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <circle cx="160" cy="90" r="64" fill="url(#fundusField)" stroke="#334155" stroke-width="1.2"/>
+                {{-- Macular fovea --}}
+                <circle cx="122" cy="92" r="4" fill="#1c0a04" stroke="#78350f" stroke-width="0.8"/>
+                {{-- Peripapillary Edema Halo --}}
+                <circle cx="186" cy="90" r="{{ $frisenHigh ? 30 : 18 }}" fill="url(#edemaHalo)"/>
+                {{-- Choroidal folds if worsening --}}
+                @if($frisenHigh)
+                    <path d="M 136 74 Q 152 80 156 90 Q 152 100 136 106" fill="none" stroke="#EAFE07" stroke-width="1" stroke-opacity="0.55" stroke-dasharray="3 2"/>
+                    <path d="M 143 68 Q 160 76 164 90 Q 160 104 143 112" fill="none" stroke="#EAFE07" stroke-width="0.9" stroke-opacity="0.45" stroke-dasharray="3 2"/>
+                @endif
+                {{-- Retinal vascular arcade --}}
+                <path d="M 186 86 Q 166 56 120 48" fill="none" stroke="#ef4444" stroke-width="{{ $frisenHigh ? 2.1 : 1.5 }}" stroke-opacity="0.85"/>
+                <path d="M 186 94 Q 164 124 118 130" fill="none" stroke="#ef4444" stroke-width="{{ $frisenHigh ? 2.1 : 1.5 }}" stroke-opacity="0.85"/>
+                <path d="M 188 86 Q 204 58 220 46" fill="none" stroke="#dc2626" stroke-width="1.3" stroke-opacity="0.75"/>
+                <path d="M 188 94 Q 204 120 218 134" fill="none" stroke="#dc2626" stroke-width="1.3" stroke-opacity="0.75"/>
+                {{-- Optic Nerve Head & Cup --}}
+                <circle cx="186" cy="90" r="{{ $frisenHigh ? 17 : 13 }}" fill="rgba(253,224,71,0.16)" stroke="{{ $frisenHigh ? '#f59e0b' : '#fde047' }}" stroke-width="1.8" stroke-dasharray="{{ $frisenHigh ? '3 2' : 'none' }}"/>
+                <circle cx="186" cy="90" r="6" fill="rgba(254,240,138,0.35)" stroke="#fef08a" stroke-width="1"/>
+                {{-- Telemetry HUD --}}
+                <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'PAPILLEDEMA' : 'EDEMA PAPILAR' }} (FRISÉN {{ $frisenVal ?? 'N/E' }})</text>
+                <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'IOP:' : 'PIO:' }} <tspan fill="#f8fafc" font-weight="700">{{ $bp['inputs']['iop_mmhg'] }} mmHg</tspan></text>
+                <text x="234" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">{{ $frisenHigh ? 'HALO + FOLDS' : 'SHARP RIM' }}</text>
             </svg>
         </div>
 
-        <div style="border:1px solid var(--border);border-radius:6px;padding:1rem;">
-            <h3 style="font-size:0.9rem;font-weight:700;margin:0 0 0.5rem;">
-                <i class="fa fa-align-justify"></i> {{ $isEn ? '3. Mean OCT Thickness (Retinal Layers)' : '3. Espesor Medio por OCT (Capas)' }}
+        {{-- 3. Mean OCT Thickness (Retinal Layers B-Scan) --}}
+        <div style="border:1px solid var(--border);border-radius:10px;padding:0.9rem;background:var(--card);">
+            <h3 style="font-size:0.86rem;font-weight:800;margin:0 0 0.55rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
+                <span><i class="fa fa-align-justify"></i> {{ $isEn ? '3. Mean OCT Thickness (Retinal Layers)' : '3. Espesor Medio por OCT (Capas)' }}</span>
+                <span style="font-family:ui-monospace,monospace;font-size:0.65rem;padding:2px 6px;border-radius:4px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);">SD-OCT</span>
             </h3>
-            @if($bp['inputs']['oct_trt_current_um'] === null)
-                <div style="height:130px;display:flex;align-items:center;justify-content:center;background:#09090b;color:#ffffff;padding:1rem;text-align:center;font-size:0.82rem;border-radius:4px;">
-                    {{ $isEn
+            @if($isUnscanned)
+                <div style="height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.45rem;background:linear-gradient(180deg,#050a14 0%,#09090b 100%);color:#e2e8f0;padding:1rem;text-align:center;font-size:0.8rem;border-radius:8px;border:1px dashed #475569;">
+                    <span style="font-family:ui-monospace,monospace;font-size:0.7rem;color:#94a3b8;letter-spacing:0.06em;">SD-OCT B-SCAN · UNMEASURED</span>
+                    <span>{{ $isEn
                         ? 'Scenario "Unscanned": OCT not evaluable (Never drawn as normal nor classified as stable).'
-                        : 'Escenario «No se escanea»: OCT no evaluable (No se dibuja como normal ni se clasifica como estable).' }}
+                        : 'Escenario «No se escanea»: OCT no evaluable (No se dibuja como normal ni se clasifica como estable).' }}</span>
                 </div>
             @else
-                <svg viewBox="0 0 260 140" style="width:100%;height:130px;background:#09090b;border-radius:4px;">
-                    <path d="M 15 55 Q 130 {{ ($bp['delta_trt_um'] ?? 0) >= 20 ? 28 : 48 }} 245 55" fill="none" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M 15 80 Q 130 78 245 80" fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-dasharray="4 2"/>
-                    <path d="M 15 106 Q 130 106 245 106" fill="none" stroke="#ffffff" stroke-width="2"/>
-                    <text x="14" y="22" fill="#ffffff" font-size="10" font-family="monospace">{{ $isEn ? 'OCT THICKNESS:' : 'ESPESOR OCT:' }} {{ $bp['inputs']['oct_trt_current_um'] }} µm</text>
-                    <text x="14" y="128" fill="#a1a1aa" font-size="9" font-family="monospace">{{ $isEn ? 'Change vs baseline:' : 'Cambio vs basal:' }} {{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }}</text>
+                @php
+                    $peakY = $deltaTrt >= 20 ? 36 : ($deltaTrt >= 10 ? 48 : 58);
+                @endphp
+                <svg viewBox="0 0 320 175" style="width:100%;height:168px;background:linear-gradient(180deg,#050a14 0%,#09090b 100%);border-radius:8px;border:1px solid #1e293b;display:block;">
+                    <defs>
+                        <linearGradient id="rnflFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}" stop-opacity="0.32"/>
+                            <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.04"/>
+                        </linearGradient>
+                    </defs>
+                    {{-- Calibrated µm depth lines --}}
+                    <line x1="34" y1="45" x2="306" y2="45" stroke="#1e293b" stroke-width="0.8"/>
+                    <line x1="34" y1="75" x2="306" y2="75" stroke="#1e293b" stroke-width="0.8"/>
+                    <line x1="34" y1="105" x2="306" y2="105" stroke="#1e293b" stroke-width="0.8"/>
+                    <line x1="34" y1="132" x2="306" y2="132" stroke="#1e293b" stroke-width="0.8"/>
+                    <text x="6" y="48" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">400</text>
+                    <text x="6" y="78" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">300</text>
+                    <text x="6" y="108" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">200</text>
+                    <text x="6" y="135" fill="#475569" font-size="7.5" font-family="ui-monospace,monospace">RPE</text>
+                    {{-- Choroid under RPE --}}
+                    <rect x="34" y="128" width="272" height="16" fill="rgba(245,158,11,0.08)"/>
+                    {{-- Retinal thickness shaded area --}}
+                    <path d="M 34 72 Q 170 {{ $peakY }} 306 72 L 306 126 Q 170 126 34 126 Z" fill="url(#rnflFill)"/>
+                    {{-- Baseline reference contour (dashed) --}}
+                    <path d="M 34 72 Q 170 62 306 72" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4 3"/>
+                    {{-- OPL / INL mid-retinal layer --}}
+                    <path d="M 34 96 Q 170 {{ $peakY + 46 }} 306 96" fill="none" stroke="#38bdf8" stroke-width="1.1" stroke-opacity="0.55"/>
+                    {{-- RPE / Bruch's membrane --}}
+                    <path d="M 34 126 Q 170 126 306 126" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                    {{-- ILM / RNFL upper contour --}}
+                    <path d="M 34 72 Q 170 {{ $peakY }} 306 72" fill="none" stroke="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}" stroke-width="2.2"/>
+                    {{-- ΔTRT Caliper --}}
+                    <line x1="170" y1="{{ $peakY + 14 }}" x2="170" y2="124" stroke="#f8fafc" stroke-width="1" stroke-dasharray="2 2"/>
+                    <circle cx="170" cy="{{ $peakY + 14 }}" r="2.5" fill="{{ $isWorsening ? '#EAFE07' : '#22d3ee' }}"/>
+                    {{-- Telemetry HUD --}}
+                    <text x="12" y="20" fill="#f8fafc" font-size="9.5" font-weight="700" font-family="ui-monospace,monospace">{{ $isEn ? 'OCT THICKNESS:' : 'ESPESOR OCT:' }} {{ $bp['inputs']['oct_trt_current_um'] }} µm</text>
+                    <text x="12" y="162" fill="#94a3b8" font-size="8.8" font-family="ui-monospace,monospace">{{ $isEn ? 'Change vs baseline:' : 'Cambio vs basal:' }} <tspan fill="{{ $isWorsening ? '#EAFE07' : '#22c55e' }}" font-weight="700">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }}</tspan></text>
+                    <text x="242" y="162" fill="#64748b" font-size="8.2" font-family="ui-monospace,monospace">RNFL · RPE</text>
                 </svg>
             @endif
         </div>
