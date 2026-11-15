@@ -190,9 +190,16 @@
                 <p class="crew-step-feedback" data-step-feedback="0" hidden></p>
             </section>
             <section class="crew-step" data-step="1" hidden>
-                <p class="crew-eyebrow">{{ $isEn ? 'GUIDED VISUAL CHECKS' : 'PRUEBAS VISUALES GUIADAS' }}</p><h2>{{ $isEn ? 'Complete the six screen checks' : 'Completa las seis pruebas en pantalla' }}</h2><p>{{ $isEn ? 'Follow the distance shown for each check. Cover one eye only when instructed.' : 'Sigue la distancia indicada en cada prueba. Cubre un ojo solo cuando se indique.' }}</p>
+                <p class="crew-eyebrow">{{ $isEn ? 'GUIDED VISUAL WIZARD' : 'ASISTENTE VISUAL GUIADO' }}</p><h2>{{ $isEn ? 'Step through the six screen checks' : 'Completa paso a paso las seis pruebas' }}</h2><p>{{ $isEn ? 'One check at a time. Follow the distance shown and cover one eye only when instructed.' : 'Una prueba a la vez. Sigue la distancia indicada y cubre un ojo solo cuando se indique.' }}</p>
                 <div class="crew-tests-toolbar" aria-label="{{ $isEn ? 'Test progress' : 'Progreso de pruebas' }}">
-                    <div><span>01</span><i></i><span>02</span><i></i><span>03</span><i></i><span>04</span><i></i><span>05</span><i></i><span>06</span></div>
+                    <div class="crew-wiz-stepper" role="tablist" aria-label="{{ $isEn ? 'Visual check steps' : 'Pasos de prueba visual' }}">
+                        <button type="button" class="crew-wiz-pill is-active" data-wiz-jump="0">01</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="1">02</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="2">03</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="3">04</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="4">05</button><i></i>
+                        <button type="button" class="crew-wiz-pill" data-wiz-jump="5">06</button>
+                    </div>
                     <output data-tests-progress>{{ $isEn ? '0 of 6 recorded' : '0 de 6 registradas' }}</output>
                 </div>
                 <div class="crew-guided-tests">
@@ -257,6 +264,21 @@
                         </div>
                     </article>
                 </div>
+                <div class="crew-wiz-nav" data-wiz-nav>
+                    <button type="button" class="crew-secondary-action" data-wiz-prev disabled><i class="fa fa-chevron-left"></i> {{ $isEn ? 'Previous check' : 'Prueba anterior' }}</button>
+                    <span class="crew-wiz-counter" data-wiz-counter>{{ $isEn ? 'Check 1 of 6' : 'Prueba 1 de 6' }}</span>
+                    <button type="button" class="crew-secondary-action" data-wiz-next>{{ $isEn ? 'Next check' : 'Siguiente prueba' }} <i class="fa fa-chevron-right"></i></button>
+                </div>
+                <style>
+                    .crew-wiz-stepper { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+                    .crew-wiz-pill { border:1px solid #cbd5e1; background:#ffffff; color:#0f172a; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
+                    .crew-wiz-pill:hover { border-color:#1d4ed8; color:#1d4ed8; }
+                    .crew-wiz-pill.is-active { background:#0b3d91; border-color:#0b3d91; color:#ffffff; box-shadow:0 0 0 3px rgba(11,61,145,0.18); }
+                    .crew-wiz-pill.is-done { background:#ecfdf5; border-color:#10b981; color:#047857; }
+                    .crew-wiz-pill.is-active.is-done { background:#047857; border-color:#047857; color:#ffffff; }
+                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; }
+                    .crew-wiz-counter { font-size:13px; font-weight:700; color:#334155; }
+                </style>
                 <p class="crew-step-feedback" data-step-feedback="1" hidden></p>
             </section>
             <section class="crew-step" data-step="2" hidden>
@@ -342,11 +364,32 @@
         if (feedback) feedback.hidden = true;
     }
 
+    const visualTests = [...app.querySelectorAll('[data-visual-test]')];
+    const wizPills = [...app.querySelectorAll('[data-wiz-jump]')];
+    let currentVisualTest = 0;
+
+    function renderVisualWizard() {
+        visualTests.forEach((test, idx) => {
+            test.hidden = idx !== currentVisualTest;
+        });
+        wizPills.forEach((pill, idx) => {
+            pill.classList.toggle('is-active', idx === currentVisualTest);
+            pill.classList.toggle('is-done', visualTests[idx]?.classList.contains('is-complete'));
+        });
+        const counter = app.querySelector('[data-wiz-counter]');
+        if (counter) counter.textContent = isEn ? `Check ${currentVisualTest + 1} of ${visualTests.length}` : `Prueba ${currentVisualTest + 1} de ${visualTests.length}`;
+        const prevBtn = app.querySelector('[data-wiz-prev]');
+        const nextBtn = app.querySelector('[data-wiz-next]');
+        if (prevBtn) prevBtn.disabled = currentVisualTest === 0;
+        if (nextBtn) nextBtn.disabled = currentVisualTest === visualTests.length - 1;
+    }
+
     function updateVisualProgress() {
         const completed = app.querySelectorAll('[data-visual-test].is-complete').length;
-        const total = app.querySelectorAll('[data-visual-test]').length;
+        const total = visualTests.length;
         const progress = app.querySelector('[data-tests-progress]');
         if (progress) progress.textContent = isEn ? `${completed} of ${total} recorded` : `${completed} de ${total} registradas`;
+        renderVisualWizard();
     }
 
     function canAdvance() {
@@ -356,9 +399,11 @@
             return false;
         }
         if (currentStep === 1) {
-            const answers = [...app.querySelectorAll('[data-test-answer]')];
-            if (answers.some(answer => !answer.value)) {
-                showFeedback(1, isEn ? 'Complete every required result in all six visual checks.' : 'Completa todos los resultados requeridos en las seis pruebas visuales.');
+            const firstIncomplete = visualTests.findIndex(test => [...test.querySelectorAll('[data-test-answer]')].some(a => !a.value));
+            if (firstIncomplete !== -1) {
+                currentVisualTest = firstIncomplete;
+                renderVisualWizard();
+                showFeedback(1, isEn ? `Complete check ${firstIncomplete + 1} of ${visualTests.length} before continuing.` : `Completa la prueba ${firstIncomplete + 1} de ${visualTests.length} antes de continuar.`);
                 return false;
             }
         }
@@ -368,6 +413,18 @@
         }
         return true;
     }
+
+    wizPills.forEach(pill => pill.addEventListener('click', () => {
+        currentVisualTest = Number(pill.dataset.wizJump || 0);
+        renderVisualWizard();
+    }));
+    app.querySelector('[data-wiz-prev]')?.addEventListener('click', () => {
+        if (currentVisualTest > 0) { currentVisualTest--; renderVisualWizard(); }
+    });
+    app.querySelector('[data-wiz-next]')?.addEventListener('click', () => {
+        if (currentVisualTest < visualTests.length - 1) { currentVisualTest++; renderVisualWizard(); }
+    });
+    renderVisualWizard();
 
     tabs.forEach(tab => tab.addEventListener('click', () => openTab(tab.dataset.crewTab)));
     app.querySelectorAll('[data-open-tab]').forEach(button => button.addEventListener('click', () => openTab(button.dataset.openTab)));
