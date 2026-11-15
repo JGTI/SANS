@@ -2162,8 +2162,10 @@ window.runCandidatePredictor = async function (e) {
         [
             'num' => 3,
             'name' => 'Miguel Ángel García Espinosa',
-            'role_en' => 'Engineering Member',
-            'role_es' => 'Integrante del equipo',
+            'role_en' => 'Software Engineering',
+            'role_es' => 'Ingeniería de Software',
+            'bio_en' => 'Software Engineering · Systems Architecture, Scientific Engine & Full-Stack Integration',
+            'bio_es' => 'Ingeniería de Software · Arquitectura de Sistemas, Motor Científico e Integración Full-Stack',
             'is_leader' => false,
             'nasa_user' => '@gitmiguelti',
             'emails' => [
