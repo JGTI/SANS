@@ -2132,9 +2132,11 @@ window.runCandidatePredictor = async function (e) {
     $teamMembers = [
         [
             'num' => 1,
-            'name' => 'José Guadalupe García Espinosa',
+            'name' => 'Ing. José Guadalupe García Espinosa',
             'role_en' => 'Team Leader',
             'role_es' => 'Líder del equipo',
+            'bio_en' => 'Computer Systems Engineer (Ingeniero en Sistemas Computacionales) · Project Architect & Scientific Computing Lead',
+            'bio_es' => 'Ingeniero en Sistemas Computacionales · Arquitectura del Proyecto y Cómputo Científico',
             'is_leader' => true,
             'nasa_user' => '@gitti',
             'emails' => [
