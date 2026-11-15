@@ -22,72 +22,8 @@
 @endphp
 <a href="#main-content" class="skip-link">{{ $isEn ? 'Skip to main content' : 'Saltar al contenido principal' }}</a>
 <div class="admin-shell">
-    <aside class="sidebar" id="app-sidebar" aria-label="{{ $isEn ? 'Main navigation' : 'Navegación principal' }}">
-        <a class="workspace-switcher" href="{{ route('home') }}">
-            <span class="workspace-logo" aria-hidden="true" style="background:#fff;padding:4px;display:flex;align-items:center;justify-content:center;">
-                <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:22px;height:22px;object-fit:contain;">
-            </span>
-            <span class="workspace-copy">
-                <span class="workspace-name">{{ config('app.name') }}</span>
-                <span class="workspace-plan">SPACE VISION · NASA Space Apps</span>
-            </span>
-            <i class="fa fa-angle-right" style="color:var(--muted-foreground); margin-left:auto;"></i>
-        </a>
-
-        <div class="sidebar-scroll">
-            <nav class="nav-section" aria-label="{{ $isEn ? 'Main SANS Flow' : 'Flujo Principal SANS' }}">
-                <div class="nav-label">{{ $isEn ? 'Main Workspace' : 'Pantallas Principales' }}</div>
-                <ul class="nav-list">
-                    <li>
-                        <a class="nav-link {{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
-                            <i class="fa fa-flask" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('public.astronaut') || request('tab') === 'astronauta' ? 'active' : '' }}" href="{{ route('public.astronaut') }}">
-                            <i class="fa fa-user-md" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? 'Astronaut Check (In-Flight)' : 'Vista Astronauta (Chequeo)' }}
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
-                            <i class="fa fa-eye" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? '3D Viewer + OCT Console' : 'Visor 3D + Consola OCT' }}
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
-        <div class="sidebar-user">
-            @php
-                $currentUserName = $isEn ? 'NASA Space Apps Judge' : 'Jurado NASA Space Apps';
-                $currentUserEmail = $isEn ? 'Public Mode · Zero Login' : 'Modo Público · Sin Login';
-            @endphp
-            <button class="user-button" id="user-menu-button" type="button" aria-expanded="false" aria-controls="user-menu">
-                <span class="avatar">NS</span>
-                <span class="user-copy">
-                    <span class="user-name">{{ $currentUserName }}</span>
-                    <span class="user-email">{{ $currentUserEmail }}</span>
-                </span>
-                <i class="fa fa-ellipsis-v" style="color:var(--muted-foreground); margin-left:auto;"></i>
-            </button>
-            <div class="user-menu" id="user-menu">
-                <a href="{{ route('home', ['lang' => app()->getLocale()]) }}" style="display:block;padding:8px 12px;text-decoration:none;color:inherit;font-size:13px;">
-                    <i class="fa fa-refresh" style="margin-right:8px;"></i> {{ $isEn ? 'Reset Public Demo' : 'Reiniciar Demo Pública' }}
-                </a>
-            </div>
-        </div>
-    </aside>
-
-    <button class="sidebar-overlay" id="sidebar-overlay" type="button" aria-label="{{ $isEn ? 'Close menu' : 'Cerrar menú' }}"></button>
-
     <div class="admin-main">
         <header class="topbar">
-            <button class="icon-btn mobile-menu" id="mobile-menu" type="button" title="{{ $isEn ? 'Toggle Navigation Drawer' : 'Abrir/Cerrar Menú Lateral' }}" aria-label="{{ $isEn ? 'Open menu' : 'Abrir menú' }}">
-                <i class="fa fa-bars" style="font-size:15px;"></i>
-            </button>
 
             <a href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--foreground);font-weight:800;font-size:0.86rem;padding-right:0.5rem;border-right:1px solid var(--border);">
                 <img src="{{ request()->getBasePath() }}/images/nexus-logo.png" alt="Nexus" style="width:20px;height:20px;object-fit:contain;">
@@ -149,39 +85,11 @@
 <script>
     (() => {
         const root = document.documentElement;
-        const sidebar = document.getElementById('app-sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const menuButton = document.getElementById('mobile-menu');
-        const userButton = document.getElementById('user-menu-button');
-        const userMenu = document.getElementById('user-menu');
 
-        document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
             const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
             root.dataset.theme = next;
             localStorage.setItem('nexus-space-theme', next);
-        });
-
-        const closeSidebar = () => {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('open');
-        };
-
-        menuButton?.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            overlay.classList.add('open');
-        });
-        overlay.addEventListener('click', closeSidebar);
-
-        userButton.addEventListener('click', () => {
-            const open = userMenu.classList.toggle('open');
-            userButton.setAttribute('aria-expanded', String(open));
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.sidebar-user')) {
-                userMenu.classList.remove('open');
-                userButton.setAttribute('aria-expanded', 'false');
-            }
         });
 
         if (root.lang === 'en') {
