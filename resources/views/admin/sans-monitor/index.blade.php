@@ -252,7 +252,13 @@
     </a>
 </div>
 
-{{-- Resumen compacto permanente por ojo --}}
+<div style="display:flex;justify-content:flex-end;margin:-0.45rem 0 0.9rem;">
+    <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:#ffffff;border:1px solid #d4d4d8;color:#09090b;font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
+        <i class="fa fa-book"></i>
+        <span>{{ $isEn ? 'NASA Protocols & Scientific Bibliography (7 References)' : 'Protocolos NASA y Bibliografía Científica (7 Referencias)' }}</span>
+        <i class="fa fa-arrow-down" style="font-size:10px;opacity:0.7;"></i>
+    </a>
+</div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.85rem;margin-bottom:1.25rem;">
     @foreach(['OD' => ($isEn ? 'Right Eye (OD)' : 'Ojo Derecho (OD)'), 'OS' => ($isEn ? 'Left Eye (OS)' : 'Ojo Izquierdo (OS)')] as $eyeKey => $eyeTitle)
         @php
@@ -1070,56 +1076,75 @@
 </div>
 
 {{-- CATÁLOGO DE PROTOCOLOS CIENTÍFICOS NASA Y 7 REFERENCIAS CANÓNICAS (RF-05 A RF-08, AT-02) --}}
-<details class="card collapsible-card" style="padding:1rem 1.2rem;margin-bottom:1.25rem;">
-    <summary style="cursor:pointer;font-weight:800;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
-        <span>
-            <i class="fa fa-book" style="color:var(--interactive-text);"></i>
-            {{ $isEn
-                ? 'NASA Clinical Protocols, Previously Applied Version & 7 Scientific References (AT-02)'
-                : 'Protocolos Clínicos NASA, Versión Previa Aplicada y 7 Referencias Científicas (AT-02)' }}
+<details open id="nasa-bibliography" class="card collapsible-card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid #d4d4d8;border-radius:10px;background:#ffffff;scroll-margin-top:78px;">
+    <summary style="cursor:pointer;font-weight:800;font-size:0.98rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:9px;color:#09090b;">
+            <span style="display:inline-grid;place-items:center;width:30px;height:30px;border-radius:7px;background:#09090b;color:#ffffff;font-size:13px;"><i class="fa fa-book"></i></span>
+            <span>
+                <small style="display:block;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:800;letter-spacing:0.08em;color:#52525b;text-transform:uppercase;">
+                    {{ $isEn ? 'NASA OCHMO · HRP · JAMA · SCIENTIFIC BIBLIOGRAPHY' : 'NASA OCHMO · HRP · JAMA · BIBLIOGRAFÍA CIENTÍFICA' }}
+                </small>
+                {{ $isEn
+                    ? 'NASA Clinical Protocols, Previously Applied Version & 7 Scientific References (AT-02)'
+                    : 'Protocolos Clínicos NASA, Versión Previa Aplicada y 7 Referencias Científicas (AT-02)' }}
+            </span>
         </span>
-        <span class="interactive-pill">{{ $isEn ? 'Click to expand +' : 'Clic para abrir +' }}</span>
+        <span class="interactive-pill" style="font-family:ui-monospace,monospace;font-size:0.72rem;">{{ count($catalogSearch['followup_matches']) }} {{ $isEn ? 'Verified Sources' : 'Fuentes Verificadas' }}</span>
     </summary>
-    <div style="margin-top:0.85rem;font-size:0.8rem;">
-        <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
-            <strong>{{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}</strong>
-            @if($catalogSearch['previously_applied'])
-                <div>
-                    <code>{{ $catalogSearch['previously_applied']->version_id }}</code> —
-                    {{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})
+
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #e4e4e7;font-size:0.8rem;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;margin-bottom:1rem;">
+            <div style="padding:0.75rem 0.9rem;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;">
+                <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:#52525b;margin-bottom:0.35rem;text-transform:uppercase;">
+                    {{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}
+                </strong>
+                @if($catalogSearch['previously_applied'])
+                    <div style="color:#09090b;font-weight:600;">
+                        <code style="background:#09090b;color:#ffffff;padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $catalogSearch['previously_applied']->version_id }}</code>
+                        <span style="margin-left:4px;">{{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})</span>
+                    </div>
+                @else
+                    <div style="color:#52525b;">{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
+                @endif
+            </div>
+
+            @if(!empty($catalogSearch['newer_verified_versions']))
+                <div style="padding:0.75rem 0.9rem;border:1px solid #d4d4d8;border-radius:8px;background:#f4f4f5;">
+                    <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:#09090b;margin-bottom:0.35rem;text-transform:uppercase;">
+                        {{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}
+                    </strong>
+                    @foreach($catalogSearch['newer_verified_versions'] as $nv)
+                        <div style="color:#09090b;font-weight:600;margin-bottom:2px;">
+                            <code style="background:#ffffff;border:1px solid #d4d4d8;color:#09090b;padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $nv->version_id }}</code>
+                            <span style="margin-left:4px;">{{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})</span>
+                        </div>
+                    @endforeach
                 </div>
-            @else
-                <div>{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
             @endif
         </div>
 
-        @if(!empty($catalogSearch['newer_verified_versions']))
-            <div style="padding:0.65rem;border:1px solid var(--border);border-radius:5px;margin-bottom:0.65rem;">
-                <strong>{{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}</strong>
-                @foreach($catalogSearch['newer_verified_versions'] as $nv)
-                    <div>
-                        <code>{{ $nv->version_id }}</code> — {{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})
-                    </div>
-                @endforeach
-            </div>
-        @endif
-
-        <div style="font-weight:700;margin-bottom:0.35rem;">
+        <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:#52525b;text-transform:uppercase;margin-bottom:0.55rem;">
             {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
         </div>
-        <ul style="margin:0;padding-left:1.15rem;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0.6rem;">
             @foreach($catalogSearch['followup_matches'] as $match)
-                <li style="margin-bottom:0.3rem;">
-                    <strong>[{{ $match['document_type_badge'] }}]</strong>
-                    <code>{{ $match['protocol']->version_id }}</code> — {{ $match['protocol']->title }}
+                <article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;">
+                    <div style="min-width:0;">
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+                            <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#e4e4e7;color:#09090b;">[{{ $match['document_type_badge'] }}]</span>
+                            <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:#09090b;">{{ $match['protocol']->version_id }}</code>
+                        </div>
+                        <div style="color:#18181b;font-weight:600;line-height:1.35;">{{ $match['protocol']->title }}</div>
+                    </div>
                     @if($match['protocol']->source_url)
-                        <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener" style="text-decoration:underline;margin-left:4px;color:var(--interactive-text);font-weight:700;">
+                        <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener"
+                           style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:#ffffff;border:1px solid #d4d4d8;color:#09090b;font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
                             <i class="fa fa-external-link"></i> NASA/Source
                         </a>
                     @endif
-                </li>
+                </article>
             @endforeach
-        </ul>
+        </div>
     </div>
 </details>
 
