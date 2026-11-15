@@ -46,8 +46,8 @@ Route::post('/admin/sans-monitor/adopt-protocol', [SansMonitorController::class,
 Route::get('/digital-twin', [DigitalTwinController::class, 'index'])->name('public.digital-twin');
 Route::get('/digital-twin/oct-telemetry', [DigitalTwinController::class, 'octTelemetry'])->name('public.digital-twin.oct-telemetry');
 Route::get('/oct-analysis', [DigitalTwinController::class, 'octWorkstation'])->name('public.oct-analysis');
-Route::get('/demo-theater', [DemoTheaterController::class, 'index'])->name('public.demo-theater');
-Route::get('/demo-theater/report/{code}', [DemoTheaterController::class, 'report'])->name('public.demo-theater.report');
+Route::get('/demo-theater', fn () => redirect()->route('home'))->name('public.demo-theater');
+Route::get('/demo-theater/report/{code}', fn () => redirect()->route('home'))->name('public.demo-theater.report');
 Route::get('/vision-lab', [VisionLabController::class, 'index'])->name('public.vision-lab');
 Route::get('/vision-lab/export', [VisionLabController::class, 'exportCsv'])->name('public.vision-lab.export');
 Route::get('/nasa-data', [NasaObservatoryController::class, 'index'])->name('public.nasa-data');

@@ -56,12 +56,6 @@
                             {{ $isEn ? '3D Viewer + OCT Console' : 'Visor 3D + Consola OCT' }}
                         </a>
                     </li>
-                    <li>
-                        <a class="nav-link {{ request()->routeIs('public.demo-theater*') || request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('public.demo-theater') }}">
-                            <i class="fa fa-play-circle" style="width:20px; text-align:center; font-size:15px;"></i>
-                            {{ $isEn ? 'Demo Pitch (3 Minutes)' : 'Demo Pitch (3 Minutos)' }}
-                        </a>
-                    </li>
                 </ul>
             </nav>
 
@@ -145,9 +139,6 @@
                 </a>
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                     <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
-                </a>
-                <a class="{{ request()->routeIs('public.demo-theater*') || request()->routeIs('admin.demo-theater*') ? 'active' : '' }}" href="{{ route('public.demo-theater') }}">
-                    <i class="fa fa-play-circle"></i> {{ $isEn ? 'Demo Pitch (3m)' : 'Demo Pitch (3m)' }}
                 </a>
 
                 <details style="position:relative;display:inline-block;">
