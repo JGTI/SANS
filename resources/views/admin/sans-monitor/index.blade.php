@@ -2136,7 +2136,20 @@ window.runCandidatePredictor = async function (e) {
 @php
     $teamMembers = [
         [
-            'num' => 1,
+            'name' => 'Dra. Gloria Margarita Pérez Vallejo',
+            'role_en' => 'Clinical Optometry & Visual Rehab',
+            'role_es' => 'Optometría Clínica y Rehabilitación Visual',
+            'bio_en' => 'B.Sc. in Optometry & Visual Rehabilitation · Specialist in Clinical Optometry, Vision Therapy & Strabismus · Federal Prof. License No. 13911122 · 8th Semester General Medicine Student',
+            'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
+            'is_leader' => false,
+            'nasa_user' => '@gloriapervall',
+            'emails' => [
+                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
+            ],
+            'photos' => ['gloria.jpg', 'gloria.jpeg', 'gloria.png'],
+            'initials' => 'GM',
+        ],
+        [
             'name' => 'Ing. José Guadalupe García Espinosa',
             'role_en' => 'Computer Systems Engineer',
             'role_es' => 'Ingeniero en Sistemas Computacionales',
@@ -2152,22 +2165,6 @@ window.runCandidatePredictor = async function (e) {
             'initials' => 'JG',
         ],
         [
-            'num' => 2,
-            'name' => 'Dra. Gloria Margarita Pérez Vallejo',
-            'role_en' => 'Clinical Optometry & Visual Rehab',
-            'role_es' => 'Optometría Clínica y Rehabilitación Visual',
-            'bio_en' => 'B.Sc. in Optometry & Visual Rehabilitation · Specialist in Clinical Optometry, Vision Therapy & Strabismus · Federal Prof. License No. 13911122 · 8th Semester General Medicine Student',
-            'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
-            'is_leader' => false,
-            'nasa_user' => '@gloriapervall',
-            'emails' => [
-                ['label_en' => 'Registered Email', 'label_es' => 'Correo registrado', 'email' => 'gloriavallejo@visualrehabcenter.com'],
-            ],
-            'photos' => ['gloria.jpg', 'gloria.jpeg', 'gloria.png'],
-            'initials' => 'GM',
-        ],
-        [
-            'num' => 3,
             'name' => 'Miguel Ángel García Espinosa',
             'role_en' => 'Software Engineering',
             'role_es' => 'Ingeniería de Software',
@@ -2182,7 +2179,6 @@ window.runCandidatePredictor = async function (e) {
             'initials' => 'MA',
         ],
         [
-            'num' => 4,
             'name' => 'Lic. Victoria Isabel Pérez Vallejo',
             'role_en' => 'International Relations',
             'role_es' => 'Lic. en Relaciones Internacionales',
@@ -2197,7 +2193,6 @@ window.runCandidatePredictor = async function (e) {
             'initials' => 'VI',
         ],
         [
-            'num' => 5,
             'name' => 'Lic. Mónica Belem Pérez Vallejo',
             'role_en' => 'Attorney at Law (LL.B.)',
             'role_es' => 'Licenciada en Derecho',
@@ -2212,7 +2207,6 @@ window.runCandidatePredictor = async function (e) {
             'initials' => 'MB',
         ],
         [
-            'num' => 6,
             'name' => 'Dr. Alam Tinajero Palacios',
             'role_en' => 'Ph.D. in Legal Sciences',
             'role_es' => 'Dr. en Ciencias Jurídicas',
@@ -2269,7 +2263,7 @@ window.runCandidatePredictor = async function (e) {
                 <div style="min-width:0;flex:1;">
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.4rem;flex-wrap:wrap;">
                         <h3 style="font-size:0.88rem;font-weight:800;margin:0;line-height:1.25;">
-                            {{ $member['num'] }}. {{ $member['name'] }}
+                            {{ $member['name'] }}
                         </h3>
                     </div>
 
