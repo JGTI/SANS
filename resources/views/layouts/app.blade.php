@@ -58,42 +58,6 @@
                     </li>
                 </ul>
             </nav>
-
-            <details style="padding: 0 0.75rem; margin-top: 0.5rem;">
-                <summary style="cursor:pointer; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted-foreground); padding:0.5rem 0.5rem; list-style:none; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--border);">
-                    <span><i class="fa fa-folder-o"></i> {{ $isEn ? 'Supporting Scientific Tools' : 'Herramientas Científicas de Apoyo' }}</span>
-                    <i class="fa fa-angle-down"></i>
-                </summary>
-
-                <nav class="nav-section" aria-label="{{ $isEn ? 'Telemetry & AI' : 'Telemetría e IA' }}" style="margin-top:0.35rem;">
-                    <ul class="nav-list">
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('public.vision-lab') || request()->routeIs('admin.vision-lab.*') ? 'active' : '' }}" href="{{ route('public.vision-lab') }}">
-                                <i class="fa fa-calculator" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('public.nasa-data') || request()->routeIs('admin.nasa-data*') ? 'active' : '' }}" href="{{ route('public.nasa-data') }}">
-                                <i class="fa fa-globe" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'NASA Repositories' : 'Repositorios NASA' }}
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('public.model-lab') || request()->routeIs('admin.model-lab*') ? 'active' : '' }}" href="{{ route('public.model-lab') }}">
-                                <i class="fa fa-flask" style="width:20px; text-align:center; font-size:14px;"></i>
-                                Benchmark ML (RF / GBM)
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link {{ request()->routeIs('public.explainability') || request()->routeIs('admin.explainability*') ? 'active' : '' }}" href="{{ route('public.explainability') }}">
-                                <i class="fa fa-pie-chart" style="width:20px; text-align:center; font-size:14px;"></i>
-                                {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </details>
         </div>
 
         <div class="sidebar-user">
@@ -140,26 +104,6 @@
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
                     <i class="fa fa-eye"></i> {{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}
                 </a>
-
-                <details style="position:relative;display:inline-block;">
-                    <summary style="list-style:none;cursor:pointer;padding:6px 11px;border-radius:7px;border:1px solid var(--interactive-border);background:var(--interactive-bg);font-size:12.5px;font-weight:700;color:var(--interactive-text);display:inline-flex;align-items:center;gap:5px;">
-                        <i class="fa fa-flask"></i> {{ $isEn ? 'Scientific Tools' : 'Herramientas' }} <i class="fa fa-angle-down"></i>
-                    </summary>
-                    <div style="position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--card);border:1px solid var(--interactive-border);border-radius:8px;padding:6px;box-shadow:0 10px 25px rgba(0,66,166,0.18);z-index:50;display:flex;flex-direction:column;gap:2px;">
-                        <a href="{{ route('public.vision-lab') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
-                            <i class="fa fa-calculator" style="width:16px;"></i> {{ $isEn ? 'Optical Calculator' : 'Calculadora Óptica' }}
-                        </a>
-                        <a href="{{ route('public.nasa-data') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
-                            <i class="fa fa-globe" style="width:16px;"></i> {{ $isEn ? 'NASA Repositories' : 'Repositorios NASA' }}
-                        </a>
-                        <a href="{{ route('public.model-lab') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
-                            <i class="fa fa-flask" style="width:16px;"></i> Benchmark ML (RF / GBM)
-                        </a>
-                        <a href="{{ route('public.explainability') }}" style="padding:7px 10px;border-radius:5px;font-size:12px;">
-                            <i class="fa fa-pie-chart" style="width:16px;"></i> {{ $isEn ? 'SHAP Weights (XAI)' : 'Pesos SHAP (XAI)' }}
-                        </a>
-                    </div>
-                </details>
             </nav>
 
             <span class="topbar-spacer"></span>
