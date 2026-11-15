@@ -328,21 +328,35 @@
         </div>
     </div>
 
-    {{-- Panel inline de cámara en vivo (getUserMedia) --}}
-    <div id="cvCameraBox" style="display:none;margin-bottom:1rem;padding:0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.55rem;gap:0.5rem;flex-wrap:wrap;">
-            <strong style="font-size:0.8rem;"><i class="fa fa-video-camera"></i> {{ $isEn ? 'Live Camera Capture → Python CV' : 'Captura de Cámara en Vivo → Python CV' }}</strong>
-            <div style="display:flex;gap:0.45rem;">
-                <button type="button" id="btnCaptureCvFrame" style="background:var(--space-neon);color:#09090b;border:1px solid #09090b;border-radius:6px;padding:0.35rem 0.85rem;font-size:0.75rem;font-weight:800;cursor:pointer;">
-                    <i class="fa fa-camera"></i> {{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}
+    {{-- Modal de cámara en vivo (getUserMedia + Voltear Cámara + Flash) --}}
+    <div id="cvCameraBox" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(9,9,11,0.84);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
+        <div style="width:100%;max-width:680px;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;box-shadow:0 24px 60px rgba(0,0,0,0.45);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;gap:0.5rem;">
+                <strong style="font-size:0.9rem;display:inline-flex;align-items:center;gap:0.45rem;">
+                    <i class="fa fa-video-camera"></i> {{ $isEn ? 'Live Camera Capture → Python CV' : 'Captura de Cámara en Vivo → Python CV' }}
+                </strong>
+                <button type="button" id="btnCloseCvCamera" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.35rem 0.75rem;font-size:0.78rem;font-weight:700;cursor:pointer;">
+                    <i class="fa fa-times"></i> {{ $isEn ? 'Close' : 'Cerrar' }}
                 </button>
-                <button type="button" id="btnCloseCvCamera" style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:6px;padding:0.35rem 0.7rem;font-size:0.75rem;font-weight:700;cursor:pointer;">
-                    {{ $isEn ? 'Close' : 'Cerrar' }}
+            </div>
+            <div style="position:relative;background:#09090b;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+                <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;max-height:60vh;min-height:260px;object-fit:contain;display:block;"></video>
+            </div>
+            <div id="cvCameraError" style="display:none;margin-top:0.55rem;font-size:0.76rem;color:#ef4444;font-weight:600;"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;">
+                <div style="display:flex;gap:0.45rem;flex-wrap:wrap;">
+                    <button type="button" id="btnFlipCvCamera" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.48rem 0.85rem;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="fa fa-refresh"></i> {{ $isEn ? 'Flip Camera' : 'Voltear Cámara' }}
+                    </button>
+                    <button type="button" id="btnToggleCvFlash" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.48rem 0.85rem;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                        <i class="fa fa-bolt"></i> <span>{{ $isEn ? 'Enable Flash' : 'Activar Flash' }}</span>
+                    </button>
+                </div>
+                <button type="button" id="btnCaptureCvFrame" style="background:var(--space-neon);color:#09090b;border:1px solid #09090b;border-radius:7px;padding:0.5rem 1.05rem;font-size:0.8rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                    <i class="fa fa-camera"></i> {{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}
                 </button>
             </div>
         </div>
-        <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;max-height:240px;border-radius:6px;background:#09090b;object-fit:contain;display:block;"></video>
-        <div id="cvCameraError" style="display:none;margin-top:0.45rem;font-size:0.75rem;color:#ef4444;font-weight:600;"></div>
     </div>
 
     {{-- Galería longitudinal multi-foto (captura en vivo + archivo de misión) --}}
@@ -571,26 +585,48 @@
     const camBox = document.getElementById('cvCameraBox');
     const camVideo = document.getElementById('cvCameraVideo');
     const camErr = document.getElementById('cvCameraError');
+    const btnFlash = document.getElementById('btnToggleCvFlash');
     let camStream = null;
+    let camFacingMode = 'environment';
+    let flashOn = false;
 
-    function stopCvCamera() {
+    function updateFlashBtn() {
+        if (!btnFlash) return;
+        btnFlash.style.background = flashOn ? 'var(--space-neon)' : 'var(--muted)';
+        btnFlash.style.color = flashOn ? '#09090b' : 'var(--foreground)';
+        btnFlash.innerHTML = `<i class="fa fa-bolt"></i> <span>${flashOn ? (isEn ? 'Flash On' : 'Flash Activado') : (isEn ? 'Enable Flash' : 'Activar Flash')}</span>`;
+    }
+
+    function stopCvStream() {
         if (camStream) {
             camStream.getTracks().forEach(t => t.stop());
             camStream = null;
         }
+        flashOn = false;
+        updateFlashBtn();
         if (camVideo) camVideo.srcObject = null;
+    }
+
+    function stopCvCamera() {
+        stopCvStream();
         if (camBox) camBox.style.display = 'none';
     }
 
-    document.getElementById('btnOpenCvCamera')?.addEventListener('click', async () => {
+    async function startCvCamera() {
         if (!camBox || !camVideo) return;
-        camBox.style.display = 'block';
+        camBox.style.display = 'flex';
         if (camErr) { camErr.style.display = 'none'; camErr.textContent = ''; }
+        stopCvStream();
         try {
             if (!navigator.mediaDevices?.getUserMedia) {
                 throw new Error(isEn ? 'Camera API requires HTTPS or localhost.' : 'La API de cámara requiere HTTPS o localhost.');
             }
-            camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+            try {
+                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: camFacingMode } }, audio: false });
+            } catch (_) {
+                camStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            }
+            camVideo.style.transform = camFacingMode === 'user' ? 'scaleX(-1)' : 'none';
             camVideo.srcObject = camStream;
         } catch (err) {
             if (camErr) {
@@ -598,16 +634,59 @@
                 camErr.textContent = err?.message || (isEn ? 'Unable to access camera.' : 'No se pudo acceder a la cámara.');
             }
         }
+    }
+
+    document.getElementById('btnOpenCvCamera')?.addEventListener('click', startCvCamera);
+    document.getElementById('btnCloseCvCamera')?.addEventListener('click', stopCvCamera);
+    camBox?.addEventListener('click', (e) => {
+        if (e.target === camBox) stopCvCamera();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && camBox && camBox.style.display !== 'none') stopCvCamera();
     });
 
-    document.getElementById('btnCloseCvCamera')?.addEventListener('click', stopCvCamera);
+    document.getElementById('btnFlipCvCamera')?.addEventListener('click', () => {
+        camFacingMode = camFacingMode === 'environment' ? 'user' : 'environment';
+        startCvCamera();
+    });
+
+    btnFlash?.addEventListener('click', async () => {
+        const track = camStream?.getVideoTracks?.()?.[0];
+        if (!track) return;
+        const caps = track.getCapabilities ? track.getCapabilities() : {};
+        if (!caps.torch) {
+            if (camErr) {
+                camErr.style.display = 'block';
+                camErr.textContent = isEn ? 'Flash / torch is not supported by this camera.' : 'El flash / linterna no está disponible en esta cámara.';
+            }
+            return;
+        }
+        try {
+            flashOn = !flashOn;
+            await track.applyConstraints({ advanced: [{ torch: flashOn }] });
+            updateFlashBtn();
+            if (camErr) camErr.style.display = 'none';
+        } catch (err) {
+            flashOn = false;
+            updateFlashBtn();
+            if (camErr) {
+                camErr.style.display = 'block';
+                camErr.textContent = err?.message || (isEn ? 'Could not toggle flash.' : 'No se pudo activar el flash.');
+            }
+        }
+    });
 
     document.getElementById('btnCaptureCvFrame')?.addEventListener('click', () => {
         if (!camVideo || !camVideo.videoWidth) return;
         const c = document.createElement('canvas');
         c.width = camVideo.videoWidth;
         c.height = camVideo.videoHeight;
-        c.getContext('2d').drawImage(camVideo, 0, 0, c.width, c.height);
+        const ctx = c.getContext('2d');
+        if (camFacingMode === 'user') {
+            ctx.translate(c.width, 0);
+            ctx.scale(-1, 1);
+        }
+        ctx.drawImage(camVideo, 0, 0, c.width, c.height);
         const dataUrl = c.toDataURL('image/png');
         stopCvCamera();
         activeCapture = {
