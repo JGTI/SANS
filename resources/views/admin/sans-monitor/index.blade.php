@@ -253,7 +253,7 @@
 </div>
 
 <div style="display:flex;justify-content:flex-end;margin:-0.45rem 0 0.9rem;">
-    <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:#ffffff;border:1px solid #d4d4d8;color:#09090b;font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
+    <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-book"></i>
         <span>{{ $isEn ? 'NASA Protocols & Scientific Bibliography (7 References)' : 'Protocolos NASA y Bibliografía Científica (7 Referencias)' }}</span>
         <i class="fa fa-arrow-down" style="font-size:10px;opacity:0.7;"></i>
@@ -300,22 +300,22 @@
 {{-- =============================================================================================== --}}
 <div id="wizard-panel-biomarcadores" data-wizard-panel="biomarcadores" style="{{ $normalizedTab === 'biomarcadores' ? '' : 'display:none;' }}">
 {{-- ESCÁNER DE FONDO DE OJO & EDEMA PAPILAR (DOWNLINK DESDE ASTRONAUTA -> PYTHON CV REAL) --}}
-<div class="card" style="padding:1.25rem;border:1px solid #d4d4d8;border-radius:10px;margin-bottom:1.25rem;background:#ffffff;" data-fundus-scanner>
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;border-bottom:1px solid #e4e4e7;padding-bottom:0.85rem;margin-bottom:1rem;">
+<div class="card" style="padding:1.25rem;border:1px solid var(--border);border-radius:10px;margin-bottom:1.25rem;background:var(--card);color:var(--foreground);" data-fundus-scanner>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;border-bottom:1px solid var(--border);padding-bottom:0.85rem;margin-bottom:1rem;">
         <div>
-            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:#52525b;letter-spacing:0.06em;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--muted-foreground);letter-spacing:0.06em;">
                 {{ $isEn ? 'ORBITAL DOWNLINK · RETINAL FUNDUS CV WORKSTATION + TONOMETER IOP' : 'ENLACE ORBITAL · ESTACIÓN CV DE FONDO DE OJO + PIO TONÓMETRO' }}
             </span>
-            <h2 style="font-size:1.15rem;font-weight:800;margin:2px 0 0;color:#09090b;">
+            <h2 style="font-size:1.15rem;font-weight:800;margin:2px 0 0;color:var(--foreground);">
                 <i class="fa fa-bullseye"></i>
                 {{ $isEn ? 'Ground Fundus Scanner & Papilledema Analyzer (Python CV)' : 'Escáner Científico de Fondo de Ojo y Edema Papilar (Python CV)' }}
             </h2>
         </div>
         <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-            <span id="fundusActiveIopBadge" style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:5px 11px;border-radius:6px;background:#f4f4f5;border:1px solid #d4d4d8;color:#09090b;font-weight:700;">
+            <span id="fundusActiveIopBadge" style="font-family:ui-monospace,monospace;font-size:0.74rem;padding:5px 11px;border-radius:6px;background:var(--muted);border:1px solid var(--border);color:var(--foreground);font-weight:700;">
                 {{ $isEn ? 'Tonometer IOP:' : 'PIO Tonómetro:' }} {{ $orbitalTransmission['iop_od'] }} / {{ $orbitalTransmission['iop_os'] }} mmHg
             </span>
-            <button type="button" id="btnRunFundusScanner" style="background:#09090b;color:#ffffff;border:1px solid #09090b;border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
+            <button type="button" id="btnRunFundusScanner" style="background:var(--primary);color:var(--primary-foreground);border:1px solid var(--primary);border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="fa fa-crosshairs"></i> {{ $isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV' }}
             </button>
         </div>
@@ -324,10 +324,10 @@
     {{-- Galería longitudinal multi-foto (captura en vivo + archivo de misión) --}}
     <div style="margin-bottom:1rem;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.45rem;flex-wrap:wrap;gap:0.5rem;">
-            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:#52525b;text-transform:uppercase;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;">
                 {{ $isEn ? 'Select Orbital Fundus Capture to Process in Python CV (8 captures)' : 'Selecciona Captura de Fondo de Ojo para Procesar en Python CV (8 capturas)' }}
             </span>
-            <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:#71717a;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:var(--muted-foreground);">
                 {{ $isEn ? 'Click any capture to run Pillow + NumPy + SciPy pixel analysis' : 'Haz clic en cualquier captura para ejecutar análisis real en Pillow + NumPy + SciPy' }}
             </span>
         </div>
@@ -394,16 +394,16 @@
         </div>
     </div>
 
-    <div id="fundusScanResultBox" style="background:#fafafa;border:1px solid #e4e4e7;border-radius:8px;padding:0.95rem 1.05rem;font-size:0.82rem;">
+    <div id="fundusScanResultBox" style="background:var(--muted);border:1px solid var(--border);border-radius:8px;padding:0.95rem 1.05rem;font-size:0.82rem;color:var(--foreground);">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.6rem;">
-            <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:#09090b;">
+            <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:var(--foreground);">
                 {{ $isEn ? 'PYTHON CV REAL-PIXEL INTERPRETATION OUTPUT' : 'SALIDA DE INTERPRETACIÓN PYTHON CV (PÍXELES REALES)' }}
             </span>
-            <span id="fundusEngineTelemetry" style="font-family:ui-monospace,monospace;font-size:0.69rem;color:#52525b;">
+            <span id="fundusEngineTelemetry" style="font-family:ui-monospace,monospace;font-size:0.69rem;color:var(--muted-foreground);">
                 {{ $isEn ? 'Initializing Python 3.14 + NumPy + SciPy scanner…' : 'Inicializando escáner Python 3.14 + NumPy + SciPy…' }}
             </span>
         </div>
-        <div id="fundusScanPlaceholder" style="color:#52525b;line-height:1.5;">
+        <div id="fundusScanPlaceholder" style="color:var(--muted-foreground);line-height:1.5;">
             {{ $isEn ? 'Running real pixel-level CV analysis on orbital fundus capture…' : 'Ejecutando análisis real de píxeles en captura orbital de fondo de ojo…' }}
         </div>
         <div id="fundusScanMetrics" style="display:none;"></div>
@@ -469,16 +469,16 @@
             const safety = isEn ? data.safety_notice?.en : data.safety_notice?.es;
             box.innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px;font-family:ui-monospace,monospace;">
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">FRISÉN GRADE</small><strong style="font-size:14px;color:#09090b;">Grade ${data.frisen_grade_estimate}</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">SOBEL RIM SHARPNESS</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.disc_margin_sharpness_index || 0) * 100)}%</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">PERIPAPILLARY HALO</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.peripapillary_edema_halo || 0) * 100)}%</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">CHOROIDAL FOLDS</small><strong style="font-size:14px;color:#09090b;">${data.choroidal_folds_detected ? (isEn ? 'Detected' : 'Detectados') : (isEn ? 'None' : 'Ausentes')}</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">VESSEL TORTUOSITY</small><strong style="font-size:14px;color:#09090b;">${Math.round((data.vessel_tortuosity_index || 0) * 100)}%</strong></div>
-                    <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:6px;padding:7px 9px;"><small style="display:block;color:#71717a;font-size:10px;">TONOMETER IOP</small><strong style="font-size:14px;color:#09090b;">${data.iop_mmhg} mmHg</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">FRISÉN GRADE</small><strong style="font-size:14px;color:var(--foreground);">Grade ${data.frisen_grade_estimate}</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">SOBEL RIM SHARPNESS</small><strong style="font-size:14px;color:var(--foreground);">${Math.round((data.disc_margin_sharpness_index || 0) * 100)}%</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">PERIPAPILLARY HALO</small><strong style="font-size:14px;color:var(--foreground);">${Math.round((data.peripapillary_edema_halo || 0) * 100)}%</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">CHOROIDAL FOLDS</small><strong style="font-size:14px;color:var(--foreground);">${data.choroidal_folds_detected ? (isEn ? 'Detected' : 'Detectados') : (isEn ? 'None' : 'Ausentes')}</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">VESSEL TORTUOSITY</small><strong style="font-size:14px;color:var(--foreground);">${Math.round((data.vessel_tortuosity_index || 0) * 100)}%</strong></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:7px 9px;"><small style="display:block;color:var(--muted-foreground);font-size:10px;">TONOMETER IOP</small><strong style="font-size:14px;color:var(--foreground);">${data.iop_mmhg} mmHg</strong></div>
                 </div>
-                <p style="margin:0 0 6px;color:#09090b;font-weight:700;">${interp}</p>
-                <p style="margin:0 0 6px;color:#52525b;font-size:12px;"><strong>${isEn ? 'Tonometer IOP Correlation' : 'Correlación PIO Tonómetro'} (${data.iop_mmhg} mmHg):</strong> ${iopNote}</p>
-                <div style="font-size:11px;color:#71717a;border-top:1px solid #e4e4e7;padding-top:6px;">${safety}</div>
+                <p style="margin:0 0 6px;color:var(--foreground);font-weight:700;">${interp}</p>
+                <p style="margin:0 0 6px;color:var(--muted-foreground);font-size:12px;"><strong>${isEn ? 'Tonometer IOP Correlation' : 'Correlación PIO Tonómetro'} (${data.iop_mmhg} mmHg):</strong> ${iopNote}</p>
+                <div style="font-size:11px;color:var(--muted-foreground);border-top:1px solid var(--border);padding-top:6px;">${safety}</div>
             `;
         } finally {
             document.querySelectorAll('.sv-scan-laser').forEach(el => { el.style.display = 'none'; });
@@ -1076,12 +1076,12 @@
 </div>
 
 {{-- CATÁLOGO DE PROTOCOLOS CIENTÍFICOS NASA Y 7 REFERENCIAS CANÓNICAS (RF-05 A RF-08, AT-02) --}}
-<details open id="nasa-bibliography" class="card collapsible-card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid #d4d4d8;border-radius:10px;background:#ffffff;scroll-margin-top:78px;">
+<details open id="nasa-bibliography" class="card collapsible-card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);scroll-margin-top:78px;">
     <summary style="cursor:pointer;font-weight:800;font-size:0.98rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;">
-        <span style="display:inline-flex;align-items:center;gap:9px;color:#09090b;">
-            <span style="display:inline-grid;place-items:center;width:30px;height:30px;border-radius:7px;background:#09090b;color:#ffffff;font-size:13px;"><i class="fa fa-book"></i></span>
+        <span style="display:inline-flex;align-items:center;gap:9px;color:var(--foreground);">
+            <span style="display:inline-grid;place-items:center;width:30px;height:30px;border-radius:7px;background:var(--primary);color:var(--primary-foreground);font-size:13px;"><i class="fa fa-book"></i></span>
             <span>
-                <small style="display:block;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:800;letter-spacing:0.08em;color:#52525b;text-transform:uppercase;">
+                <small style="display:block;font-family:ui-monospace,monospace;font-size:0.66rem;font-weight:800;letter-spacing:0.08em;color:var(--muted-foreground);text-transform:uppercase;">
                     {{ $isEn ? 'NASA OCHMO · HRP · JAMA · SCIENTIFIC BIBLIOGRAPHY' : 'NASA OCHMO · HRP · JAMA · BIBLIOGRAFÍA CIENTÍFICA' }}
                 </small>
                 {{ $isEn
@@ -1092,30 +1092,30 @@
         <span class="interactive-pill" style="font-family:ui-monospace,monospace;font-size:0.72rem;">{{ count($catalogSearch['followup_matches']) }} {{ $isEn ? 'Verified Sources' : 'Fuentes Verificadas' }}</span>
     </summary>
 
-    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #e4e4e7;font-size:0.8rem;">
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.8rem;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0.75rem;margin-bottom:1rem;">
-            <div style="padding:0.75rem 0.9rem;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;">
-                <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:#52525b;margin-bottom:0.35rem;text-transform:uppercase;">
+            <div style="padding:0.75rem 0.9rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:var(--muted-foreground);margin-bottom:0.35rem;text-transform:uppercase;">
                     {{ $isEn ? '1. Previously Applied Protocol on Subject:' : '1. Protocolo Aplicado Previamente en la Ficha:' }}
                 </strong>
                 @if($catalogSearch['previously_applied'])
-                    <div style="color:#09090b;font-weight:600;">
-                        <code style="background:#09090b;color:#ffffff;padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $catalogSearch['previously_applied']->version_id }}</code>
+                    <div style="color:var(--foreground);font-weight:600;">
+                        <code style="background:var(--primary);color:var(--primary-foreground);padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $catalogSearch['previously_applied']->version_id }}</code>
                         <span style="margin-left:4px;">{{ $catalogSearch['previously_applied']->title }} ({{ $catalogSearch['previously_applied']->issuer ?? 'NASA' }})</span>
                     </div>
                 @else
-                    <div style="color:#52525b;">{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
+                    <div style="color:var(--muted-foreground);">{{ $isEn ? 'Unknown / Not recorded (Does not block evaluation)' : 'Desconocido / No registrado (No bloquea evaluación)' }}</div>
                 @endif
             </div>
 
             @if(!empty($catalogSearch['newer_verified_versions']))
-                <div style="padding:0.75rem 0.9rem;border:1px solid #d4d4d8;border-radius:8px;background:#f4f4f5;">
-                    <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:#09090b;margin-bottom:0.35rem;text-transform:uppercase;">
+                <div style="padding:0.75rem 0.9rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+                    <strong style="display:block;font-family:ui-monospace,monospace;font-size:0.72rem;color:var(--foreground);margin-bottom:0.35rem;text-transform:uppercase;">
                         {{ $isEn ? '2. Newer Verified Version Available (Never auto-replaces selection):' : '2. Versión Posterior Verificada Disponible (Nunca reemplaza sola la selección):' }}
                     </strong>
                     @foreach($catalogSearch['newer_verified_versions'] as $nv)
-                        <div style="color:#09090b;font-weight:600;margin-bottom:2px;">
-                            <code style="background:#ffffff;border:1px solid #d4d4d8;color:#09090b;padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $nv->version_id }}</code>
+                        <div style="color:var(--foreground);font-weight:600;margin-bottom:2px;">
+                            <code style="background:var(--card);border:1px solid var(--border);color:var(--foreground);padding:2px 6px;border-radius:4px;font-size:0.72rem;">{{ $nv->version_id }}</code>
                             <span style="margin-left:4px;">{{ $nv->title }} ({{ $nv->publication_date ?? '2024' }})</span>
                         </div>
                     @endforeach
@@ -1123,22 +1123,22 @@
             @endif
         </div>
 
-        <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:#52525b;text-transform:uppercase;margin-bottom:0.55rem;">
+        <div style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;margin-bottom:0.55rem;">
             {{ $isEn ? '3. Curated Catalog (Protocols vs Technical Standards vs Research Articles):' : '3. Catálogo Curado (Protocolos vs Estándares Técnicos vs Artículos de Investigación):' }}
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:0.6rem;">
             @foreach($catalogSearch['followup_matches'] as $match)
-                <article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid #e4e4e7;border-radius:8px;background:#fafafa;">
+                <article style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;padding:0.7rem 0.85rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
                     <div style="min-width:0;">
                         <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
-                            <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:#e4e4e7;color:#09090b;">[{{ $match['document_type_badge'] }}]</span>
-                            <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:#09090b;">{{ $match['protocol']->version_id }}</code>
+                            <span style="font-family:ui-monospace,monospace;font-size:0.65rem;font-weight:800;padding:2px 6px;border-radius:4px;background:var(--accent);color:var(--foreground);border:1px solid var(--border);">[{{ $match['document_type_badge'] }}]</span>
+                            <code style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:700;color:var(--foreground);">{{ $match['protocol']->version_id }}</code>
                         </div>
-                        <div style="color:#18181b;font-weight:600;line-height:1.35;">{{ $match['protocol']->title }}</div>
+                        <div style="color:var(--foreground);font-weight:600;line-height:1.35;">{{ $match['protocol']->title }}</div>
                     </div>
                     @if($match['protocol']->source_url)
                         <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener"
-                           style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:#ffffff;border:1px solid #d4d4d8;color:#09090b;font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
+                           style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
                             <i class="fa fa-external-link"></i> NASA/Source
                         </a>
                     @endif
