@@ -1409,9 +1409,15 @@ function initThreeEngine() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.6;
     controls.maxDistance = 55;
     controls.minDistance = 8;
     controls.target.set(0, 0, 0);
+    window.__twinUserDragging = false;
+    window.__twinMultiAxis = true;
+    controls.addEventListener('start', () => { window.__twinUserDragging = true; });
+    controls.addEventListener('end', () => { window.__twinUserDragging = false; });
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
@@ -1570,10 +1576,17 @@ function animate() {
     requestAnimationFrame(animate);
     if (controls) controls.update();
 
-    const time = Date.now() * 0.003;
+    const time = Date.now() * 0.0025;
+    if (typeof eyeGroup !== 'undefined' && eyeGroup && window.__twinMultiAxis && !window.__twinUserDragging) {
+        eyeGroup.rotation.y += 0.0045;
+        eyeGroup.rotation.x = Math.sin(time * 0.55) * 0.16;
+        eyeGroup.rotation.z = Math.cos(time * 0.38) * 0.07;
+        eyeGroup.position.y = Math.sin(time * 0.9) * 0.22;
+    }
+
     if (forceVectorGroup) {
         forceVectorGroup.children.forEach((arrow, i) => {
-            arrow.position.x = -14 + Math.sin(time + i) * 0.3;
+            arrow.position.x = -14 + Math.sin(time * 1.2 + i) * 0.35;
         });
     }
 
@@ -1588,9 +1601,15 @@ function setPresetView(mode) {
     if (mode === 'free') {
         document.getElementById('btn-view-free').classList.add('active');
         controls.autoRotate = true;
-        controls.autoRotateSpeed = 1.0;
+        controls.autoRotateSpeed = 1.6;
+        window.__twinMultiAxis = true;
     } else {
         controls.autoRotate = false;
+        window.__twinMultiAxis = false;
+        if (typeof eyeGroup !== 'undefined' && eyeGroup) {
+            eyeGroup.rotation.set(0, 0, 0);
+            eyeGroup.position.y = 0;
+        }
     }
 
     if (mode === 'sagittal') {

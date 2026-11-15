@@ -705,6 +705,13 @@
     function loop() {
         requestAnimationFrame(loop);
         controls.update();
+        const t = Date.now() * 0.002;
+        if (typeof eye !== 'undefined' && eye) {
+            eye.rotation.y += 0.004;
+            eye.rotation.x = Math.sin(t * 0.6) * 0.16;
+            eye.rotation.z = Math.cos(t * 0.4) * 0.07;
+            eye.position.y = Math.sin(t * 0.9) * 0.1;
+        }
         ring.rotation.z += 0.008;
         renderer.render(scene, camera);
     }
