@@ -2146,9 +2146,11 @@ window.runCandidatePredictor = async function (e) {
         ],
         [
             'num' => 2,
-            'name' => 'Gloria Margarita Pérez Vallejo',
-            'role_en' => 'Research & Clinical Member',
-            'role_es' => 'Integrante del equipo',
+            'name' => 'Dra. Gloria Margarita Pérez Vallejo',
+            'role_en' => 'Clinical Optometry & Visual Rehab',
+            'role_es' => 'Optometría Clínica y Rehabilitación Visual',
+            'bio_en' => 'B.Sc. in Optometry & Visual Rehabilitation · Specialist in Clinical Optometry, Vision Therapy & Strabismus · Federal Prof. License No. 13911122 · 8th Semester General Medicine Student',
+            'bio_es' => 'Lic. en Optometría y Rehabilitación Visual · Especialista en Optometría Clínica, Terapia Visual y Estrabismo · Cédula Profesional Federal No. 13911122 · Estudiante 8.º semestre Medicina General',
             'is_leader' => false,
             'nasa_user' => '@gloriapervall',
             'emails' => [
@@ -2272,6 +2274,11 @@ window.runCandidatePredictor = async function (e) {
                     </div>
 
                     <div style="display:flex;flex-direction:column;gap:2px;font-size:0.72rem;color:var(--muted-foreground);">
+                        @if(!empty($member['bio_es']) || !empty($member['bio_en']))
+                            <div style="color:var(--foreground);line-height:1.35;margin-bottom:3px;font-weight:600;">
+                                {{ $isEn ? ($member['bio_en'] ?? $member['bio_es']) : ($member['bio_es'] ?? $member['bio_en']) }}
+                            </div>
+                        @endif
                         @foreach($member['emails'] as $em)
                             <div style="word-break:break-all;">
                                 <strong style="color:var(--foreground);">{{ $isEn ? $em['label_en'] : $em['label_es'] }}:</strong>
