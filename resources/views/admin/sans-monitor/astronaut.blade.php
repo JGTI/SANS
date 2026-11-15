@@ -3,21 +3,21 @@
 @endphp
 
 <section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
-    {{-- Orbital Flight Logbook Telemetry Strip (High-Contrast Monochrome) --}}
-    <div style="background:#09090b;color:#ffffff;border:1px solid #27272a;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;">
+    {{-- Orbital Flight Logbook Telemetry Strip (NASA Deep-Space Blue — matches Page 1) --}}
+    <div style="background:linear-gradient(135deg,#07173F 0%,#0042A6 100%);color:#ffffff;border:1px solid #2E96F5;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;box-shadow:0 4px 14px rgba(0,66,166,0.18);">
         <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-            <span style="background:#ffffff;color:#09090b;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
+            <span style="background:#ffffff;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
                 <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
             </span>
-            <span style="color:#a1a1aa;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
-            <span style="color:#a1a1aa;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
-            <span style="color:#a1a1aa;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
+            <span style="color:#bfdbfe;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
+            <span style="color:#bfdbfe;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
+            <span style="color:#bfdbfe;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
         </div>
         <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
             @foreach($cases as $cItem)
                 @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
                 <a href="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}"
-                   style="padding:0.2rem 0.55rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : '#3f3f46' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : '#18181b' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#09090b' : '#d4d4d8' }};">
+                   style="padding:0.2rem 0.55rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : 'rgba(147,197,253,0.45)' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : 'rgba(7,23,63,0.55)' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#07173F' : '#e0f2fe' }};">
                     {{ $cMeta['name'] }}
                 </a>
             @endforeach
@@ -34,10 +34,10 @@
             </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <label for="crewAstronautSelect" style="display:flex;align-items:center;gap:6px;background:#ffffff;border:1px solid #d4d4d8;border-radius:8px;padding:4px 10px;font-size:0.78rem;font-weight:700;color:#09090b;">
+            <label for="crewAstronautSelect" style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:0.78rem;font-weight:700;color:var(--foreground);">
                 <i class="fa fa-user-circle"></i>
                 <span>{{ $isEn ? 'Astronaut:' : 'Astronauta:' }}</span>
-                <select id="crewAstronautSelect" aria-label="{{ $isEn ? 'Switch astronaut' : 'Cambiar de astronauta' }}" onchange="if(this.value) window.location.href=this.value;" style="border:none;background:transparent;font-weight:800;color:#09090b;cursor:pointer;outline:none;font-size:0.78rem;">
+                <select id="crewAstronautSelect" aria-label="{{ $isEn ? 'Switch astronaut' : 'Cambiar de astronauta' }}" onchange="if(this.value) window.location.href=this.value;" style="border:none;background:transparent;font-weight:800;color:var(--foreground);cursor:pointer;outline:none;font-size:0.78rem;">
                     @foreach($cases as $cItem)
                         @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
                         <option value="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}" {{ $cItem->case_id === $activeCase->case_id ? 'selected' : '' }}>
@@ -63,20 +63,20 @@
     <div class="crew-view is-active" data-crew-view="today">
         {{-- Quick-Locate Action Strip --}}
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px;">
-            <button type="button" data-start-check style="text-align:left;background:#09090b;color:#ffffff;border:1px solid #09090b;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#a1a1aa;letter-spacing:0.06em;">WIZARD 1-BY-1</small><strong style="font-size:13px;">{{ $isEn ? 'Start Guided Check' : 'Iniciar Revisión' }}</strong></span>
+            <button type="button" data-start-check style="text-align:left;background:linear-gradient(135deg,#07173F 0%,#0042A6 100%);color:#ffffff;border:1px solid #2E96F5;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 3px 10px rgba(0,66,166,0.22);">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#bfdbfe;letter-spacing:0.06em;">WIZARD 1-BY-1</small><strong style="font-size:13px;">{{ $isEn ? 'Start Guided Check' : 'Iniciar Revisión' }}</strong></span>
                 <i class="fa fa-arrow-right"></i>
             </button>
-            <button type="button" data-open-tab="log" style="text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">TIMELINE</small><strong style="font-size:13px;">{{ $isEn ? 'Mission Logbook' : 'Bitácora de Misión' }}</strong></span>
+            <button type="button" data-open-tab="log" style="text-align:left;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:var(--muted-foreground);letter-spacing:0.06em;">TIMELINE</small><strong style="font-size:13px;">{{ $isEn ? 'Mission Logbook' : 'Bitácora de Misión' }}</strong></span>
                 <i class="fa fa-book"></i>
             </button>
-            <button type="button" data-open-tab="trends" style="text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">BIOMARKERS</small><strong style="font-size:13px;">{{ $isEn ? 'IOP & OCT Trends' : 'Tendencias PIO/OCT' }}</strong></span>
+            <button type="button" data-open-tab="trends" style="text-align:left;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:var(--muted-foreground);letter-spacing:0.06em;">BIOMARKERS</small><strong style="font-size:13px;">{{ $isEn ? 'IOP & OCT Trends' : 'Tendencias PIO/OCT' }}</strong></span>
                 <i class="fa fa-line-chart"></i>
             </button>
-            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="text-decoration:none;text-align:left;background:#ffffff;color:#09090b;border:1px solid #e4e4e7;border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:#71717a;letter-spacing:0.06em;">DIGITAL TWIN</small><strong style="font-size:13px;">{{ $isEn ? 'Full 3D + OCT' : 'Visor 3D + OCT' }}</strong></span>
+            <a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="text-decoration:none;text-align:left;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                <span><small style="display:block;font-family:ui-monospace,monospace;font-size:10px;color:var(--muted-foreground);letter-spacing:0.06em;">DIGITAL TWIN</small><strong style="font-size:13px;">{{ $isEn ? 'Full 3D + OCT' : 'Visor 3D + OCT' }}</strong></span>
                 <i class="fa fa-cube"></i>
             </a>
         </div>
@@ -93,7 +93,7 @@
                     <li><i class="fa fa-check"></i> {{ $isEn ? '6-step visual wizard (Acuity, Amsler, Contrast)' : 'Asistente visual de 6 pasos (Agudeza, Amsler, Contraste)' }}</li>
                     <li><i class="fa fa-check"></i> {{ $isEn ? 'Eye pressure and physiological context' : 'Presión ocular y contexto fisiológico' }}</li>
                 </ul>
-                <button type="button" class="crew-primary-action" style="background:#09090b;border-color:#09090b;" data-start-check>
+                <button type="button" class="crew-primary-action" data-start-check>
                     {{ $isEn ? 'Start today’s check' : 'Comenzar revisión de hoy' }} <i class="fa fa-arrow-right"></i>
                 </button>
                 <p class="crew-action-note"><i class="fa fa-lock"></i> {{ $isEn ? 'Saved under your pseudonymous mission record.' : 'Se guarda en tu expediente de misión seudonimizado.' }}</p>
@@ -441,13 +441,13 @@
                 </div>
                 <style>
                     .crew-wiz-stepper { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-                    .crew-wiz-pill { border:1px solid #d4d4d8; background:#ffffff; color:#09090b; font-family:ui-monospace,monospace; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
-                    .crew-wiz-pill:hover { border-color:#09090b; color:#09090b; background:#f4f4f5; }
-                    .crew-wiz-pill.is-active { background:#09090b; border-color:#09090b; color:#ffffff; box-shadow:0 0 0 3px rgba(9,9,11,0.12); }
-                    .crew-wiz-pill.is-done { background:#f4f4f5; border-color:#18181b; color:#09090b; }
-                    .crew-wiz-pill.is-active.is-done { background:#09090b; border-color:#09090b; color:#ffffff; }
-                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:#fafafa; border:1px solid #e4e4e7; border-radius:10px; }
-                    .crew-wiz-counter { font-family:ui-monospace,monospace; font-size:12.5px; font-weight:700; color:#18181b; }
+                    .crew-wiz-pill { border:1px solid var(--crew-border); background:var(--crew-surface); color:var(--crew-ink); font-family:ui-monospace,monospace; font-weight:700; font-size:12px; padding:5px 10px; border-radius:6px; cursor:pointer; transition:all .15s ease; }
+                    .crew-wiz-pill:hover { border-color:var(--crew-primary); color:var(--crew-primary); background:var(--crew-soft); }
+                    .crew-wiz-pill.is-active { background:var(--crew-primary); border-color:var(--crew-primary); color:#ffffff; box-shadow:0 0 0 3px rgba(46,150,245,0.22); }
+                    .crew-wiz-pill.is-done { background:var(--crew-soft); border-color:var(--crew-primary); color:var(--crew-ink); }
+                    .crew-wiz-pill.is-active.is-done { background:var(--crew-primary); border-color:var(--crew-primary); color:#ffffff; }
+                    .crew-wiz-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding:12px 16px; background:var(--crew-soft); border:1px solid var(--crew-border); border-radius:10px; }
+                    .crew-wiz-counter { font-family:ui-monospace,monospace; font-size:12.5px; font-weight:700; color:var(--crew-ink); }
                 </style>
                 <p class="crew-step-feedback" data-step-feedback="1" hidden></p>
             </section>

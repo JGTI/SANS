@@ -993,18 +993,18 @@ details.collapsible-card > summary::-webkit-details-marker {
 
 /* Astronaut task-first experience ------------------------------------------------ */
 .crew-app {
-    --crew-ink: #09090b;
-    --crew-muted: #52525b;
-    --crew-canvas: #ffffff;
-    --crew-surface: #ffffff;
-    --crew-soft: #f4f4f5;
-    --crew-primary: #09090b;
-    --crew-primary-dark: #18181b;
-    --crew-electric: #18181b;
-    --crew-sky: #f4f4f5;
+    --crew-ink: var(--foreground);
+    --crew-muted: var(--muted-foreground);
+    --crew-canvas: var(--background);
+    --crew-surface: var(--card);
+    --crew-soft: var(--muted);
+    --crew-primary: #0042A6;
+    --crew-primary-dark: #07173F;
+    --crew-electric: #2E96F5;
+    --crew-sky: #eff6ff;
     --crew-positive: #16a34a;
     --crew-attention: #d97706;
-    --crew-border: #e4e4e7;
+    --crew-border: var(--border);
     max-width: 1180px;
     margin: 0 auto;
     color: var(--crew-ink);
@@ -1035,9 +1035,9 @@ details.collapsible-card > summary::-webkit-details-marker {
 .crew-check-list i { margin-right:5px; color:var(--crew-ink); }
 .crew-primary-action, .crew-secondary-action { min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:0 18px; border-radius:7px; font-weight:700; font-size:.86rem; cursor:pointer; transition:background .15s ease, border-color .15s ease; }
 .crew-primary-action { color:#fff; background:var(--crew-primary); border:1px solid var(--crew-primary); }
-.crew-primary-action:hover { background:#27272a; border-color:#27272a; }
-.crew-secondary-action { color:var(--crew-ink); background:#fff; border:1px solid #d4d4d8; }
-.crew-secondary-action:hover:not(:disabled) { background:var(--crew-soft); border-color:#09090b; }
+.crew-primary-action:hover:not(:disabled) { background:var(--crew-primary-dark); border-color:var(--crew-primary-dark); }
+.crew-secondary-action { color:var(--crew-ink); background:var(--crew-surface); border:1px solid var(--crew-border); }
+.crew-secondary-action:hover:not(:disabled) { background:var(--crew-soft); border-color:var(--crew-primary); }
 .crew-primary-action:disabled, .crew-secondary-action:disabled { opacity:.42; cursor:not-allowed; pointer-events:none; }
 .crew-action-note { margin:12px 0 0; color:var(--crew-muted); font-size:.74rem; }
 .crew-side-panel { padding:22px 24px; }
