@@ -714,168 +714,6 @@
             </div>
         </div>
 
-        {{-- Matriz Predictiva de Susceptibilidad en 4 Perfiles (SANS+ vs SANS- para Futuros Candidatos) --}}
-        @php
-            $isSusceptible = $activeCase->scenario_archetype === 'EMPEORA';
-            $isMissingOct = ($bp['inputs']['oct_trt_current_um'] ?? null) === null;
-            $matchLabel = $isMissingOct
-                ? ($isEn ? 'Insufficient Data (Missing OCT)' : 'Datos Insuficientes (Sin OCT)')
-                : ($isSusceptible
-                    ? ($isEn ? 'High Similarity to SANS+ Cohort' : 'Alta Similitud con Cohorte SANS+')
-                    : ($isEn ? 'Aligned with SANS- Resilient Cohort' : 'Alineado con Cohorte Resiliente SANS-'));
-            $matchColor = $isMissingOct ? '#64748b' : ($isSusceptible ? '#d97706' : '#16a34a');
-        @endphp
-        <div class="card" style="padding:1rem;margin-bottom:0.85rem;border:1px solid var(--border);background:var(--card);">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
-                <div>
-                    <div style="font-family:ui-monospace,monospace;font-size:0.68rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.05em;">
-                        {{ $isEn ? '4-DOMAIN PREDICTIVE SUSCEPTIBILITY MODEL · SANS+ VS. SANS- COHORTS' : 'MODELO PREDICTIVO DE SUSCEPTIBILIDAD EN 4 PERFILES · COHORTES SANS+ VS. SANS-' }}
-                    </div>
-                    <h3 style="font-size:0.95rem;font-weight:800;margin:0.2rem 0 0;">
-                        {{ $isEn
-                            ? 'Pre-Flight & In-Flight Susceptibility Pattern Matching for Future Spaceflight Candidates'
-                            : 'Identificación de Patrones de Susceptibilidad al SANS para Futuros Candidatos a Misiones Espaciales' }}
-                    </h3>
-                </div>
-                <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;padding:0.25rem 0.65rem;border-radius:6px;background:var(--muted);border:1.5px solid {{ $matchColor }};color:{{ $matchColor }};">
-                    {{ $matchLabel }}
-                </span>
-            </div>
-
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0.65rem;font-size:0.76rem;">
-                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
-                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-arrows-h"></i> {{ $isEn ? 'Biometric Profile' : 'Perfil Biométrico' }}</div>
-                    <div style="color:var(--muted-foreground);line-height:1.4;">
-                        {{ $isEn ? 'Active AL:' : 'Long. Axial:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['axial_length_mm'] ?? '23.8' }} mm</strong><br>
-                        {{ $isEn ? 'SANS+ pattern: shorter/flattened globe + -6° HDT shift' : 'Patrón SANS+: globo más corto/aplanado + respuesta -6° HDT' }}
-                    </div>
-                </div>
-                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
-                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-eye"></i> {{ $isEn ? 'Ophthalmological Profile' : 'Perfil Oftalmológico' }}</div>
-                    <div style="color:var(--muted-foreground);line-height:1.4;">
-                        {{ $isEn ? 'ΔTRT / Frisén:' : 'ΔTRT / Frisén:' }} <strong style="color:var(--foreground);">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }} · G{{ $bp['inputs']['papilledema_frisen'] ?? 'N/E' }}</strong><br>
-                        {{ $isEn ? 'SANS+ pattern: ΔTRT ≥ +20 µm, +0.75 D, choroidal folds' : 'Patrón SANS+: ΔTRT ≥ +20 µm, +0.75 D, pliegues coroideos' }}
-                    </div>
-                </div>
-                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
-                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-sitemap"></i> {{ $isEn ? 'Neurological Profile' : 'Perfil Neurológico' }}</div>
-                    <div style="color:var(--muted-foreground);line-height:1.4;">
-                        {{ $isEn ? 'IOP / Translaminar:' : 'PIO / Translaminar:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['iop_mmhg'] }} mmHg</strong><br>
-                        {{ $isEn ? 'SANS+ pattern: optic nerve sheath distension & CSF cephalic shift' : 'Patrón SANS+: distensión de vaina óptica y flujo cefálico de LCR' }}
-                    </div>
-                </div>
-                <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
-                    <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-flask"></i> {{ $isEn ? 'Metabolic & Cofactors' : 'Perfil Metabólico y Cofactores' }}</div>
-                    <div style="color:var(--muted-foreground);line-height:1.4;">
-                        {{ $isEn ? '1-Carbon / B-Vitamins / CO₂' : 'Metabolismo 1-C / Vit. B / CO₂' }}<br>
-                        {{ $isEn ? 'Zwart et al. (NASA): MTRR/SHMT1 polymorphisms + low folate/B12' : 'Zwart et al. (NASA): polimorfismos MTRR/SHMT1 + folato/B12 bajos' }}
-                    </div>
-                </div>
-            </div>
-
-            {{-- Simulador Predictivo Interactivo para Futuros Candidatos Espaciales (Scikit-learn) --}}
-            <form id="candidate-predict-form" onsubmit="return window.runCandidatePredictor(event)" style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid var(--border);">
-                <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.55rem;">
-                    <span style="font-size:0.78rem;font-weight:800;">
-                        <i class="fa fa-sliders"></i> {{ $isEn ? 'Future Mission Candidate Susceptibility Simulator (Python Scikit-learn)' : 'Simulador Predictivo para Futuros Candidatos a Misión (Python Scikit-learn)' }}
-                    </span>
-                    <button type="submit" id="candidate-predict-btn" style="background:#EAFE07;color:#09090b;border:1px solid #09090b;padding:0.35rem 0.85rem;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;">
-                        <i class="fa fa-calculator"></i> {{ $isEn ? 'Run Predictive Model' : 'Ejecutar Modelo Predictivo' }}
-                    </button>
-                </div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:0.5rem;font-size:0.72rem;">
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Axial Length (mm)' : 'Long. Axial (mm)' }}</span>
-                        <input type="number" step="0.1" id="pred-axial" value="23.2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                    </label>
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '-6° HDT ΔTRT (µm)' : '-6° HDT ΔTRT (µm)' }}</span>
-                        <input type="number" step="1" id="pred-hdt" value="20" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                    </label>
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Mission Days' : 'Días Misión' }}</span>
-                        <input type="number" step="10" id="pred-days" value="180" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                    </label>
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'ONSD (mm)' : 'Vaina Óptica (mm)' }}</span>
-                        <input type="number" step="0.1" id="pred-onsd" value="5.8" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                    </label>
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '1-Carbon / Vit B' : '1-Carbono / Vit B' }}</span>
-                        <select id="pred-oc" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                            <option value="low">{{ $isEn ? 'Low Risk' : 'Riesgo Bajo' }}</option>
-                            <option value="moderate" selected>{{ $isEn ? 'Moderate' : 'Moderado' }}</option>
-                            <option value="high">{{ $isEn ? 'High (Polymorphism)' : 'Alto (Polimorfismo)' }}</option>
-                        </select>
-                    </label>
-                    <label style="display:flex;flex-direction:column;gap:2px;">
-                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Cabin CO₂' : 'CO₂ en Cabina' }}</span>
-                        <select id="pred-co2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
-                            <option value="nominal" selected>{{ $isEn ? 'Nominal' : 'Nominal' }}</option>
-                            <option value="elevated">{{ $isEn ? 'Elevated' : 'Elevado' }}</option>
-                        </select>
-                    </label>
-                </div>
-                <div id="candidate-predict-output" style="display:none;margin-top:0.65rem;padding:0.65rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:var(--muted);font-size:0.76rem;"></div>
-            </form>
-        </div>
-
-        <script>
-        window.runCandidatePredictor = async function (e) {
-            if (e) e.preventDefault();
-            const btn = document.getElementById('candidate-predict-btn');
-            const out = document.getElementById('candidate-predict-output');
-            if (!out) return false;
-            const orig = btn ? btn.innerHTML : '';
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ...'; }
-            try {
-                const res = await fetch(`{{ route('public.sans-monitor.predict-candidate') }}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    },
-                    body: JSON.stringify({
-                        axial_length_mm: parseFloat(document.getElementById('pred-axial').value || 23.2),
-                        hdt6_delta_trt_um: parseFloat(document.getElementById('pred-hdt').value || 20),
-                        mission_duration_days: parseInt(document.getElementById('pred-days').value || 180, 10),
-                        onsd_mm: parseFloat(document.getElementById('pred-onsd').value || 5.8),
-                        one_carbon_risk: document.getElementById('pred-oc').value,
-                        co2_sensitivity: document.getElementById('pred-co2').value,
-                        baseline_iop_mmhg: {{ (float) ($bp['inputs']['iop_mmhg'] ?? 15.5) }},
-                        baseline_trt_um: {{ (float) ($bp['inputs']['oct_trt_baseline_um'] ?? 280) }},
-                    }),
-                });
-                const d = await res.json();
-                const isEn = @json($isEn);
-                const dc = d.domain_contributions || {};
-                const pct = d.susceptibility_probability_pct ?? 0;
-                const col = pct >= 65 ? '#dc2626' : (pct >= 35 ? '#d97706' : '#16a34a');
-                out.style.display = 'block';
-                out.innerHTML = `
-                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;">
-                        <strong>${isEn ? 'Estimated SANS Susceptibility:' : 'Susceptibilidad Estimada al SANS:'} <span style="color:${col};font-size:0.95rem;font-family:ui-monospace,monospace;">${pct}% (${d.risk_tier})</span></strong>
-                        <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:var(--muted-foreground);">${d.engine || ''}</span>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;margin-bottom:0.35rem;font-family:ui-monospace,monospace;font-size:0.68rem;">
-                        <div>Bio: <strong>${dc.biometric_pct ?? 0}%</strong></div>
-                        <div>Oph: <strong>${dc.ophthalmological_pct ?? 0}%</strong></div>
-                        <div>Neu: <strong>${dc.neurological_pct ?? 0}%</strong></div>
-                        <div>Met: <strong>${dc.metabolic_pct ?? 0}%</strong></div>
-                    </div>
-                    <div style="color:var(--foreground);font-weight:600;">${(d.recommended_cadence && (isEn ? d.recommended_cadence.en : d.recommended_cadence.es)) || ''}</div>
-                    <div style="color:var(--muted-foreground);font-size:0.68rem;margin-top:2px;">${(d.safety_notice && (isEn ? d.safety_notice.en : d.safety_notice.es)) || ''}</div>
-                `;
-            } catch (err) {
-                console.error(err);
-            } finally {
-                if (btn) { btn.disabled = false; btn.innerHTML = orig; }
-            }
-            return false;
-        };
-        </script>
-
         {{-- Formulario Inicial Compacto para Registrar Nueva Persona --}}
         <details class="card collapsible-card" style="padding:1rem;">
             <summary style="cursor:pointer;font-weight:700;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center;gap:0.5rem;">
@@ -925,6 +763,168 @@
         </details>
     </div>
 </div>
+
+{{-- Matriz Predictiva de Susceptibilidad en 4 Perfiles (Full-Width, SANS+ vs SANS- para Futuros Candidatos) --}}
+@php
+    $isSusceptible = $activeCase->scenario_archetype === 'EMPEORA';
+    $isMissingOct = ($bp['inputs']['oct_trt_current_um'] ?? null) === null;
+    $matchLabel = $isMissingOct
+        ? ($isEn ? 'Insufficient Data (Missing OCT)' : 'Datos Insuficientes (Sin OCT)')
+        : ($isSusceptible
+            ? ($isEn ? 'High Similarity to SANS+ Cohort' : 'Alta Similitud con Cohorte SANS+')
+            : ($isEn ? 'Aligned with SANS- Resilient Cohort' : 'Alineado con Cohorte Resiliente SANS-'));
+    $matchColor = $isMissingOct ? '#64748b' : ($isSusceptible ? '#d97706' : '#16a34a');
+@endphp
+<div class="card" style="padding:1rem;margin-top:1rem;border:1px solid var(--border);background:var(--card);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <div>
+            <div style="font-family:ui-monospace,monospace;font-size:0.68rem;font-weight:800;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:0.05em;">
+                {{ $isEn ? '4-DOMAIN PREDICTIVE SUSCEPTIBILITY MODEL · SANS+ VS. SANS- COHORTS' : 'MODELO PREDICTIVO DE SUSCEPTIBILIDAD EN 4 PERFILES · COHORTES SANS+ VS. SANS-' }}
+            </div>
+            <h3 style="font-size:0.95rem;font-weight:800;margin:0.2rem 0 0;">
+                {{ $isEn
+                    ? 'Pre-Flight & In-Flight Susceptibility Pattern Matching for Future Spaceflight Candidates'
+                    : 'Identificación de Patrones de Susceptibilidad al SANS para Futuros Candidatos a Misiones Espaciales' }}
+            </h3>
+        </div>
+        <span style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;padding:0.25rem 0.65rem;border-radius:6px;background:var(--muted);border:1.5px solid {{ $matchColor }};color:{{ $matchColor }};">
+            {{ $matchLabel }}
+        </span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.65rem;font-size:0.76rem;">
+        <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+            <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-arrows-h"></i> {{ $isEn ? 'Biometric Profile' : 'Perfil Biométrico' }}</div>
+            <div style="color:var(--muted-foreground);line-height:1.4;">
+                {{ $isEn ? 'Active AL:' : 'Long. Axial:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['axial_length_mm'] ?? '23.8' }} mm</strong><br>
+                {{ $isEn ? 'SANS+ pattern: shorter/flattened globe + -6° HDT shift' : 'Patrón SANS+: globo más corto/aplanado + respuesta -6° HDT' }}
+            </div>
+        </div>
+        <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+            <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-eye"></i> {{ $isEn ? 'Ophthalmological Profile' : 'Perfil Oftalmológico' }}</div>
+            <div style="color:var(--muted-foreground);line-height:1.4;">
+                {{ $isEn ? 'ΔTRT / Frisén:' : 'ΔTRT / Frisén:' }} <strong style="color:var(--foreground);">{{ $bp['delta_trt_um'] !== null ? '+'.$bp['delta_trt_um'].' µm' : 'N/A' }} · G{{ $bp['inputs']['papilledema_frisen'] ?? 'N/E' }}</strong><br>
+                {{ $isEn ? 'SANS+ pattern: ΔTRT ≥ +20 µm, +0.75 D, choroidal folds' : 'Patrón SANS+: ΔTRT ≥ +20 µm, +0.75 D, pliegues coroideos' }}
+            </div>
+        </div>
+        <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+            <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-sitemap"></i> {{ $isEn ? 'Neurological Profile' : 'Perfil Neurológico' }}</div>
+            <div style="color:var(--muted-foreground);line-height:1.4;">
+                {{ $isEn ? 'IOP / Translaminar:' : 'PIO / Translaminar:' }} <strong style="color:var(--foreground);">{{ $bp['inputs']['iop_mmhg'] }} mmHg</strong><br>
+                {{ $isEn ? 'SANS+ pattern: optic nerve sheath distension & CSF cephalic shift' : 'Patrón SANS+: distensión de vaina óptica y flujo cefálico de LCR' }}
+            </div>
+        </div>
+        <div style="padding:0.65rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:var(--muted);">
+            <div style="font-weight:800;margin-bottom:0.25rem;"><i class="fa fa-flask"></i> {{ $isEn ? 'Metabolic & Cofactors' : 'Perfil Metabólico y Cofactores' }}</div>
+            <div style="color:var(--muted-foreground);line-height:1.4;">
+                {{ $isEn ? '1-Carbon / B-Vitamins / CO₂' : 'Metabolismo 1-C / Vit. B / CO₂' }}<br>
+                {{ $isEn ? 'Zwart et al. (NASA): MTRR/SHMT1 polymorphisms + low folate/B12' : 'Zwart et al. (NASA): polimorfismos MTRR/SHMT1 + folato/B12 bajos' }}
+            </div>
+        </div>
+    </div>
+
+    {{-- Simulador Predictivo Interactivo para Futuros Candidatos Espaciales (Scikit-learn) --}}
+    <form id="candidate-predict-form" onsubmit="return window.runCandidatePredictor(event)" style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.55rem;">
+            <span style="font-size:0.78rem;font-weight:800;">
+                <i class="fa fa-sliders"></i> {{ $isEn ? 'Future Mission Candidate Susceptibility Simulator (Python Scikit-learn)' : 'Simulador Predictivo para Futuros Candidatos a Misión (Python Scikit-learn)' }}
+            </span>
+            <button type="submit" id="candidate-predict-btn" style="background:#EAFE07;color:#09090b;border:1px solid #09090b;padding:0.35rem 0.85rem;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;">
+                <i class="fa fa-calculator"></i> {{ $isEn ? 'Run Predictive Model' : 'Ejecutar Modelo Predictivo' }}
+            </button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:0.5rem;font-size:0.72rem;">
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Axial Length (mm)' : 'Long. Axial (mm)' }}</span>
+                <input type="number" step="0.1" id="pred-axial" value="23.2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '-6° HDT ΔTRT (µm)' : '-6° HDT ΔTRT (µm)' }}</span>
+                <input type="number" step="1" id="pred-hdt" value="20" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Mission Days' : 'Días Misión' }}</span>
+                <input type="number" step="10" id="pred-days" value="180" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'ONSD (mm)' : 'Vaina Óptica (mm)' }}</span>
+                <input type="number" step="0.1" id="pred-onsd" value="5.8" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '1-Carbon / Vit B' : '1-Carbono / Vit B' }}</span>
+                <select id="pred-oc" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    <option value="low">{{ $isEn ? 'Low Risk' : 'Riesgo Bajo' }}</option>
+                    <option value="moderate" selected>{{ $isEn ? 'Moderate' : 'Moderado' }}</option>
+                    <option value="high">{{ $isEn ? 'High (Polymorphism)' : 'Alto (Polimorfismo)' }}</option>
+                </select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:2px;">
+                <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Cabin CO₂' : 'CO₂ en Cabina' }}</span>
+                <select id="pred-co2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    <option value="nominal" selected>{{ $isEn ? 'Nominal' : 'Nominal' }}</option>
+                    <option value="elevated">{{ $isEn ? 'Elevated' : 'Elevado' }}</option>
+                </select>
+            </label>
+        </div>
+        <div id="candidate-predict-output" style="display:none;margin-top:0.65rem;padding:0.65rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:var(--muted);font-size:0.76rem;"></div>
+    </form>
+</div>
+
+<script>
+window.runCandidatePredictor = async function (e) {
+    if (e) e.preventDefault();
+    const btn = document.getElementById('candidate-predict-btn');
+    const out = document.getElementById('candidate-predict-output');
+    if (!out) return false;
+    const orig = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ...'; }
+    try {
+        const res = await fetch(`{{ route('public.sans-monitor.predict-candidate') }}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+            body: JSON.stringify({
+                axial_length_mm: parseFloat(document.getElementById('pred-axial').value || 23.2),
+                hdt6_delta_trt_um: parseFloat(document.getElementById('pred-hdt').value || 20),
+                mission_duration_days: parseInt(document.getElementById('pred-days').value || 180, 10),
+                onsd_mm: parseFloat(document.getElementById('pred-onsd').value || 5.8),
+                one_carbon_risk: document.getElementById('pred-oc').value,
+                co2_sensitivity: document.getElementById('pred-co2').value,
+                baseline_iop_mmhg: {{ (float) ($bp['inputs']['iop_mmhg'] ?? 15.5) }},
+                baseline_trt_um: {{ (float) ($bp['inputs']['oct_trt_baseline_um'] ?? 280) }},
+            }),
+        });
+        const d = await res.json();
+        const isEn = @json($isEn);
+        const dc = d.domain_contributions || {};
+        const pct = d.susceptibility_probability_pct ?? 0;
+        const col = pct >= 65 ? '#dc2626' : (pct >= 35 ? '#d97706' : '#16a34a');
+        out.style.display = 'block';
+        out.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;">
+                <strong>${isEn ? 'Estimated SANS Susceptibility:' : 'Susceptibilidad Estimada al SANS:'} <span style="color:${col};font-size:0.95rem;font-family:ui-monospace,monospace;">${pct}% (${d.risk_tier})</span></strong>
+                <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:var(--muted-foreground);">${d.engine || ''}</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;margin-bottom:0.35rem;font-family:ui-monospace,monospace;font-size:0.68rem;">
+                <div>Bio: <strong>${dc.biometric_pct ?? 0}%</strong></div>
+                <div>Oph: <strong>${dc.ophthalmological_pct ?? 0}%</strong></div>
+                <div>Neu: <strong>${dc.neurological_pct ?? 0}%</strong></div>
+                <div>Met: <strong>${dc.metabolic_pct ?? 0}%</strong></div>
+            </div>
+            <div style="color:var(--foreground);font-weight:600;">${(d.recommended_cadence && (isEn ? d.recommended_cadence.en : d.recommended_cadence.es)) || ''}</div>
+            <div style="color:var(--muted-foreground);font-size:0.68rem;margin-top:2px;">${(d.safety_notice && (isEn ? d.safety_notice.en : d.safety_notice.es)) || ''}</div>
+        `;
+    } catch (err) {
+        console.error(err);
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+    }
+    return false;
+};
+</script>
 </div>
 
 {{-- =============================================================================================== --}}
