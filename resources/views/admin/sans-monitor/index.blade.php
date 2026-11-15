@@ -277,7 +277,12 @@
     </a>
 </div>
 
-<div style="display:flex;justify-content:flex-end;margin:-0.45rem 0 0.9rem;">
+<div style="display:flex;justify-content:flex-end;gap:0.5rem;flex-wrap:wrap;margin:-0.45rem 0 0.9rem;">
+    <a href="#project-team-section" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
+        <i class="fa fa-users"></i>
+        <span>{{ $isEn ? 'Project Team (6 Members)' : 'Miembros del Proyecto (6)' }}</span>
+        <i class="fa fa-arrow-down" style="font-size:10px;opacity:0.7;"></i>
+    </a>
     <a href="#nasa-bibliography" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-book"></i>
         <span>{{ $isEn ? 'NASA Protocols & Scientific Bibliography (7 References)' : 'Protocolos NASA y Bibliografía Científica (7 Referencias)' }}</span>
