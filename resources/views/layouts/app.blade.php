@@ -208,13 +208,13 @@
         </h2>
         <p style="font-size:0.98rem;line-height:1.5;color:#d4d4d8;margin:0 0 1.35rem;">
             {{ $isEn
-                ? 'Sit back and watch the full 16-step automated tour with large live subtitles across Python CV, 6 Biomarkers, Scikit-learn Candidate Predictor, Astronaut View, and 3D Digital Twin + SD-OCT.'
-                : 'Recorre automáticamente toda la plataforma en 16 pasos con subtítulos grandes en vivo: Escáner Python CV, 6 Biomarcadores, Predictor Scikit-learn, Vista Astronauta y Gemelo Digital 3D + SD-OCT.' }}
+                ? 'Press Play to launch the automatic 2x tour across the entire platform (no need to click Next): Python CV, Camera App, 6 Biomarkers, Scikit-learn Predictor, Integrated Populations, Astronaut Wizard, and 3D Digital Twin + SD-OCT.'
+                : 'Dale Play para ejecutar el recorrido automático a velocidad 2x por toda la plataforma (sin pulsar Siguiente): Escáner Python CV, Cámara, 6 Biomarcadores, Predictor Scikit-learn, Poblaciones, Wizard Astronauta y Gemelo 3D + SD-OCT.' }}
         </p>
         <div style="display:flex;flex-direction:column;gap:0.65rem;align-items:center;">
             <button type="button" id="sv-welcome-start-btn" style="width:100%;background:#EAFE07;color:#09090b;border:none;border-radius:10px;padding:0.95rem 1.5rem;font-size:1.08rem;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 30px rgba(234,254,7,0.28);">
                 <i class="fa fa-play-circle" style="font-size:1.25rem;"></i>
-                <span>{{ $isEn ? 'ACTIVATE AUTOMATIC DEMO' : 'ACTIVAR DEMO AUTOMÁTICO' }}</span>
+                <span>{{ $isEn ? 'PLAY AUTOMATIC DEMO (2x)' : 'PLAY · EJECUTAR DEMO AUTOMÁTICO (2x)' }}</span>
             </button>
             <button type="button" id="sv-welcome-skip-btn" style="background:transparent;color:#a1a1aa;border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:0.5rem 1.1rem;font-size:0.84rem;font-weight:700;cursor:pointer;">
                 {{ $isEn ? 'Explore on my own' : 'Explorar por mi cuenta' }}
@@ -233,9 +233,9 @@
             <label for="sv-demo-speed" style="font-size:0.72rem;color:#a1a1aa;font-weight:700;margin:0;">{{ $isEn ? 'Speed' : 'Vel.' }}</label>
             <select id="sv-demo-speed" aria-label="{{ $isEn ? 'Demo Speed' : 'Velocidad del Demo' }}" style="background:rgba(255,255,255,0.12);color:#EAFE07;border:1px solid rgba(255,255,255,0.22);border-radius:7px;padding:0.26rem 0.45rem;font-size:0.76rem;font-weight:800;cursor:pointer;">
                 <option value="0.5" style="color:#09090b;">0.5x</option>
-                <option value="1" selected style="color:#09090b;">1x</option>
+                <option value="1" style="color:#09090b;">1x</option>
                 <option value="1.5" style="color:#09090b;">1.5x</option>
-                <option value="2" style="color:#09090b;">2x</option>
+                <option value="2" selected style="color:#09090b;">2x</option>
                 <option value="3" style="color:#09090b;">3x</option>
             </select>
             <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
@@ -629,7 +629,7 @@
 
         tickTimer = setInterval(() => {
             if (paused) return;
-            const curSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '1') || 1;
+            const curSpeed = parseFloat(sessionStorage.getItem('sv_demo_speed') || '2') || 2;
             elapsed += 150 * curSpeed;
             const pct = Math.min(100, (elapsed / dur) * 100);
             if (progEl) progEl.style.width = `${pct}%`;
@@ -641,17 +641,21 @@
 
     const speedSelectEl = document.getElementById('sv-demo-speed');
     if (speedSelectEl) {
-        const savedSpeed = sessionStorage.getItem('sv_demo_speed');
-        if (savedSpeed) speedSelectEl.value = savedSpeed;
+        const savedSpeed = sessionStorage.getItem('sv_demo_speed') || '2';
+        sessionStorage.setItem('sv_demo_speed', savedSpeed);
+        speedSelectEl.value = savedSpeed;
         speedSelectEl.addEventListener('change', () => {
-            sessionStorage.setItem('sv_demo_speed', speedSelectEl.value || '1');
+            sessionStorage.setItem('sv_demo_speed', speedSelectEl.value || '2');
         });
     }
 
     launchBtn?.addEventListener('click', () => {
-        sessionStorage.removeItem('sv_demo_v2_dismissed');
+        sessionStorage.removeItem('sv_demo_v3_dismissed');
+        if (!sessionStorage.getItem('sv_demo_speed')) {
+            sessionStorage.setItem('sv_demo_speed', '2');
+        }
+        if (speedSelectEl) speedSelectEl.value = sessionStorage.getItem('sv_demo_speed') || '2';
         if (welcomeModal) welcomeModal.style.display = 'none';
-        clearInterval(welcomeCountdownTimer);
         paused = false;
         if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         runStep(0);
@@ -668,16 +672,19 @@
         paused = !paused;
         pauseBtn.innerHTML = paused ? '<i class="fa fa-play"></i>' : '<i class="fa fa-pause"></i>';
     });
-    document.getElementById('sv-demo-stop')?.addEventListener('click', () => stopDemo(true));
+    document.getElementById('sv-demo-stop')?.addEventListener('click', () => {
+        sessionStorage.setItem('sv_demo_v3_dismissed', '1');
+        stopDemo(true);
+    });
 
     const welcomeModal = document.getElementById('sv-demo-welcome-modal');
     const welcomeStartBtn = document.getElementById('sv-welcome-start-btn');
-    let welcomeCountdownTimer = null;
 
     function startDemoFromWelcome() {
-        clearInterval(welcomeCountdownTimer);
         if (welcomeModal) welcomeModal.style.display = 'none';
-        sessionStorage.removeItem('sv_demo_v2_dismissed');
+        sessionStorage.removeItem('sv_demo_v3_dismissed');
+        sessionStorage.setItem('sv_demo_speed', '2');
+        if (speedSelectEl) speedSelectEl.value = '2';
         paused = false;
         if (pauseBtn) pauseBtn.innerHTML = '<i class="fa fa-pause"></i>';
         runStep(0);
@@ -685,36 +692,21 @@
 
     welcomeStartBtn?.addEventListener('click', startDemoFromWelcome);
     document.getElementById('sv-welcome-skip-btn')?.addEventListener('click', () => {
-        clearInterval(welcomeCountdownTimer);
         if (welcomeModal) welcomeModal.style.display = 'none';
-        sessionStorage.setItem('sv_demo_v2_dismissed', '1');
+        sessionStorage.setItem('sv_demo_v3_dismissed', '1');
     });
 
     const forceDemoLink = window.location.pathname.endsWith('/demo') || new URLSearchParams(window.location.search).get('demo') === '1';
     if (forceDemoLink) {
-        sessionStorage.removeItem('sv_demo_v2_dismissed');
+        sessionStorage.removeItem('sv_demo_v3_dismissed');
+        sessionStorage.setItem('sv_demo_speed', '2');
+        if (speedSelectEl) speedSelectEl.value = '2';
         setTimeout(() => runStep(0), 120);
     } else if (sessionStorage.getItem('sv_demo_active') === '1') {
         const savedIdx = parseInt(sessionStorage.getItem('sv_demo_step') || '0', 10);
         setTimeout(() => runStep(savedIdx), 120);
-    } else if (sessionStorage.getItem('sv_demo_v2_dismissed') !== '1') {
-        if (welcomeModal) {
-            welcomeModal.style.display = 'flex';
-            let sec = 1;
-            const labelSpan = welcomeStartBtn?.querySelector('span');
-            const baseLabel = isEn ? 'ACTIVATE AUTOMATIC DEMO' : 'ACTIVAR DEMO AUTOMÁTICO';
-            if (labelSpan) labelSpan.textContent = `${baseLabel} (${sec}s)`;
-            welcomeCountdownTimer = setInterval(() => {
-                sec--;
-                if (sec <= 0) {
-                    startDemoFromWelcome();
-                } else if (labelSpan) {
-                    labelSpan.textContent = `${baseLabel} (${sec}s)`;
-                }
-            }, 1000);
-        } else {
-            setTimeout(() => runStep(0), 150);
-        }
+    } else if (currentPageKey() === 'home' && sessionStorage.getItem('sv_demo_v3_dismissed') !== '1') {
+        if (welcomeModal) welcomeModal.style.display = 'flex';
     }
 })();
 </script>
