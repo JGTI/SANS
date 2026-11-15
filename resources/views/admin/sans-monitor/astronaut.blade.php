@@ -3,22 +3,22 @@
 @endphp
 
 <section class="crew-app" data-crew-app data-locale="{{ $isEn ? 'en' : 'es' }}" data-case="{{ $activeCase->case_id }}">
-    {{-- Orbital Flight Logbook Telemetry Strip --}}
-    <div style="background:#07173F;color:#f8fafc;border:1.5px solid #2E96F5;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;">
+    {{-- Orbital Flight Logbook Telemetry Strip (High-Contrast Monochrome) --}}
+    <div style="background:#09090b;color:#ffffff;border:1px solid #27272a;border-radius:10px;padding:0.65rem 1rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:0.74rem;">
         <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
-            <span style="background:#EAFE07;color:#07173F;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
+            <span style="background:#ffffff;color:#09090b;font-weight:900;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.06em;">
                 <i class="fa fa-space-shuttle"></i> {{ $isEn ? 'ORBITAL FLIGHT LOG' : 'BITÁCORA ESPACIAL DE VUELO' }}
             </span>
-            <span style="color:#93c5fd;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
-            <span style="color:#93c5fd;">GRAVITY: <strong style="color:#EAFE07;">0.00 G (Microgravity)</strong></span>
-            <span style="color:#93c5fd;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
+            <span style="color:#a1a1aa;">ISS ALT: <strong style="color:#ffffff;">408 km</strong></span>
+            <span style="color:#a1a1aa;">GRAVITY: <strong style="color:#ffffff;">0.00 G (Microgravity)</strong></span>
+            <span style="color:#a1a1aa;">RECORD: <strong style="color:#ffffff;">{{ $activeCase->case_id }}</strong></span>
         </div>
         <div style="display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;">
             @foreach($cases as $cItem)
                 @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
                 <a href="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}"
-                   style="padding:0.2rem 0.5rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#EAFE07' : '#1e3a8a' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#0042A6' : 'rgba(255,255,255,0.06)' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#EAFE07' : '#cbd5e1' }};">
-                    {{ explode(' ', $cMeta['name'])[1] ?? $cMeta['name'] }}
+                   style="padding:0.2rem 0.55rem;border-radius:5px;text-decoration:none;font-size:0.68rem;font-weight:800;border:1px solid {{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : '#3f3f46' }};background:{{ $cItem->case_id === $activeCase->case_id ? '#ffffff' : '#18181b' }};color:{{ $cItem->case_id === $activeCase->case_id ? '#09090b' : '#d4d4d8' }};">
+                    {{ $cMeta['name'] }}
                 </a>
             @endforeach
         </div>
@@ -28,14 +28,28 @@
         <div class="crew-identity">
             <img src="{{ $crew['avatar'] }}" alt="{{ $crew['name'] }}" class="crew-avatar">
             <div>
-                <p class="crew-kicker">{{ $isEn ? 'Mission day 30 · Personal eye log' : 'Día 30 de misión · Bitácora visual personal' }}</p>
-                <h1>{{ $isEn ? 'Good morning,' : 'Buenos días,' }} {{ explode(' ', $crew['name'])[0] }}</h1>
+                <p class="crew-kicker">{{ $isEn ? 'Mission day 30 · Personal eye log · ' . $activeCase->case_id : 'Día 30 de misión · Bitácora visual personal · ' . $activeCase->case_id }}</p>
+                <h1>{{ $isEn ? 'Good morning,' : 'Buenos días,' }} {{ $crew['name'] }}</h1>
                 <p>{{ $isEn ? 'Your next check is ready. It takes about 8 minutes.' : 'Tu siguiente revisión está lista. Toma aproximadamente 8 minutos.' }}</p>
             </div>
         </div>
-        <div class="crew-sync" role="status">
-            <span class="crew-sync-dot" aria-hidden="true"></span>
-            {{ $isEn ? 'Synced with ground team' : 'Sincronizado con el equipo en Tierra' }}
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <label for="crewAstronautSelect" style="display:flex;align-items:center;gap:6px;background:#ffffff;border:1px solid #d4d4d8;border-radius:8px;padding:4px 10px;font-size:0.78rem;font-weight:700;color:#09090b;">
+                <i class="fa fa-user-circle"></i>
+                <span>{{ $isEn ? 'Astronaut:' : 'Astronauta:' }}</span>
+                <select id="crewAstronautSelect" aria-label="{{ $isEn ? 'Switch astronaut' : 'Cambiar de astronauta' }}" onchange="if(this.value) window.location.href=this.value;" style="border:none;background:transparent;font-weight:800;color:#09090b;cursor:pointer;outline:none;font-size:0.78rem;">
+                    @foreach($cases as $cItem)
+                        @php $cMeta = \App\Models\AstronautProfile::crewMetaForCase($cItem->case_id); @endphp
+                        <option value="{{ route('public.astronaut', ['case_id' => $cItem->case_id, 'lang' => app()->getLocale()]) }}" {{ $cItem->case_id === $activeCase->case_id ? 'selected' : '' }}>
+                            {{ $cMeta['name'] }} ({{ $cItem->case_id }})
+                        </option>
+                    @endforeach
+                </select>
+            </label>
+            <div class="crew-sync" role="status">
+                <span class="crew-sync-dot" aria-hidden="true"></span>
+                {{ $isEn ? 'Synced with ground team' : 'Sincronizado con el equipo en Tierra' }}
+            </div>
         </div>
     </header>
 
