@@ -539,8 +539,8 @@
                 <i class="fa fa-upload"></i> {{ $isEn ? 'Upload Photo' : 'Subir Foto' }}
                 <input type="file" id="cvUploadFileInput" accept="image/*" hidden>
             </label>
-            <button type="button" id="btnOpenCvCamera" style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.52rem 0.9rem;font-size:0.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-                <i class="fa fa-camera"></i> {{ $isEn ? 'Camera' : 'Activar Cámara' }}
+            <button type="button" id="btnOpenCvCamera" title="{{ $isEn ? 'Demo webcam preview (clinical use requires a fundus camera)' : 'Vista previa demo (uso clínico requiere cámara de fondo de ojo)' }}" style="background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.52rem 0.9rem;font-size:0.8rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+                <i class="fa fa-camera"></i> {{ $isEn ? 'Demo Camera' : 'Cámara Demo' }}
             </button>
             <button type="button" id="btnRunFundusScanner" style="background:var(--space-neon);color:#09090b;border:1px solid #c7d900;border-radius:7px;padding:0.55rem 1.05rem;font-size:0.82rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;">
                 <i class="fa fa-crosshairs"></i> {{ $isEn ? 'Run Python CV Scanner' : 'Ejecutar Escáner Python CV' }}
@@ -563,6 +563,14 @@
                 <button type="button" id="btnCloseCvCamera" aria-label="{{ $isEn ? 'Close' : 'Cerrar' }}" title="{{ $isEn ? 'Close' : 'Cerrar' }}" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.12);color:#ffffff;border:1px solid rgba(255,255,255,0.18);font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
                     <i class="fa fa-times"></i>
                 </button>
+            </div>
+
+            {{-- Aviso claro: Demo vs Cámara de Fondo de Ojo --}}
+            <div style="padding:0.45rem 0.9rem;background:rgba(234,254,7,0.12);border-top:1px solid rgba(234,254,7,0.28);border-bottom:1px solid rgba(234,254,7,0.28);color:#fef08a;font-size:0.71rem;line-height:1.35;text-align:center;font-weight:600;">
+                <i class="fa fa-info-circle"></i>
+                {{ $isEn
+                    ? 'DEMO MODE: Live webcam is for demonstration only. Real retinal screening requires a dedicated fundus camera (retinograph).'
+                    : 'MODO DEMO: La cámara en vivo es solo demostrativa. La evaluación clínica requiere una cámara de fondo de ojo (retinógrafo).' }}
             </div>
 
             {{-- Viewfinder + Optic Reticle Overlay --}}
