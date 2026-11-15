@@ -249,6 +249,7 @@
                 <option value="1.5" style="color:#09090b;">1.5x</option>
                 <option value="2" selected style="color:#09090b;">2x</option>
                 <option value="3" style="color:#09090b;">3x</option>
+                <option value="4" style="color:#09090b;">4x</option>
             </select>
             <button type="button" id="sv-demo-prev" title="{{ $isEn ? 'Previous' : 'Anterior' }}" style="background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);border-radius:7px;padding:0.32rem 0.65rem;font-size:0.78rem;font-weight:700;cursor:pointer;"><i class="fa fa-step-backward"></i></button>
             <button type="button" id="sv-demo-pause" title="{{ $isEn ? 'Pause / Resume' : 'Pausar / Reanudar' }}" style="background:#EAFE07;color:#09090b;border:1px solid #EAFE07;border-radius:7px;padding:0.32rem 0.75rem;font-size:0.78rem;font-weight:800;cursor:pointer;"><i class="fa fa-pause"></i></button>
