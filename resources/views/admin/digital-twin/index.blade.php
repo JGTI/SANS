@@ -124,9 +124,15 @@
     }
     #threeCanvasContainer {
         width: 100%;
-        height: 440px;
+        flex: 1;
+        min-height: 500px;
         position: relative;
         cursor: grab;
+    }
+    #threeCanvasContainer canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
     }
     #threeCanvasContainer:active {
         cursor: grabbing;
@@ -644,9 +650,9 @@
                     <span id="oct-elevation-val" style="color:#EAFE07;">ELEVACIÓN PAPILAR: 0 &mu;m</span>
                 </div>
                 <div style="height:44px;background:#000;border:1px solid #27272a;border-radius:4px;position:relative;overflow:hidden;">
-                    <svg id="octCurveSvg" width="100%" height="44" preserveAspectRatio="none" viewBox="0 0 300 48">
-                        <path id="octCurvePath" d="M 0 34 Q 75 34 110 32 Q 150 30 190 32 Q 225 34 300 34" fill="none" stroke="#22c55e" stroke-width="2.5"/>
-                        <path id="octBaseCurve" d="M 0 34 Q 75 34 150 34 Q 225 34 300 34" fill="none" stroke="#52525b" stroke-width="1" stroke-dasharray="3,3"/>
+                    <svg id="octCurveSvg" width="100%" height="44" preserveAspectRatio="none" viewBox="0 0 300 48" style="display:block;width:100%;height:44px;">
+                        <path id="octBaseCurve" d="M 0 36 L 300 36" fill="none" stroke="#52525b" stroke-width="1" stroke-dasharray="4,4"/>
+                        <path id="octCurvePath" d="M 0 34 Q 75 34 110 30 Q 150 24 190 30 Q 225 34 300 34" fill="none" stroke="#22c55e" stroke-width="2.5"/>
                     </svg>
                 </div>
             </div>
@@ -1425,6 +1431,10 @@ function initThreeEngine() {
     buildEyeAnatomy();
     animate();
     window.addEventListener('resize', onWindowResize);
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(() => onWindowResize()).observe(container);
+    }
+    setTimeout(onWindowResize, 50);
 }
 
 function buildEyeAnatomy() {
@@ -1725,12 +1735,13 @@ function renderDay(index) {
         vectorStatus.style.color = '#4ade80';
     }
 
-    // 5. Mini curva B-Scan
+    // 5. Mini curva B-Scan (Curva Bézier completa de 0 a 300 sin corte)
     const elevUm = sample.od_delta_um !== null ? Math.max(0, Math.round(sample.od_delta_um)) : 0;
     document.getElementById('oct-elevation-val').textContent = hasOd ? `ΔTRT MUESTRA: +${elevUm} µm` : 'SIN ESCANEO OCT';
-    const peakY = hasOd ? (32 - Math.min(22, Math.round(elevUm * 0.75))) : 34;
+    const peakY = hasOd ? (34 - Math.min(24, Math.round(elevUm * 0.8))) : 36;
+    const midControlY = hasOd ? Math.max(4, peakY - 6) : 36;
     const curveEl = document.getElementById('octCurvePath');
-    curveEl.setAttribute('d', `M 0 34 Q 75 34 110 ${peakY + 4} Q 150 ${peakY} Q 190 ${peakY + 4} Q 225 34 300 34`);
+    curveEl.setAttribute('d', `M 0 36 Q 70 36 108 ${peakY} Q 150 ${midControlY} 192 ${peakY} Q 230 36 300 36`);
     curveEl.setAttribute('stroke', !hasOd ? '#fbbf24' : (elevUm >= 20 ? '#ef4444' : (elevUm >= 10 ? '#eab308' : '#22c55e')));
 
     // 6. Deformación de malla 3D vinculada a la muestra
