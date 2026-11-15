@@ -472,6 +472,48 @@
                     <article data-device="tonometer"><div><i class="fa fa-eye"></i><span><strong>{{ $isEn ? 'Digital rebound tonometer' : 'Tonómetro digital de rebote' }}</strong><small>{{ $isEn ? 'Measures OD, then OS under the same baseline protocol.' : 'Mide OD y después OS con el mismo protocolo basal.' }}</small></span></div><dl><div><dt>OD</dt><dd><output data-reading="iop_od">—</output> mmHg<input type="hidden" name="iop_od"></dd></div><div><dt>OS</dt><dd><output data-reading="iop_os">—</output> mmHg<input type="hidden" name="iop_os"></dd></div></dl><button type="button" class="crew-secondary-action" data-capture-device="tonometer"><i class="fa fa-play"></i>{{ $isEn ? 'Simulate reading' : 'Simular lectura' }}</button></article>
                     <article data-device="vitals"><div><i class="fa fa-heartbeat"></i><span><strong>{{ $isEn ? 'Digital mission health sensor' : 'Sensor digital de salud de misión' }}</strong><small>{{ $isEn ? 'Measures blood pressure and heart rate with a timestamp.' : 'Mide presión arterial y frecuencia cardiaca con hora.' }}</small></span></div><dl><div><dt>{{ $isEn ? 'Blood pressure' : 'Presión arterial' }}</dt><dd><output data-reading="bp">— / —</output> mmHg<input type="hidden" name="bp_sys"><input type="hidden" name="bp_dia"></dd></div><div><dt>{{ $isEn ? 'Heart rate' : 'Frecuencia cardiaca' }}</dt><dd><output data-reading="hr">—</output> bpm<input type="hidden" name="hr"></dd></div></dl><button type="button" class="crew-secondary-action" data-capture-device="vitals"><i class="fa fa-play"></i>{{ $isEn ? 'Simulate reading' : 'Simular lectura' }}</button></article>
                 </div>
+
+                {{-- Digital Fundus Camera (Upload or Demo Capture for Ground Papilledema Scan) --}}
+                <div style="margin-top:18px;background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;padding:18px 20px;" data-fundus-panel>
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid #f4f4f5;padding-bottom:12px;margin-bottom:14px;">
+                        <div>
+                            <span style="font-family:ui-monospace,monospace;font-size:11px;font-weight:800;color:#52525b;letter-spacing:0.06em;">{{ $isEn ? 'ORBITAL FUNDUS CAMERA · DOWNLINK TO GROUND' : 'CÁMARA DE FONDO DE OJO ORBITAL · ENVÍO A TIERRA' }}</span>
+                            <h3 style="margin:2px 0 0;font-size:1rem;color:#09090b;">{{ $isEn ? 'Capture or upload retinal fundus photos (OD / OS)' : 'Tomar o subir fotografías de fondo de ojo (OD / OS)' }}</h3>
+                        </div>
+                        <button type="button" class="crew-secondary-action" data-load-demo-fundus style="min-height:38px;padding:0 14px;font-size:12.5px;">
+                            <i class="fa fa-camera"></i> {{ $isEn ? 'Capture Demo Fundus (OD/OS)' : 'Capturar Demo Fondo de Ojo (OD/OS)' }}
+                        </button>
+                    </div>
+                    <p style="margin:0 0 14px;font-size:12.5px;color:#52525b;">
+                        {{ $isEn ? 'Note: Intraocular pressure is captured directly from the digital tonometer above (never manually uploaded). Attach fundus photos here to transmit to Ground Control for Python CV papilledema screening.' : 'Nota: La presión intraocular se captura directamente del tonómetro digital arriba (no se sube manualmente). Adjunta aquí las fotos de fondo de ojo para enviarlas a Tierra y analizarlas en el Módulo Científico.' }}
+                    </p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">
+                        <div style="border:1px solid #e4e4e7;border-radius:8px;padding:12px;background:#fafafa;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <strong style="font-size:12.5px;color:#09090b;">OD ({{ $isEn ? 'Right Eye' : 'Ojo Derecho' }})</strong>
+                                <select name="preset_od" data-fundus-preset="od" style="font-size:11.5px;border:1px solid #d4d4d8;border-radius:5px;padding:2px 6px;background:#ffffff;">
+                                    <option value="edema">{{ $isEn ? 'Demo: Papilledema (Frisén 2)' : 'Demo: Edema Papilar (Frisén 2)' }}</option>
+                                    <option value="folds">{{ $isEn ? 'Demo: Choroidal Folds' : 'Demo: Pliegues Coroideos' }}</option>
+                                    <option value="normal">{{ $isEn ? 'Demo: Normal Optic Disc' : 'Demo: Disco Normal (Frisén 0)' }}</option>
+                                </select>
+                            </div>
+                            <img data-fundus-preview="od" src="{{ asset('images/sans/fundus/fundus-edema.png') }}" alt="OD Fundus" style="width:100%;height:150px;object-fit:contain;background:#09090b;border-radius:6px;margin-bottom:8px;">
+                            <input type="file" name="fundus_od_file" accept="image/*" data-fundus-file="od" style="width:100%;font-size:11.5px;">
+                        </div>
+                        <div style="border:1px solid #e4e4e7;border-radius:8px;padding:12px;background:#fafafa;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <strong style="font-size:12.5px;color:#09090b;">OS ({{ $isEn ? 'Left Eye' : 'Ojo Izquierdo' }})</strong>
+                                <select name="preset_os" data-fundus-preset="os" style="font-size:11.5px;border:1px solid #d4d4d8;border-radius:5px;padding:2px 6px;background:#ffffff;">
+                                    <option value="folds">{{ $isEn ? 'Demo: Choroidal Folds' : 'Demo: Pliegues Coroideos' }}</option>
+                                    <option value="normal">{{ $isEn ? 'Demo: Normal Optic Disc' : 'Demo: Disco Normal (Frisén 0)' }}</option>
+                                    <option value="edema">{{ $isEn ? 'Demo: Papilledema (Frisén 2)' : 'Demo: Edema Papilar (Frisén 2)' }}</option>
+                                </select>
+                            </div>
+                            <img data-fundus-preview="os" src="{{ asset('images/sans/fundus/fundus-folds.jpg') }}" alt="OS Fundus" style="width:100%;height:150px;object-fit:contain;background:#09090b;border-radius:6px;margin-bottom:8px;">
+                            <input type="file" name="fundus_os_file" accept="image/*" data-fundus-file="os" style="width:100%;font-size:11.5px;">
+                        </div>
+                    </div>
+                </div>
                 <p class="crew-step-feedback" data-step-feedback="2" hidden></p>
             </section>
             <section class="crew-step" data-step="3" hidden>
@@ -513,11 +555,48 @@
         app.querySelector('[data-progress-label]').textContent = currentStep < 4 ? `${currentStep + 1} / 4` : (isEn ? 'Complete' : 'Completa');
     }
     function startFlow() { views.forEach(view => view.hidden = true); flow.hidden = false; currentStep = 0; renderStep(); flow.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    const fundusPresetUrls = {
+        normal: @json(asset('images/sans/fundus/fundus-normal.jpg')),
+        folds: @json(asset('images/sans/fundus/fundus-folds.jpg')),
+        edema: @json(asset('images/sans/fundus/fundus-edema.png')),
+    };
+
+    app.querySelectorAll('[data-fundus-preset]').forEach(sel => sel.addEventListener('change', () => {
+        const eye = sel.dataset.fundusPreset;
+        const preview = app.querySelector(`[data-fundus-preview="${eye}"]`);
+        if (preview && fundusPresetUrls[sel.value]) preview.src = fundusPresetUrls[sel.value];
+    }));
+
+    app.querySelectorAll('[data-fundus-file]').forEach(inp => inp.addEventListener('change', () => {
+        const file = inp.files?.[0];
+        if (!file) return;
+        const eye = inp.dataset.fundusFile;
+        const preview = app.querySelector(`[data-fundus-preview="${eye}"]`);
+        if (preview) preview.src = URL.createObjectURL(file);
+    }));
+
+    app.querySelector('[data-load-demo-fundus]')?.addEventListener('click', () => {
+        const odSel = app.querySelector('[data-fundus-preset="od"]');
+        const osSel = app.querySelector('[data-fundus-preset="os"]');
+        if (odSel) { odSel.value = 'edema'; odSel.dispatchEvent(new Event('change')); }
+        if (osSel) { osSel.value = 'folds'; osSel.dispatchEvent(new Event('change')); }
+    });
+
     function saveEntry() {
         const form = app.querySelector('[data-check-form]');
-        const data = Object.fromEntries(new FormData(form).entries());
+        const formData = new FormData(form);
+        formData.append('case_id', app.dataset.case || 'CASE-PROG-02');
+        const data = Object.fromEntries(formData.entries());
         data.completed_at = new Date().toISOString();
         try { localStorage.setItem(`space-vision-check-${app.dataset.case}`, JSON.stringify(data)); } catch (_) {}
+
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        fetch(@json(route('public.astronaut.transmit')), {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
+            body: formData
+        }).catch(() => {});
+
         currentStep = 4;
         renderStep();
     }

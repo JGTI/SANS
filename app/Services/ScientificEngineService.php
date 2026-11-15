@@ -791,4 +791,52 @@ class ScientificEngineService
             ]
         ];
     }
+
+    /**
+     * Ejecuta el escáner CV en Python para analizar fotografía de fondo de ojo (edema papilar y pliegues).
+     */
+    public function scanFundusPhoto(array $payload): array
+    {
+        try {
+            $response = Http::withToken($this->token)
+                ->timeout($this->timeout)
+                ->post("{$this->baseUrl}/api/v1/computer-vision/fundus-scan", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+        } catch (\Throwable $e) {
+            Log::debug('Scientific Engine fundus-scan fallback: ' . $e->getMessage());
+        }
+
+        $preset = strtolower((string) ($payload['demo_preset'] ?? 'edema'));
+        $iop = (float) ($payload['iop_mmhg'] ?? 16.0);
+        $isNormal = $preset === 'normal';
+        $isFolds = $preset === 'folds';
+
+        return [
+            'engine' => 'SPACE VISION CV Fundus Analyzer (Fallback)',
+            'case_id' => $payload['case_id'] ?? 'CASE-PROG-02',
+            'eye' => strtoupper((string) ($payload['eye'] ?? 'OD')),
+            'iop_mmhg' => round($iop, 1),
+            'iop_interpretation' => [
+                'en' => ($iop >= 10.0 && $iop <= 21.0) ? 'Within nominal band (10–21 mmHg)' : 'Outside nominal band',
+                'es' => ($iop >= 10.0 && $iop <= 21.0) ? 'Dentro de rango nominal (10–21 mmHg)' : 'Fuera de rango nominal',
+            ],
+            'frisen_grade_estimate' => $isNormal ? 0 : ($isFolds ? 1 : 2),
+            'disc_margin_sharpness_index' => $isNormal ? 0.92 : ($isFolds ? 0.64 : 0.41),
+            'peripapillary_edema_halo' => $isNormal ? 0.11 : ($isFolds ? 0.42 : 0.76),
+            'choroidal_folds_detected' => !$isNormal,
+            'vessel_tortuosity_index' => $isNormal ? 0.18 : ($isFolds ? 0.49 : 0.68),
+            'operational_flag' => $isNormal ? 'READY_FOR_REVIEW' : 'PRIORITIZE_REVIEW',
+            'clinical_interpretation' => [
+                'en' => $isNormal ? 'Sharp optic disc margins (Frisén Grade 0).' : ($isFolds ? 'Mild nasal disc blurring (Frisén Grade 1) with choroidal folds.' : 'Circumferential optic disc elevation & halo (Frisén Grade 2).'),
+                'es' => $isNormal ? 'Bordes papilares nítidos (Grado Frisén 0).' : ($isFolds ? 'Borramiento nasal leve (Grado Frisén 1) con pliegues coroideos.' : 'Elevación circunferencial papilar y halo peripapilar (Grado Frisén 2).'),
+            ],
+            'safety_notice' => [
+                'en' => 'Automated CV screening support only; specialist verification required.',
+                'es' => 'Apoyo automatizado de tamizaje por visión computacional; requiere verificación del especialista.',
+            ],
+        ];
+    }
 }

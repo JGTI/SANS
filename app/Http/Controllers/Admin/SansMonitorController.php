@@ -167,6 +167,17 @@ class SansMonitorController extends Controller
             'prior_hdt6_exposure' => $request->query('prior_hdt6_exposure'),
         ]);
 
+        $defaultFundusByCase = [
+            'CASE-STABLE-01' => ['od_image' => 'images/sans/fundus/fundus-normal.jpg', 'os_image' => 'images/sans/fundus/fundus-normal.jpg', 'od_preset' => 'normal', 'os_preset' => 'normal', 'iop_od' => 14.5, 'iop_os' => 14.2],
+            'CASE-PROG-02' => ['od_image' => 'images/sans/fundus/fundus-edema.png', 'os_image' => 'images/sans/fundus/fundus-folds.jpg', 'od_preset' => 'edema', 'os_preset' => 'folds', 'iop_od' => 16.4, 'iop_os' => 15.1],
+            'CASE-ASO-05' => ['od_image' => 'images/sans/fundus/fundus-edema.png', 'os_image' => 'images/sans/fundus/fundus-normal.jpg', 'od_preset' => 'edema', 'os_preset' => 'normal', 'iop_od' => 17.2, 'iop_os' => 15.0],
+            'CASE-TILT-04' => ['od_image' => 'images/sans/fundus/fundus-folds.jpg', 'os_image' => 'images/sans/fundus/fundus-normal.jpg', 'od_preset' => 'folds', 'os_preset' => 'normal', 'iop_od' => 15.8, 'iop_os' => 15.4],
+        ];
+        $orbitalTransmission = session("orbital_fundus_transmissions.{$activeCase->case_id}") ?? array_merge(
+            ['case_id' => $activeCase->case_id, 'transmitted_at' => now()->subHours(2)->toIso8601String(), 'source' => 'DEMO_ORBITAL_ARCHIVE'],
+            $defaultFundusByCase[$activeCase->case_id] ?? ['od_image' => 'images/sans/fundus/fundus-normal.jpg', 'os_image' => 'images/sans/fundus/fundus-normal.jpg', 'od_preset' => 'normal', 'os_preset' => 'normal', 'iop_od' => 15.5, 'iop_os' => 15.0]
+        );
+
         return view('admin.sans-monitor.index', compact(
             'cases',
             'activeCase',
@@ -194,8 +205,88 @@ class SansMonitorController extends Controller
             'initialObsId',
             'compareObsId',
             'exposureComparison',
-            'biomarkerPredictor'
+            'biomarkerPredictor',
+            'orbitalTransmission'
         ));
+    }
+
+    /**
+     * Recibe fotografías de fondo de ojo (subidas o demo) + PIO del tonómetro desde /astronaut-check y las envía a Tierra.
+     */
+    public function transmitFundus(Request $request)
+    {
+        $caseId = strtoupper((string) $request->input('case_id', 'CASE-PROG-02'));
+        $iopOd = (float) $request->input('iop_od', 16.0);
+        $iopOs = (float) $request->input('iop_os', 15.0);
+        $presetOd = (string) $request->input('preset_od', 'edema');
+        $presetOs = (string) $request->input('preset_os', 'normal');
+
+        $defaultMap = [
+            'normal' => 'images/sans/fundus/fundus-normal.jpg',
+            'folds' => 'images/sans/fundus/fundus-folds.jpg',
+            'edema' => 'images/sans/fundus/fundus-edema.png',
+        ];
+
+        $odPath = $defaultMap[$presetOd] ?? $defaultMap['edema'];
+        $osPath = $defaultMap[$presetOs] ?? $defaultMap['normal'];
+
+        $uploadDir = public_path('uploads/fundus');
+        if (! is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0775, true);
+        }
+
+        if ($request->hasFile('fundus_od_file') && $request->file('fundus_od_file')->isValid()) {
+            $ext = $request->file('fundus_od_file')->getClientOriginalExtension() ?: 'png';
+            $fname = strtolower($caseId) . '-od-' . time() . '.' . $ext;
+            $request->file('fundus_od_file')->move($uploadDir, $fname);
+            $odPath = 'uploads/fundus/' . $fname;
+            $presetOd = 'edema';
+        }
+
+        if ($request->hasFile('fundus_os_file') && $request->file('fundus_os_file')->isValid()) {
+            $ext = $request->file('fundus_os_file')->getClientOriginalExtension() ?: 'png';
+            $fname = strtolower($caseId) . '-os-' . time() . '.' . $ext;
+            $request->file('fundus_os_file')->move($uploadDir, $fname);
+            $osPath = 'uploads/fundus/' . $fname;
+            $presetOs = 'folds';
+        }
+
+        $payload = [
+            'case_id' => $caseId,
+            'transmitted_at' => now()->toIso8601String(),
+            'iop_od' => $iopOd,
+            'iop_os' => $iopOs,
+            'od_image' => $odPath,
+            'os_image' => $osPath,
+            'od_preset' => $presetOd,
+            'os_preset' => $presetOs,
+            'source' => 'ORBITAL_CREW_DOWNLINK',
+        ];
+
+        session()->put("orbital_fundus_transmissions.{$caseId}", $payload);
+
+        return response()->json([
+            'ok' => true,
+            'message' => 'Transmisión orbital recibida en Tierra.',
+            'transmission' => $payload,
+        ]);
+    }
+
+    /**
+     * Escáner del Módulo Científico: procesa la fotografía de fondo de ojo en Python (FastAPI CV) para edema papilar + PIO.
+     */
+    public function scanFundus(Request $request)
+    {
+        $service = app(\App\Services\ScientificEngineService::class);
+        $result = $service->scanFundusPhoto([
+            'case_id' => (string) $request->input('case_id', 'CASE-PROG-02'),
+            'eye' => (string) $request->input('eye', 'OD'),
+            'iop_mmhg' => (float) $request->input('iop_mmhg', 16.0),
+            'demo_preset' => (string) $request->input('demo_preset', 'edema'),
+            'image_filename' => $request->input('image_filename'),
+        ]);
+
+        return response()->json($result);
     }
 
     /**

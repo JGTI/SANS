@@ -359,4 +359,33 @@ class SansMonitorAcceptanceTest extends TestCase
         $resEs->assertSee('BITÁCORA ESPACIAL DE VUELO');
         $resEs->assertSee('Monitor 3D Orbital de Fluido Cefálico');
     }
+
+    public function test_astronaut_fundus_downlink_and_ground_python_cv_scanner_work_without_login(): void
+    {
+        $this->assertGuest();
+
+        $transmit = $this->postJson('/astronaut-check/transmit', [
+            'case_id' => 'CASE-PROG-02',
+            'iop_od' => 16.4,
+            'iop_os' => 15.2,
+            'preset_od' => 'edema',
+            'preset_os' => 'folds',
+        ]);
+        $transmit->assertOk()->assertJsonPath('ok', true)->assertJsonPath('transmission.case_id', 'CASE-PROG-02');
+
+        $scan = $this->postJson('/sans-monitor/fundus-scan', [
+            'case_id' => 'CASE-PROG-02',
+            'eye' => 'OD',
+            'iop_mmhg' => 16.4,
+            'demo_preset' => 'edema',
+        ]);
+        $scan->assertOk()
+            ->assertJsonPath('case_id', 'CASE-PROG-02')
+            ->assertJsonPath('frisen_grade_estimate', 2)
+            ->assertJsonPath('choroidal_folds_detected', true);
+
+        $monitor = $this->get('/?case_id=CASE-PROG-02&lang=es');
+        $monitor->assertOk();
+        $monitor->assertSee('Escáner Científico de Fondo de Ojo y Edema Papilar');
+    }
 }
