@@ -415,5 +415,22 @@ class SansMonitorAcceptanceTest extends TestCase
         $search->assertOk()
             ->assertJsonPath('ok', true)
             ->assertJsonStructure(['ok', 'query', 'osdr', 'ntrs']);
+
+        $pred = $this->postJson('/sans-monitor/predict-candidate', [
+            'axial_length_mm' => 23.1,
+            'hdt6_delta_trt_um' => 22,
+            'mission_duration_days' => 210,
+            'onsd_mm' => 6.0,
+            'one_carbon_risk' => 'high',
+            'co2_sensitivity' => 'elevated',
+        ]);
+        $pred->assertOk()
+            ->assertJsonStructure([
+                'susceptibility_probability_pct',
+                'risk_tier',
+                'domain_contributions' => ['biometric_pct', 'ophthalmological_pct', 'neurological_pct', 'metabolic_pct'],
+                'recommended_cadence',
+                'safety_notice',
+            ]);
     }
 }

@@ -244,6 +244,29 @@ class SansMonitorController extends Controller
     }
 
     /**
+     * Predicción de susceptibilidad al SANS en 4 perfiles para futuros candidatos espaciales (Scikit-learn).
+     */
+    public function predictCandidate(Request $request)
+    {
+        $payload = [
+            'axial_length_mm' => (float) $request->input('axial_length_mm', 23.6),
+            'mission_duration_days' => (int) $request->input('mission_duration_days', 180),
+            'hdt6_delta_trt_um' => (float) $request->input('hdt6_delta_trt_um', 14.0),
+            'baseline_trt_um' => (float) $request->input('baseline_trt_um', 280.0),
+            'baseline_iop_mmhg' => (float) $request->input('baseline_iop_mmhg', 15.5),
+            'hyperopic_reserve_d' => (float) $request->input('hyperopic_reserve_d', 0.5),
+            'onsd_mm' => (float) $request->input('onsd_mm', 5.4),
+            'prior_flights' => (int) $request->input('prior_flights', 1),
+            'one_carbon_risk' => (string) $request->input('one_carbon_risk', 'moderate'),
+            'co2_sensitivity' => (string) $request->input('co2_sensitivity', 'nominal'),
+        ];
+
+        $result = app(\App\Services\ScientificEngineService::class)->predictCandidateSusceptibility($payload);
+
+        return response()->json($result);
+    }
+
+    /**
      * Recibe fotografías de fondo de ojo (subidas o demo) + PIO del tonómetro desde /astronaut-check y las envía a Tierra.
      */
     public function transmitFundus(Request $request)

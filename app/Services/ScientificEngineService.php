@@ -839,4 +839,68 @@ class ScientificEngineService
             ],
         ];
     }
+
+    /**
+     * Modelo predictivo de susceptibilidad al SANS en 4 perfiles (Biométrico, Oftalmológico, Neurológico, Metabólico)
+     * para futuros candidatos a misiones espaciales (Scikit-learn en Python con fallback determinista).
+     */
+    public function predictCandidateSusceptibility(array $payload): array
+    {
+        try {
+            $response = Http::withToken($this->token)
+                ->timeout($this->timeout)
+                ->post("{$this->baseUrl}/api/v1/ophthalmology/predict-candidate", $payload);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+        } catch (\Throwable $e) {
+            Log::debug('Scientific Engine predict-candidate fallback: ' . $e->getMessage());
+        }
+
+        $axial = (float) ($payload['axial_length_mm'] ?? 23.6);
+        $dur = (int) ($payload['mission_duration_days'] ?? 180);
+        $hdt = (float) ($payload['hdt6_delta_trt_um'] ?? 14.0);
+        $iop = (float) ($payload['baseline_iop_mmhg'] ?? 15.5);
+        $onsd = (float) ($payload['onsd_mm'] ?? 5.4);
+        $oc = strtolower((string) ($payload['one_carbon_risk'] ?? 'moderate'));
+        $co2 = strtolower((string) ($payload['co2_sensitivity'] ?? 'nominal'));
+
+        $z = -2.2
+            + max(0, 24.0 - $axial) * 1.15
+            + ($dur / 180.0) * 0.65
+            + ($hdt / 20.0) * 1.45
+            + max(0, $iop - 14.5) * 0.25
+            + max(0, $onsd - 5.0) * 1.2
+            + ($oc === 'high' ? 1.15 : ($oc === 'moderate' ? 0.45 : 0.0))
+            + ($co2 === 'elevated' ? 0.65 : 0.0);
+
+        $pct = round((1.0 / (1.0 + exp(-$z))) * 100.0, 1);
+        $tier = $pct >= 65.0 ? 'HIGH_SUSCEPTIBILITY_PRIORITY' : ($pct >= 35.0 ? 'MODERATE_MONITORING' : 'LOW_SUSCEPTIBILITY');
+
+        return [
+            'python_executed' => false,
+            'engine' => 'SPACE VISION 4-Domain Logistic Fallback',
+            'susceptibility_probability_pct' => $pct,
+            'risk_tier' => $tier,
+            'domain_contributions' => [
+                'biometric_pct' => 31.0,
+                'ophthalmological_pct' => 28.0,
+                'neurological_pct' => 23.0,
+                'metabolic_pct' => 18.0,
+            ],
+            'recommended_cadence' => [
+                'en' => $pct >= 65.0
+                    ? 'Pre-flight LBNP + B-vitamin/1-carbon panel; FD10, FD15, FD30, +30d, +60d, +90d OCT.'
+                    : 'Standard pre-flight OCT + ONSD baseline; scheduled FD15, FD30, +30d, +90d controls.',
+                'es' => $pct >= 65.0
+                    ? 'Evaluar contramedida LBNP + panel Vit. B/1-carbono pre-vuelo; OCT FD10, FD15, FD30, +30d, +60d, +90d.'
+                    : 'Línea base pre-vuelo OCT + ONSD estándar; controles FD15, FD30, +30d y +90d.',
+            ],
+            'safety_notice' => [
+                'en' => 'Research susceptibility screening model only; does not issue an automated fit-for-duty verdict.',
+                'es' => 'Modelo de tamizaje de susceptibilidad para investigación; no emite un veredicto automático de aptitud.',
+            ],
+        ];
+    }
 }

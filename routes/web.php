@@ -41,6 +41,7 @@ Route::get('/impact', fn () => redirect()->route('public.astronaut'))->name('pub
 Route::post('/astronaut-check/transmit', [SansMonitorController::class, 'transmitFundus'])->name('public.astronaut.transmit');
 Route::post('/sans-monitor/fundus-scan', [SansMonitorController::class, 'scanFundus'])->name('public.sans-monitor.fundus-scan');
 Route::get('/sans-monitor/nasa-search', [SansMonitorController::class, 'nasaSearch'])->name('public.sans-monitor.nasa-search');
+Route::post('/sans-monitor/predict-candidate', [SansMonitorController::class, 'predictCandidate'])->name('public.sans-monitor.predict-candidate');
 Route::get('/admin/sans-monitor', [SansMonitorController::class, 'index'])->name('admin.sans-monitor.index');
 Route::post('/admin/sans-monitor/cases', [SansMonitorController::class, 'storeCase'])->name('admin.sans-monitor.cases.store');
 Route::post('/admin/sans-monitor/import', [SansMonitorController::class, 'importObservations'])->name('admin.sans-monitor.import');

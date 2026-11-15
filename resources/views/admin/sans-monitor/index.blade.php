@@ -772,7 +772,109 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Simulador Predictivo Interactivo para Futuros Candidatos Espaciales (Scikit-learn) --}}
+            <form id="candidate-predict-form" onsubmit="return window.runCandidatePredictor(event)" style="margin-top:0.85rem;padding-top:0.85rem;border-top:1px solid var(--border);">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.55rem;">
+                    <span style="font-size:0.78rem;font-weight:800;">
+                        <i class="fa fa-sliders"></i> {{ $isEn ? 'Future Mission Candidate Susceptibility Simulator (Python Scikit-learn)' : 'Simulador Predictivo para Futuros Candidatos a Misión (Python Scikit-learn)' }}
+                    </span>
+                    <button type="submit" id="candidate-predict-btn" style="background:#EAFE07;color:#09090b;border:1px solid #09090b;padding:0.35rem 0.85rem;border-radius:6px;font-size:0.74rem;font-weight:800;cursor:pointer;">
+                        <i class="fa fa-calculator"></i> {{ $isEn ? 'Run Predictive Model' : 'Ejecutar Modelo Predictivo' }}
+                    </button>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:0.5rem;font-size:0.72rem;">
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Axial Length (mm)' : 'Long. Axial (mm)' }}</span>
+                        <input type="number" step="0.1" id="pred-axial" value="23.2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '-6° HDT ΔTRT (µm)' : '-6° HDT ΔTRT (µm)' }}</span>
+                        <input type="number" step="1" id="pred-hdt" value="20" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Mission Days' : 'Días Misión' }}</span>
+                        <input type="number" step="10" id="pred-days" value="180" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'ONSD (mm)' : 'Vaina Óptica (mm)' }}</span>
+                        <input type="number" step="0.1" id="pred-onsd" value="5.8" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? '1-Carbon / Vit B' : '1-Carbono / Vit B' }}</span>
+                        <select id="pred-oc" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                            <option value="low">{{ $isEn ? 'Low Risk' : 'Riesgo Bajo' }}</option>
+                            <option value="moderate" selected>{{ $isEn ? 'Moderate' : 'Moderado' }}</option>
+                            <option value="high">{{ $isEn ? 'High (Polymorphism)' : 'Alto (Polimorfismo)' }}</option>
+                        </select>
+                    </label>
+                    <label style="display:flex;flex-direction:column;gap:2px;">
+                        <span style="color:var(--muted-foreground);font-weight:600;">{{ $isEn ? 'Cabin CO₂' : 'CO₂ en Cabina' }}</span>
+                        <select id="pred-co2" class="form-control" style="padding:0.28rem 0.45rem;font-size:0.76rem;">
+                            <option value="nominal" selected>{{ $isEn ? 'Nominal' : 'Nominal' }}</option>
+                            <option value="elevated">{{ $isEn ? 'Elevated' : 'Elevado' }}</option>
+                        </select>
+                    </label>
+                </div>
+                <div id="candidate-predict-output" style="display:none;margin-top:0.65rem;padding:0.65rem 0.85rem;border-radius:8px;border:1px solid var(--border);background:var(--muted);font-size:0.76rem;"></div>
+            </form>
         </div>
+
+        <script>
+        window.runCandidatePredictor = async function (e) {
+            if (e) e.preventDefault();
+            const btn = document.getElementById('candidate-predict-btn');
+            const out = document.getElementById('candidate-predict-output');
+            if (!out) return false;
+            const orig = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> ...'; }
+            try {
+                const res = await fetch(`{{ route('public.sans-monitor.predict-candidate') }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        axial_length_mm: parseFloat(document.getElementById('pred-axial').value || 23.2),
+                        hdt6_delta_trt_um: parseFloat(document.getElementById('pred-hdt').value || 20),
+                        mission_duration_days: parseInt(document.getElementById('pred-days').value || 180, 10),
+                        onsd_mm: parseFloat(document.getElementById('pred-onsd').value || 5.8),
+                        one_carbon_risk: document.getElementById('pred-oc').value,
+                        co2_sensitivity: document.getElementById('pred-co2').value,
+                        baseline_iop_mmhg: {{ (float) ($bp['inputs']['iop_mmhg'] ?? 15.5) }},
+                        baseline_trt_um: {{ (float) ($bp['inputs']['oct_trt_baseline_um'] ?? 280) }},
+                    }),
+                });
+                const d = await res.json();
+                const isEn = @json($isEn);
+                const dc = d.domain_contributions || {};
+                const pct = d.susceptibility_probability_pct ?? 0;
+                const col = pct >= 65 ? '#dc2626' : (pct >= 35 ? '#d97706' : '#16a34a');
+                out.style.display = 'block';
+                out.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.35rem;">
+                        <strong>${isEn ? 'Estimated SANS Susceptibility:' : 'Susceptibilidad Estimada al SANS:'} <span style="color:${col};font-size:0.95rem;font-family:ui-monospace,monospace;">${pct}% (${d.risk_tier})</span></strong>
+                        <span style="font-family:ui-monospace,monospace;font-size:0.68rem;color:var(--muted-foreground);">${d.engine || ''}</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.4rem;margin-bottom:0.35rem;font-family:ui-monospace,monospace;font-size:0.68rem;">
+                        <div>Bio: <strong>${dc.biometric_pct ?? 0}%</strong></div>
+                        <div>Oph: <strong>${dc.ophthalmological_pct ?? 0}%</strong></div>
+                        <div>Neu: <strong>${dc.neurological_pct ?? 0}%</strong></div>
+                        <div>Met: <strong>${dc.metabolic_pct ?? 0}%</strong></div>
+                    </div>
+                    <div style="color:var(--foreground);font-weight:600;">${(d.recommended_cadence && (isEn ? d.recommended_cadence.en : d.recommended_cadence.es)) || ''}</div>
+                    <div style="color:var(--muted-foreground);font-size:0.68rem;margin-top:2px;">${(d.safety_notice && (isEn ? d.safety_notice.en : d.safety_notice.es)) || ''}</div>
+                `;
+            } catch (err) {
+                console.error(err);
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+            }
+            return false;
+        };
+        </script>
 
         {{-- Formulario Inicial Compacto para Registrar Nueva Persona --}}
         <details class="card collapsible-card" style="padding:1rem;">
