@@ -319,33 +319,33 @@
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start;">
-            <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;">
-                <div style="padding:12px 16px;background:#fafafa;border-bottom:1px solid #e4e4e7;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;color:#09090b;display:flex;justify-content:space-between;">
-                    <span>{{ $isEn ? '01 · CREW ANTHROPOMETRY & IDENTITY' : '01 · IDENTIDAD Y ANTROPOMETRÍA' }}</span>
-                    <span style="color:#71717a;">{{ $bio['agency'] }}</span>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;color:var(--foreground);">
+                <div style="padding:12px 16px;background:var(--muted);border-bottom:1px solid var(--border);font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;color:var(--foreground);display:flex;justify-content:space-between;">
+                    <span>{{ $isEn ? 'CREW ANTHROPOMETRY & IDENTITY' : 'IDENTIDAD Y ANTROPOMETRÍA' }}</span>
+                    <span style="color:var(--muted-foreground);">{{ $bio['agency'] }}</span>
                 </div>
                 <table style="width:100%;border-collapse:collapse;font-size:13px;">
                     <tbody>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Participant ID' : 'Código de participante' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $activeCase->case_id }}</td></tr>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Assigned Mission' : 'Misión asignada' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $bio['mission'] }}</td></tr>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Age at Launch' : 'Edad al lanzamiento' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $bio['age'] }} {{ $isEn ? 'yrs' : 'años' }}</td></tr>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Sex' : 'Sexo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $isEn ? $bio['sex_en'] : $bio['sex_es'] }}</td></tr>
-                        <tr><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Height / Pre-flight Mass' : 'Estatura / Masa pre-vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $bio['height'] }} · {{ $bio['weight'] }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Participant ID' : 'Código de participante' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:var(--foreground);">{{ $activeCase->case_id }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Assigned Mission' : 'Misión asignada' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:var(--foreground);">{{ $bio['mission'] }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Age at Launch' : 'Edad al lanzamiento' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:var(--foreground);">{{ $bio['age'] }} {{ $isEn ? 'yrs' : 'años' }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Sex' : 'Sexo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:var(--foreground);">{{ $isEn ? $bio['sex_en'] : $bio['sex_es'] }}</td></tr>
+                        <tr><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Height / Pre-flight Mass' : 'Estatura / Masa pre-vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:var(--foreground);">{{ $bio['height'] }} · {{ $bio['weight'] }}</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;">
-                <div style="padding:12px 16px;background:#09090b;color:#ffffff;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;">
-                    <span>{{ $isEn ? '02 · PRE-FLIGHT OCULAR BASELINE' : '02 · LÍNEA BASAL OCULAR PRE-VUELO' }}</span>
-                    <span style="color:#a1a1aa;">OCHMO-MTB</span>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;color:var(--foreground);">
+                <div style="padding:12px 16px;background:var(--muted);border-bottom:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;">
+                    <span>{{ $isEn ? 'PRE-FLIGHT OCULAR BASELINE' : 'LÍNEA BASAL OCULAR PRE-VUELO' }}</span>
+                    <span style="color:var(--muted-foreground);">OCHMO-MTB</span>
                 </div>
                 <table style="width:100%;border-collapse:collapse;font-size:13px;">
                     <tbody>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Baseline OCT TRT (OD)' : 'OCT TRT Basal (OD)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $baseOd !== null ? $baseOd . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Baseline OCT TRT (OS)' : 'OCT TRT Basal (OS)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $baseOs !== null ? $baseOs . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
-                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Flight Modification Policy' : 'Política de modificación en vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $isEn ? 'Append-only checks' : 'Solo anexar revisiones' }}</td></tr>
-                        <tr><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? '3D Digital Twin Link' : 'Vínculo Gemelo Digital 3D' }}</td><td style="padding:10px 16px;text-align:right;"><a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="color:#09090b;font-weight:800;text-decoration:underline;">{{ $isEn ? 'Inspect 3D + OCT →' : 'Inspeccionar 3D + OCT →' }}</a></td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Baseline OCT TRT (OD)' : 'OCT TRT Basal (OD)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:var(--foreground);">{{ $baseOd !== null ? $baseOd . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Baseline OCT TRT (OS)' : 'OCT TRT Basal (OS)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:var(--foreground);">{{ $baseOs !== null ? $baseOs . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
+                        <tr style="border-bottom:1px solid var(--border);"><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? 'Flight Modification Policy' : 'Política de modificación en vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:var(--foreground);">{{ $isEn ? 'Append-only checks' : 'Solo anexar revisiones' }}</td></tr>
+                        <tr><td style="padding:10px 16px;color:var(--muted-foreground);">{{ $isEn ? '3D Digital Twin Link' : 'Vínculo Gemelo Digital 3D' }}</td><td style="padding:10px 16px;text-align:right;"><a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="color:var(--foreground);font-weight:800;text-decoration:underline;">{{ $isEn ? 'Inspect 3D + OCT →' : 'Inspeccionar 3D + OCT →' }}</a></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -497,36 +497,36 @@
                 </div>
 
                 {{-- Digital Fundus Camera (Upload or Demo Capture for Ground Papilledema Scan) --}}
-                <div style="margin-top:18px;background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;padding:18px 20px;" data-fundus-panel>
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid #f4f4f5;padding-bottom:12px;margin-bottom:14px;">
+                <div style="margin-top:18px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;color:var(--foreground);" data-fundus-panel>
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:14px;">
                         <div>
-                            <span style="font-family:ui-monospace,monospace;font-size:11px;font-weight:800;color:#52525b;letter-spacing:0.06em;">{{ $isEn ? 'ORBITAL FUNDUS CAMERA · DOWNLINK TO GROUND' : 'CÁMARA DE FONDO DE OJO ORBITAL · ENVÍO A TIERRA' }}</span>
-                            <h3 style="margin:2px 0 0;font-size:1rem;color:#09090b;">{{ $isEn ? 'Capture or upload retinal fundus photos (OD / OS)' : 'Tomar o subir fotografías de fondo de ojo (OD / OS)' }}</h3>
+                            <span style="font-family:ui-monospace,monospace;font-size:11px;font-weight:800;color:var(--muted-foreground);letter-spacing:0.06em;">{{ $isEn ? 'ORBITAL FUNDUS CAMERA · DOWNLINK TO GROUND' : 'CÁMARA DE FONDO DE OJO ORBITAL · ENVÍO A TIERRA' }}</span>
+                            <h3 style="margin:2px 0 0;font-size:1rem;color:var(--foreground);">{{ $isEn ? 'Capture or upload retinal fundus photos (OD / OS)' : 'Tomar o subir fotografías de fondo de ojo (OD / OS)' }}</h3>
                         </div>
                         <button type="button" class="crew-secondary-action" data-load-demo-fundus style="min-height:38px;padding:0 14px;font-size:12.5px;">
                             <i class="fa fa-camera"></i> {{ $isEn ? 'Capture Demo Fundus (OD/OS)' : 'Capturar Demo Fondo de Ojo (OD/OS)' }}
                         </button>
                     </div>
-                    <p style="margin:0 0 14px;font-size:12.5px;color:#52525b;">
+                    <p style="margin:0 0 14px;font-size:12.5px;color:var(--muted-foreground);">
                         {{ $isEn ? 'Note: Intraocular pressure is captured directly from the digital tonometer above (never manually uploaded). Attach fundus photos here to transmit to Ground Control for Python CV papilledema screening.' : 'Nota: La presión intraocular se captura directamente del tonómetro digital arriba (no se sube manualmente). Adjunta aquí las fotos de fondo de ojo para enviarlas a Tierra y analizarlas en el Módulo Científico.' }}
                     </p>
                     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;">
-                        <div style="border:1px solid #e4e4e7;border-radius:8px;padding:12px;background:#fafafa;">
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px;background:var(--muted);">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                <strong style="font-size:12.5px;color:#09090b;">OD ({{ $isEn ? 'Right Eye' : 'Ojo Derecho' }})</strong>
-                                <select name="preset_od" data-fundus-preset="od" style="font-size:11.5px;border:1px solid #d4d4d8;border-radius:5px;padding:2px 6px;background:#ffffff;">
+                                <strong style="font-size:12.5px;color:var(--foreground);">OD ({{ $isEn ? 'Right Eye' : 'Ojo Derecho' }})</strong>
+                                <select name="preset_od" data-fundus-preset="od" style="font-size:11.5px;border:1px solid var(--border);border-radius:5px;padding:2px 6px;background:var(--card);color:var(--foreground);">
                                     <option value="edema">{{ $isEn ? 'Demo: Papilledema (Frisén 2)' : 'Demo: Edema Papilar (Frisén 2)' }}</option>
                                     <option value="folds">{{ $isEn ? 'Demo: Choroidal Folds' : 'Demo: Pliegues Coroideos' }}</option>
                                     <option value="normal">{{ $isEn ? 'Demo: Normal Optic Disc' : 'Demo: Disco Normal (Frisén 0)' }}</option>
                                 </select>
                             </div>
                             <img data-fundus-preview="od" src="{{ asset('images/sans/fundus/fundus-edema.png') }}" alt="OD Fundus" style="width:100%;height:150px;object-fit:contain;background:#09090b;border-radius:6px;margin-bottom:8px;">
-                            <input type="file" name="fundus_od_file" accept="image/*" data-fundus-file="od" style="width:100%;font-size:11.5px;">
+                            <input type="file" name="fundus_od_file" accept="image/*" data-fundus-file="od" style="width:100%;font-size:11.5px;color:var(--foreground);">
                         </div>
-                        <div style="border:1px solid #e4e4e7;border-radius:8px;padding:12px;background:#fafafa;">
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px;background:var(--muted);">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                <strong style="font-size:12.5px;color:#09090b;">OS ({{ $isEn ? 'Left Eye' : 'Ojo Izquierdo' }})</strong>
-                                <select name="preset_os" data-fundus-preset="os" style="font-size:11.5px;border:1px solid #d4d4d8;border-radius:5px;padding:2px 6px;background:#ffffff;">
+                                <strong style="font-size:12.5px;color:var(--foreground);">OS ({{ $isEn ? 'Left Eye' : 'Ojo Izquierdo' }})</strong>
+                                <select name="preset_os" data-fundus-preset="os" style="font-size:11.5px;border:1px solid var(--border);border-radius:5px;padding:2px 6px;background:var(--card);color:var(--foreground);">
                                     <option value="folds">{{ $isEn ? 'Demo: Choroidal Folds' : 'Demo: Pliegues Coroideos' }}</option>
                                     <option value="normal">{{ $isEn ? 'Demo: Normal Optic Disc' : 'Demo: Disco Normal (Frisén 0)' }}</option>
                                     <option value="edema">{{ $isEn ? 'Demo: Papilledema (Frisén 2)' : 'Demo: Edema Papilar (Frisén 2)' }}</option>
