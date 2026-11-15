@@ -328,33 +328,61 @@
         </div>
     </div>
 
-    {{-- Modal de cámara en vivo (getUserMedia + Voltear Cámara + Flash) --}}
-    <div id="cvCameraBox" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(9,9,11,0.84);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
-        <div style="width:100%;max-width:680px;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;box-shadow:0 24px 60px rgba(0,0,0,0.45);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;gap:0.5rem;">
-                <strong style="font-size:0.9rem;display:inline-flex;align-items:center;gap:0.45rem;">
-                    <i class="fa fa-video-camera"></i> {{ $isEn ? 'Live Camera Capture → Python CV' : 'Captura de Cámara en Vivo → Python CV' }}
-                </strong>
-                <button type="button" id="btnCloseCvCamera" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.35rem 0.75rem;font-size:0.78rem;font-weight:700;cursor:pointer;">
-                    <i class="fa fa-times"></i> {{ $isEn ? 'Close' : 'Cerrar' }}
+    {{-- Modal estilo App de Cámara en Vivo (getUserMedia + Retícula Fundoscópica + Shutter + Voltear + Flash) --}}
+    <div id="cvCameraBox" role="dialog" aria-modal="true" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(5,5,7,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:0.75rem;">
+        <div style="width:100%;max-width:460px;background:#09090b;color:#ffffff;border:1px solid rgba(255,255,255,0.14);border-radius:24px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,0.75);display:flex;flex-direction:column;">
+            {{-- Top Camera HUD --}}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:linear-gradient(180deg,rgba(0,0,0,0.75),rgba(0,0,0,0.2));">
+                <button type="button" id="btnToggleCvFlash" title="{{ $isEn ? 'Enable Flash' : 'Activar Flash' }}" style="background:rgba(255,255,255,0.12);color:#ffffff;border:1px solid rgba(255,255,255,0.18);border-radius:999px;padding:0.4rem 0.78rem;font-size:0.74rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;">
+                    <i class="fa fa-bolt"></i> <span>{{ $isEn ? 'Flash' : 'Flash' }}</span>
+                </button>
+                <span style="font-family:ui-monospace,monospace;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;color:#a1a1aa;display:inline-flex;align-items:center;gap:6px;">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+                    {{ $isEn ? 'FUNDUS CAM · LIVE' : 'CÁMARA · EN VIVO' }}
+                </span>
+                <button type="button" id="btnCloseCvCamera" aria-label="{{ $isEn ? 'Close' : 'Cerrar' }}" title="{{ $isEn ? 'Close' : 'Cerrar' }}" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.12);color:#ffffff;border:1px solid rgba(255,255,255,0.18);font-size:0.85rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+                    <i class="fa fa-times"></i>
                 </button>
             </div>
-            <div style="position:relative;background:#09090b;border-radius:10px;overflow:hidden;border:1px solid var(--border);">
-                <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;max-height:60vh;min-height:260px;object-fit:contain;display:block;"></video>
-            </div>
-            <div id="cvCameraError" style="display:none;margin-top:0.55rem;font-size:0.76rem;color:#ef4444;font-weight:600;"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-top:0.85rem;">
-                <div style="display:flex;gap:0.45rem;flex-wrap:wrap;">
-                    <button type="button" id="btnFlipCvCamera" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.48rem 0.85rem;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-                        <i class="fa fa-refresh"></i> {{ $isEn ? 'Flip Camera' : 'Voltear Cámara' }}
-                    </button>
-                    <button type="button" id="btnToggleCvFlash" style="background:var(--muted);color:var(--foreground);border:1px solid var(--border);border-radius:7px;padding:0.48rem 0.85rem;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-                        <i class="fa fa-bolt"></i> <span>{{ $isEn ? 'Enable Flash' : 'Activar Flash' }}</span>
-                    </button>
+
+            {{-- Viewfinder + Optic Reticle Overlay --}}
+            <div style="position:relative;background:#000000;aspect-ratio:3/4;max-height:62vh;width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+                <video id="cvCameraVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+                {{-- Retícula circular de alineación ocular --}}
+                <div style="pointer-events:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+                    <div style="width:58%;aspect-ratio:1/1;border-radius:50%;border:1.5px dashed rgba(234,254,7,0.65);box-shadow:0 0 0 9999px rgba(0,0,0,0.22);position:relative;">
+                        <div style="position:absolute;top:50%;left:50%;width:14px;height:14px;transform:translate(-50%,-50%);border:1.5px solid rgba(234,254,7,0.85);border-radius:50%;"></div>
+                    </div>
                 </div>
-                <button type="button" id="btnCaptureCvFrame" style="background:var(--space-neon);color:#09090b;border:1px solid #09090b;border-radius:7px;padding:0.5rem 1.05rem;font-size:0.8rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-                    <i class="fa fa-camera"></i> {{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}
-                </button>
+            </div>
+
+            <div id="cvCameraError" style="display:none;padding:0.45rem 1rem;background:rgba(239,68,68,0.14);font-size:0.74rem;color:#fca5a5;font-weight:600;text-align:center;"></div>
+
+            {{-- Bottom Camera Shutter Deck --}}
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:1rem 1.25rem 1.15rem;background:#09090b;gap:0.75rem;">
+                <div style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">
+                    <span style="font-family:ui-monospace,monospace;font-size:0.64rem;color:#a1a1aa;text-transform:uppercase;">Python CV</span>
+                    <span style="font-size:0.72rem;font-weight:700;color:#e4e4e7;">Pillow · SciPy</span>
+                </div>
+
+                {{-- Botón Obturador (Shutter) --}}
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <button type="button" id="btnCaptureCvFrame" title="{{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}" aria-label="{{ $isEn ? 'Capture & Scan in Python' : 'Tomar Foto y Analizar' }}"
+                        style="width:68px;height:68px;border-radius:50%;background:transparent;border:4px solid #ffffff;padding:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s;"
+                        onmousedown="this.style.transform='scale(0.92)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.92)'" ontouchend="this.style.transform='scale(1)'">
+                        <span style="width:100%;height:100%;border-radius:50%;background:#ffffff;display:block;"></span>
+                    </button>
+                    <span style="font-size:0.66rem;font-weight:700;color:#d4d4d8;letter-spacing:0.03em;">{{ $isEn ? 'Capture' : 'Capturar' }}</span>
+                </div>
+
+                {{-- Botón Circular Voltear Cámara --}}
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                    <button type="button" id="btnFlipCvCamera" title="{{ $isEn ? 'Flip Camera' : 'Voltear Cámara' }}" aria-label="{{ $isEn ? 'Flip Camera' : 'Voltear Cámara' }}"
+                        style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.12);color:#ffffff;border:1px solid rgba(255,255,255,0.2);font-size:1rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                    <span style="font-size:0.64rem;font-weight:600;color:#a1a1aa;">{{ $isEn ? 'Flip' : 'Voltear' }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -592,9 +620,10 @@
 
     function updateFlashBtn() {
         if (!btnFlash) return;
-        btnFlash.style.background = flashOn ? 'var(--space-neon)' : 'var(--muted)';
-        btnFlash.style.color = flashOn ? '#09090b' : 'var(--foreground)';
-        btnFlash.innerHTML = `<i class="fa fa-bolt"></i> <span>${flashOn ? (isEn ? 'Flash On' : 'Flash Activado') : (isEn ? 'Enable Flash' : 'Activar Flash')}</span>`;
+        btnFlash.style.background = flashOn ? '#EAFE07' : 'rgba(255,255,255,0.12)';
+        btnFlash.style.color = flashOn ? '#09090b' : '#ffffff';
+        btnFlash.style.borderColor = flashOn ? '#EAFE07' : 'rgba(255,255,255,0.18)';
+        btnFlash.innerHTML = `<i class="fa fa-bolt"></i> <span>${flashOn ? (isEn ? 'Flash ON' : 'Flash ON') : 'Flash'}</span>`;
     }
 
     function stopCvStream() {
