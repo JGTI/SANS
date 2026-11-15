@@ -2228,20 +2228,11 @@ window.runCandidatePredictor = async function (e) {
         ],
     ];
 @endphp
-<section id="project-team-section" class="card" style="padding:1.25rem 1.35rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);">
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:0.75rem;flex-wrap:wrap;margin-bottom:1rem;">
-        <div>
-            <div style="font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:800;color:var(--interactive-text);text-transform:uppercase;letter-spacing:0.06em;">
-                {{ $isEn ? 'NASA SPACE APPS CHALLENGE · NEXUS × VISUAL REHAB CENTER' : 'NASA SPACE APPS CHALLENGE · NEXUS × VISUAL REHAB CENTER' }}
-            </div>
-            <h2 style="font-size:1.12rem;font-weight:900;margin:0.15rem 0 0;">
-                <i class="fa fa-users" style="color:var(--interactive-text);"></i>
-                {{ $isEn ? 'Project Team Members (6 Members)' : 'Miembros del Proyecto (6 Integrantes)' }}
-            </h2>
-        </div>
-        <span style="font-family:ui-monospace,monospace;font-size:0.72rem;font-weight:800;padding:0.28rem 0.7rem;border-radius:999px;background:var(--muted);border:1px solid var(--border);">
-            {{ $isEn ? 'Official Roster' : 'Equipo Oficial' }}
-        </span>
+<section id="project-team-section" class="card" style="padding:1.5rem 1.5rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--foreground);">
+    <div style="margin-bottom:1.25rem;">
+        <h2 style="font-size:1.35rem;font-weight:700;margin:0;letter-spacing:-0.01em;">
+            {{ $isEn ? 'Our Team' : 'Nuestro Equipo' }}
+        </h2>
     </div>
 
     <style>
