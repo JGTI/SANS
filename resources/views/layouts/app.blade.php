@@ -34,17 +34,14 @@
 
             <nav class="topnav" aria-label="{{ $isEn ? 'Primary Navigation' : 'Navegación Principal' }}">
                 <a class="{{ (request()->routeIs('home') || request()->routeIs('public.demo') || request()->routeIs('public.sans-monitor') || request()->routeIs('admin.sans-monitor.*')) && request('tab') !== 'astronauta' ? 'active' : '' }}" href="{{ route('home') }}">
-                    <span class="topnav-idx">01</span>
                     <i class="fa fa-flask"></i>
                     <span>{{ $isEn ? 'Scientific Module (SANS)' : 'Módulo Científico (SANS)' }}</span>
                 </a>
                 <a class="{{ request()->routeIs('public.astronaut') || request('tab') === 'astronauta' ? 'active' : '' }}" href="{{ route('public.astronaut') }}">
-                    <span class="topnav-idx">02</span>
                     <i class="fa fa-user-md"></i>
                     <span>{{ $isEn ? 'Astronaut Check' : 'Vista Astronauta' }}</span>
                 </a>
                 <a class="{{ request()->routeIs('public.digital-twin') || request()->routeIs('admin.digital-twin') || request()->routeIs('public.oct-analysis') || request()->routeIs('admin.oct-analysis') ? 'active' : '' }}" href="{{ route('public.digital-twin', ['mode' => 'dual']) }}">
-                    <span class="topnav-idx">03</span>
                     <i class="fa fa-eye"></i>
                     <span>{{ $isEn ? '3D Viewer + OCT' : 'Visor 3D + OCT' }}</span>
                 </a>

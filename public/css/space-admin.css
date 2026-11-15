@@ -311,16 +311,6 @@ a { color: inherit; text-decoration: none; }
     text-decoration: none;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.topnav-idx {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: color-mix(in srgb, var(--foreground) 8%, transparent);
-    color: inherit;
-    letter-spacing: 0.03em;
-}
 .topnav a:hover {
     color: var(--foreground);
     background: var(--background);
@@ -331,10 +321,6 @@ a { color: inherit; text-decoration: none; }
     background: var(--primary);
     border-color: var(--primary);
     box-shadow: 0 2px 6px rgba(9, 9, 11, 0.18);
-}
-.topnav a.active .topnav-idx {
-    background: rgba(255, 255, 255, 0.18);
-    color: var(--primary-foreground);
 }
 .topbar-spacer { flex: 1; }
 .topbar-tools { display: inline-flex; align-items: center; gap: 8px; }

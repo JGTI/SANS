@@ -54,10 +54,10 @@
     </header>
 
     <nav class="crew-tabs" aria-label="{{ $isEn ? 'Astronaut workspace' : 'Espacio del astronauta' }}">
-        <button type="button" class="crew-tab is-active" data-crew-tab="today"><i class="fa fa-sun-o"></i><span>01 · {{ $isEn ? 'Today & 3D Eye' : 'Hoy y Ojo 3D' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="log"><i class="fa fa-book"></i><span>02 · {{ $isEn ? 'Logbook' : 'Bitácora' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="trends"><i class="fa fa-line-chart"></i><span>03 · {{ $isEn ? 'Trends' : 'Tendencias' }}</span></button>
-        <button type="button" class="crew-tab" data-crew-tab="profile"><i class="fa fa-user-o"></i><span>04 · {{ $isEn ? 'Profile' : 'Perfil' }}</span></button>
+        <button type="button" class="crew-tab is-active" data-crew-tab="today"><i class="fa fa-sun-o"></i><span>{{ $isEn ? 'Today & 3D Eye' : 'Hoy y Ojo 3D' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="log"><i class="fa fa-book"></i><span>{{ $isEn ? 'Logbook' : 'Bitácora' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="trends"><i class="fa fa-line-chart"></i><span>{{ $isEn ? 'Trends' : 'Tendencias' }}</span></button>
+        <button type="button" class="crew-tab" data-crew-tab="profile"><i class="fa fa-user-o"></i><span>{{ $isEn ? 'Profile' : 'Perfil' }}</span></button>
     </nav>
 
     <div class="crew-view is-active" data-crew-view="today">
