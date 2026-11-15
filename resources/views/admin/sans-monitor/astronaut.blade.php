@@ -271,12 +271,61 @@
     </div>
 
     <div class="crew-view" data-crew-view="profile" hidden>
-        <div class="crew-page-heading"><div><p class="crew-eyebrow">{{ $isEn ? 'BASELINE PROFILE' : 'PERFIL BASAL' }}</p><h2>{{ $isEn ? 'Verified before flight' : 'Verificado antes del vuelo' }}</h2></div><span class="crew-neutral-status"><i class="fa fa-lock"></i> {{ $isEn ? 'Read only in flight' : 'Solo lectura en vuelo' }}</span></div>
-        <div class="crew-profile-form">
-            <p class="crew-profile-note"><i class="fa fa-shield"></i> {{ $isEn ? 'A specialist established this profile before launch. The astronaut cannot change baseline information during the mission.' : 'Un especialista estableció este perfil antes del lanzamiento. El astronauta no puede modificar la información basal durante la misión.' }}</p>
-            <dl class="crew-profile-values"><div><dt>{{ $isEn ? 'Participant code' : 'Código de participante' }}</dt><dd>{{ $activeCase->case_id }}</dd></div><div><dt>{{ $isEn ? 'Age at launch' : 'Edad al lanzamiento' }}</dt><dd>42</dd></div><div><dt>{{ $isEn ? 'Sex assigned at birth' : 'Sexo asignado al nacer' }}</dt><dd>{{ $isEn ? 'Female' : 'Femenino' }}</dd></div><div><dt>{{ $isEn ? 'Height' : 'Estatura' }}</dt><dd>168 cm</dd></div><div><dt>{{ $isEn ? 'Pre-flight weight' : 'Peso pre-vuelo' }}</dt><dd>64 kg</dd></div><div><dt>{{ $isEn ? 'Baseline completed' : 'Línea basal completada' }}</dt><dd>{{ $isEn ? 'Yes · verified' : 'Sí · verificada' }}</dd></div></dl>
-            <details><summary><span><i class="fa fa-eye"></i>{{ $isEn ? 'Verified eye history' : 'Antecedentes oculares verificados' }}</span><i class="fa fa-angle-down"></i></summary><div class="crew-detail-body"><p>{{ $isEn ? 'Uses corrective lenses. No prior ocular surgery or documented retinal disease in this demonstration profile.' : 'Usa lentes correctivos. Sin cirugía ocular previa ni enfermedad retiniana documentada en este perfil demostrativo.' }}</p></div></details>
-            <details><summary><span><i class="fa fa-heartbeat"></i>{{ $isEn ? 'What updates during flight' : 'Qué se actualiza durante el vuelo' }}</span><i class="fa fa-angle-down"></i></summary><div class="crew-detail-body"><p>{{ $isEn ? 'Only measurements, symptoms, medication changes and environmental context are appended through the guided check.' : 'Solo se agregan mediciones, síntomas, cambios de medicamentos y contexto ambiental mediante la revisión guiada.' }}</p></div></details>
+        @php
+            $bioMap = [
+                'CASE-STABLE-01' => ['age' => '39', 'sex_en' => 'Female', 'sex_es' => 'Femenino', 'height' => '167 cm', 'weight' => '61 kg', 'agency' => 'ESA / ISS', 'mission' => 'ISS Expedition 71 (180d)'],
+                'CASE-PROG-02' => ['age' => '42', 'sex_en' => 'Male', 'sex_es' => 'Masculino', 'height' => '179 cm', 'weight' => '76 kg', 'agency' => 'NASA / ISS', 'mission' => 'ISS Expedition 72 (180d)'],
+                'CASE-NOSCAN-03A' => ['age' => '36', 'sex_en' => 'Male', 'sex_es' => 'Masculino', 'height' => '174 cm', 'weight' => '71 kg', 'agency' => 'JAXA / ISS', 'mission' => 'ISS Expedition 72 (90d)'],
+                'CASE-ASO-05' => ['age' => '41', 'sex_en' => 'Female', 'sex_es' => 'Femenino', 'height' => '170 cm', 'weight' => '63 kg', 'agency' => 'RSA / ISS', 'mission' => 'ISS Expedition 72 (180d)'],
+                'CASE-NORECENT-03B' => ['age' => '44', 'sex_en' => 'Male', 'sex_es' => 'Masculino', 'height' => '181 cm', 'weight' => '79 kg', 'agency' => 'CSA / Gateway', 'mission' => 'Gateway Logistics (60d)'],
+                'CASE-TILT-04' => ['age' => '38', 'sex_en' => 'Male', 'sex_es' => 'Masculino', 'height' => '176 cm', 'weight' => '74 kg', 'agency' => 'ESA / DLR', 'mission' => '-6° HDT & Orbital MSN-ORB-04'],
+            ];
+            $bio = $bioMap[$activeCase->case_id] ?? ['age' => '40', 'sex_en' => 'Unspecified', 'sex_es' => 'No especificado', 'height' => '175 cm', 'weight' => '70 kg', 'agency' => 'NASA', 'mission' => 'ISS Mission'];
+            $baseOd = $caseEvaluation['eyes']['OD']['baseline_trt'] ?? null;
+            $baseOs = $caseEvaluation['eyes']['OS']['baseline_trt'] ?? null;
+        @endphp
+
+        <div class="crew-page-heading" style="border-bottom:1px solid #e4e4e7;padding-bottom:14px;margin-bottom:18px;">
+            <div>
+                <p class="crew-eyebrow">{{ $isEn ? 'FLIGHT SURGEON BASELINE DOSSIER' : 'EXPEDIENTE BASAL DE MEDICINA AEROESPACIAL' }}</p>
+                <h2>{{ $crew['name'] }} · {{ $activeCase->case_id }}</h2>
+            </div>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;background:#09090b;color:#ffffff;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:700;">
+                <i class="fa fa-lock"></i> {{ $isEn ? 'Read only in flight' : 'Solo lectura en vuelo' }}
+            </span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start;">
+            <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;">
+                <div style="padding:12px 16px;background:#fafafa;border-bottom:1px solid #e4e4e7;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;color:#09090b;display:flex;justify-content:space-between;">
+                    <span>{{ $isEn ? '01 · CREW ANTHROPOMETRY & IDENTITY' : '01 · IDENTIDAD Y ANTROPOMETRÍA' }}</span>
+                    <span style="color:#71717a;">{{ $bio['agency'] }}</span>
+                </div>
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <tbody>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Participant ID' : 'Código de participante' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $activeCase->case_id }}</td></tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Assigned Mission' : 'Misión asignada' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $bio['mission'] }}</td></tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Age at Launch' : 'Edad al lanzamiento' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $bio['age'] }} {{ $isEn ? 'yrs' : 'años' }}</td></tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Sex' : 'Sexo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $isEn ? $bio['sex_en'] : $bio['sex_es'] }}</td></tr>
+                        <tr><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Height / Pre-flight Mass' : 'Estatura / Masa pre-vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $bio['height'] }} · {{ $bio['weight'] }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="background:#ffffff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;">
+                <div style="padding:12px 16px;background:#09090b;color:#ffffff;font-family:ui-monospace,monospace;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;">
+                    <span>{{ $isEn ? '02 · PRE-FLIGHT OCULAR BASELINE' : '02 · LÍNEA BASAL OCULAR PRE-VUELO' }}</span>
+                    <span style="color:#a1a1aa;">OCHMO-MTB</span>
+                </div>
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <tbody>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Baseline OCT TRT (OD)' : 'OCT TRT Basal (OD)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $baseOd !== null ? $baseOd . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Baseline OCT TRT (OS)' : 'OCT TRT Basal (OS)' }}</td><td style="padding:10px 16px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:#09090b;">{{ $baseOs !== null ? $baseOs . ' µm' : ($isEn ? 'Not acquired' : 'Sin escaneo') }}</td></tr>
+                        <tr style="border-bottom:1px solid #f4f4f5;"><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? 'Flight Modification Policy' : 'Política de modificación en vuelo' }}</td><td style="padding:10px 16px;text-align:right;font-weight:700;color:#09090b;">{{ $isEn ? 'Append-only checks' : 'Solo anexar revisiones' }}</td></tr>
+                        <tr><td style="padding:10px 16px;color:#52525b;">{{ $isEn ? '3D Digital Twin Link' : 'Vínculo Gemelo Digital 3D' }}</td><td style="padding:10px 16px;text-align:right;"><a href="{{ route('public.digital-twin', ['mode' => 'dual', 'case_id' => $activeCase->case_id, 'lang' => app()->getLocale()]) }}" style="color:#09090b;font-weight:800;text-decoration:underline;">{{ $isEn ? 'Inspect 3D + OCT →' : 'Inspeccionar 3D + OCT →' }}</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
