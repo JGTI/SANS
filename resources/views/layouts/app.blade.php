@@ -265,7 +265,7 @@
     const steps = [
         {
             page: 'home',
-            selector: '#sans-monitor-workspace',
+            selector: '#sans-monitor-workspace .card',
             duration: 7500,
             titleEn: '1. Mission Overview, Bilingual EN/ES & Crew Roster (Zero-Login)',
             titleEs: '1. Visión de Misión, Bilingüe EN/ES y Tripulación (Acceso Directo)',
@@ -274,12 +274,12 @@
         },
         {
             page: 'home',
-            selector: '[data-wizard-tab="ingreso"]',
+            selector: '#sans-monitor-workspace [role="tablist"]',
             duration: 7500,
-            titleEn: '2. Independent OD/OS Triage & 3-Stage Clinical Workflow',
-            titleEs: '2. Triaje Independiente OD/OS y Flujo Clínico en 3 Fases',
-            textEn: 'Right Eye (OD) and Left Eye (OS) are evaluated independently into Ready for review, Prioritize review, or Missing data—never issuing an automated fit-for-duty verdict. The 3 tabs organize Intake, Time Cuts, and Reference Scenarios.',
-            textEs: 'Ojo Derecho (OD) y Ojo Izquierdo (OS) se evalúan por separado en Listo para revisión, Priorizar revisión o Faltan datos, sin emitir veredictos automáticos de aptitud. Las 3 pestañas guían: Ingreso, Cortes en el Tiempo y Escenarios.',
+            titleEn: '2. Independent OD/OS Triage & 4-Tab Clinical Workflow',
+            titleEs: '2. Triaje Independiente OD/OS y Flujo Clínico en 4 Pestañas',
+            textEn: 'Right Eye (OD) and Left Eye (OS) are evaluated independently into Ready for review, Prioritize review, or Missing data—never issuing an automated fit-for-duty verdict. The 4 tabs organize Intake, Time Cuts, Scenarios, and Population Dashboard.',
+            textEs: 'Ojo Derecho (OD) y Ojo Izquierdo (OS) se evalúan por separado en Listo para revisión, Priorizar revisión o Faltan datos, sin emitir veredictos automáticos de aptitud. Las 4 pestañas guían: Ingreso, Cortes en el Tiempo, Escenarios y Poblaciones.',
         },
         {
             page: 'home',
@@ -381,7 +381,7 @@
             textEn: 'Retrieves applicable NASA OCHMO clinical protocols (preserving prior versions alongside newer verified ones), 7 scientific references, and live NASA OSDR, NTRS, DONKI, and ISS telemetry.',
             textEs: 'Consulta protocolos clínicos NASA OCHMO (sin sobrescribir versiones previas), 7 referencias científicas verificadas y búsqueda en vivo contra NASA OSDR, NTRS, DONKI e ISS.',
             action: () => {
-                const tab = document.querySelector('[data-wizard-tab="ingreso"]');
+                const tab = document.querySelector('[data-wizard-tab="biomarcadores"]');
                 if (tab) tab.click();
             }
         },
