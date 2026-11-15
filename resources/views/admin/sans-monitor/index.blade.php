@@ -57,6 +57,7 @@
     @include('admin.sans-monitor.astronaut')
 @else
 
+@if($normalizedTab !== 'team')
 {{-- CABECERA CIENTÍFICA COMPACTA (SIN PAJA PROMOCIONAL) --}}
 <div class="card" style="padding:1.1rem 1.35rem;margin-bottom:1rem;border:1.5px solid var(--space-blue);">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
@@ -278,7 +279,6 @@
     </a>
 </div>
 
-@if($normalizedTab !== 'team')
 <div style="display:flex;justify-content:flex-end;gap:0.5rem;flex-wrap:wrap;margin:-0.45rem 0 0.9rem;">
     <a href="{{ route('admin.sans-monitor.index', array_merge($sharedParams, ['tab' => 'team'])) }}" style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-size:0.76rem;font-weight:700;text-decoration:none;font-family:ui-monospace,monospace;">
         <i class="fa fa-users"></i>
