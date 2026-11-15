@@ -612,21 +612,57 @@
         if (camBox) camBox.style.display = 'none';
     }
 
-    async function startCvCamera() {
+    async function startCvCamera(forceSwitch = false) {
         if (!camBox || !camVideo) return;
         camBox.style.display = 'flex';
         if (camErr) { camErr.style.display = 'none'; camErr.textContent = ''; }
+        const prevTrack = camStream?.getVideoTracks?.()?.[0];
+        const prevDeviceId = prevTrack?.getSettings?.()?.deviceId || null;
         stopCvStream();
+        if (forceSwitch) {
+            await new Promise(r => setTimeout(r, 80));
+        }
         try {
             if (!navigator.mediaDevices?.getUserMedia) {
                 throw new Error(isEn ? 'Camera API requires HTTPS or localhost.' : 'La API de cámara requiere HTTPS o localhost.');
             }
-            try {
-                camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: camFacingMode } }, audio: false });
-            } catch (_) {
-                camStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            const attempts = [
+                { video: { facingMode: { exact: camFacingMode } }, audio: false },
+                { video: { facingMode: { ideal: camFacingMode } }, audio: false },
+            ];
+            if (forceSwitch && navigator.mediaDevices.enumerateDevices) {
+                try {
+                    const devs = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput');
+                    if (devs.length > 1) {
+                        const idx = devs.findIndex(d => d.deviceId === prevDeviceId);
+                        const nextDev = devs[(idx + 1) % devs.length];
+                        if (nextDev?.deviceId) {
+                            attempts.splice(1, 0, { video: { deviceId: { exact: nextDev.deviceId } }, audio: false });
+                        }
+                    }
+                } catch (_) {}
             }
-            camVideo.style.transform = camFacingMode === 'user' ? 'scaleX(-1)' : 'none';
+            attempts.push({ video: true, audio: false });
+
+            let lastErr = null;
+            for (const constraints of attempts) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    const newDevId = stream.getVideoTracks?.()?.[0]?.getSettings?.()?.deviceId || null;
+                    if (forceSwitch && prevDeviceId && newDevId && newDevId === prevDeviceId && constraints !== attempts[attempts.length - 1]) {
+                        stream.getTracks().forEach(t => t.stop());
+                        continue;
+                    }
+                    camStream = stream;
+                    break;
+                } catch (err) {
+                    lastErr = err;
+                }
+            }
+            if (!camStream) throw (lastErr || new Error('Camera unavailable'));
+
+            const activeFacing = camStream.getVideoTracks?.()?.[0]?.getSettings?.()?.facingMode || camFacingMode;
+            camVideo.style.transform = activeFacing === 'user' ? 'scaleX(-1)' : 'none';
             camVideo.srcObject = camStream;
         } catch (err) {
             if (camErr) {
@@ -636,7 +672,7 @@
         }
     }
 
-    document.getElementById('btnOpenCvCamera')?.addEventListener('click', startCvCamera);
+    document.getElementById('btnOpenCvCamera')?.addEventListener('click', () => startCvCamera(false));
     document.getElementById('btnCloseCvCamera')?.addEventListener('click', stopCvCamera);
     camBox?.addEventListener('click', (e) => {
         if (e.target === camBox) stopCvCamera();
@@ -647,7 +683,7 @@
 
     document.getElementById('btnFlipCvCamera')?.addEventListener('click', () => {
         camFacingMode = camFacingMode === 'environment' ? 'user' : 'environment';
-        startCvCamera();
+        startCvCamera(true);
     });
 
     btnFlash?.addEventListener('click', async () => {
