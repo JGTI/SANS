@@ -770,6 +770,10 @@
         0%, 100% { box-shadow: 0 0 0 0 rgba(234, 254, 7, 0.85), 0 0 20px rgba(234, 254, 7, 0.4), 0 8px 22px rgba(0, 0, 0, 0.5); }
         50% { box-shadow: 0 0 0 12px rgba(234, 254, 7, 0), 0 0 28px rgba(234, 254, 7, 0.7), 0 8px 22px rgba(0, 0, 0, 0.5); }
     }
+    @keyframes svPulseViolet {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.85), 0 0 20px rgba(168, 85, 247, 0.45), 0 8px 22px rgba(0, 0, 0, 0.5); }
+        50% { box-shadow: 0 0 0 12px rgba(168, 85, 247, 0), 0 0 28px rgba(168, 85, 247, 0.75), 0 8px 22px rgba(0, 0, 0, 0.5); }
+    }
     .sv-fab-stack {
         position: fixed;
         right: 20px;
@@ -810,6 +814,11 @@
         color: #EAFE07;
         border: 1.5px solid #EAFE07;
     }
+    .sv-fab-label-deck {
+        background: linear-gradient(135deg, #2e1065 0%, #6d28d9 100%);
+        color: #ffffff;
+        border: 1.5px solid #c084fc;
+    }
     .sv-fab-circle {
         width: 58px;
         height: 58px;
@@ -840,13 +849,19 @@
         color: #09090b;
         animation: svPulseYellow 1.7s infinite 0.85s;
     }
+    .sv-fab-deck {
+        border: 2.5px solid #c084fc;
+        background: radial-gradient(circle at 30% 30%, #7c3aed, #2e1065);
+        color: #ffffff;
+        animation: svPulseViolet 1.7s infinite 0.45s;
+    }
     @media (max-width: 640px) {
         .sv-fab-label {
             display: none;
         }
     }
     @media (prefers-reduced-motion: reduce) {
-        .sv-fab-protocol, .sv-fab-video {
+        .sv-fab-protocol, .sv-fab-video, .sv-fab-deck {
             animation: none;
         }
     }
@@ -865,6 +880,21 @@
         </span>
         <span class="sv-fab-circle sv-fab-protocol">
             <i class="fa fa-flask" aria-hidden="true" style="font-size:1.35rem;color:#EAFE07;"></i>
+        </span>
+    </a>
+
+    <a id="sv-floating-deck-btn"
+       class="sv-fab-item"
+       href="{{ request()->getBasePath() }}/docs/presentacion-sans-en.pdf"
+       target="_blank"
+       rel="noopener noreferrer"
+       title="{{ $isEn ? 'Open Presentation Deck' : 'Abrir Presentación' }}"
+       aria-label="{{ $isEn ? 'Open Presentation Deck' : 'Abrir Presentación' }}">
+        <span class="sv-fab-label sv-fab-label-deck">
+            {{ $isEn ? 'Presentation Deck' : 'Presentación' }}
+        </span>
+        <span class="sv-fab-circle sv-fab-deck">
+            <i class="fa fa-television" aria-hidden="true" style="font-size:1.2rem;color:#EAFE07;"></i>
         </span>
     </a>
 
