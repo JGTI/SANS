@@ -760,23 +760,86 @@
 })();
 </script>
 
-{{-- Botones flotantes globales (Protocolo PDF + Video Demo) en todas las páginas --}}
-<div style="position:fixed;right:20px;bottom:20px;z-index:9500;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+{{-- Botones flotantes globales en vertical (círculos con pulso para jueces NASA) --}}
+<style>
+    @keyframes svPulseCyan {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.72), 0 8px 22px rgba(0, 0, 0, 0.45); }
+        50% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0), 0 8px 22px rgba(0, 0, 0, 0.45); }
+    }
+    @keyframes svPulseYellow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(234, 254, 7, 0.78), 0 8px 22px rgba(0, 0, 0, 0.45); }
+        50% { box-shadow: 0 0 0 11px rgba(234, 254, 7, 0), 0 8px 22px rgba(0, 0, 0, 0.45); }
+    }
+    .sv-fab-stack {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 9500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .sv-fab-circle {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.18s ease;
+        position: relative;
+    }
+    .sv-fab-circle:hover {
+        transform: scale(1.08);
+    }
+    .sv-fab-circle small {
+        font-size: 0.56rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+    .sv-fab-protocol {
+        border: 2px solid #00D4FF;
+        background: #07173F;
+        color: #ffffff;
+        animation: svPulseCyan 1.8s infinite;
+    }
+    .sv-fab-video {
+        border: 2px solid #09090b;
+        background: #EAFE07;
+        color: #09090b;
+        animation: svPulseYellow 1.8s infinite 0.9s;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .sv-fab-protocol, .sv-fab-video {
+            animation: none;
+        }
+    }
+</style>
+<div class="sv-fab-stack">
     <a id="sv-floating-protocol-btn"
+       class="sv-fab-circle sv-fab-protocol"
        href="{{ request()->getBasePath() }}/docs/protocolo-investigacion-sans.pdf"
        target="_blank"
        rel="noopener noreferrer"
-       aria-label="{{ $isEn ? 'Open Research Protocol PDF' : 'Abrir Protocolo de Investigación PDF' }}"
-       style="display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid rgba(255,255,255,0.28);background:#07173F;color:#ffffff;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;text-decoration:none;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
-        <i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:1rem;color:#EAFE07;"></i>
-        <span>{{ $isEn ? 'Research Protocol' : 'Protocolo PDF' }}</span>
+       title="{{ $isEn ? 'Open Research Protocol (PDF)' : 'Abrir Protocolo de Investigación (PDF)' }}"
+       aria-label="{{ $isEn ? 'Open Research Protocol PDF' : 'Abrir Protocolo de Investigación PDF' }}">
+        <i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:1.15rem;color:#EAFE07;"></i>
+        <small>PDF</small>
     </a>
 
     <button id="sv-floating-video-btn" type="button"
-            aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}"
-            style="display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid #09090b;background:#EAFE07;color:#09090b;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
-        <i class="fa fa-play-circle" aria-hidden="true" style="font-size:1.05rem;"></i>
-        <span>{{ $isEn ? 'Demo Video' : 'Video Demo' }}</span>
+            class="sv-fab-circle sv-fab-video"
+            title="{{ $isEn ? 'Watch Official Demo Video' : 'Ver Video Demo Oficial' }}"
+            aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}">
+        <i class="fa fa-play" aria-hidden="true" style="font-size:1.1rem;margin-left:2px;"></i>
+        <small>VIDEO</small>
     </button>
 </div>
 
