@@ -111,13 +111,27 @@ class ScientificEngineService
             ? $this->phpCalculator->sphericalEquivalent($baseSph, $baseCyl)
             : $se;
 
-        $risk = $this->phpCalculator->evaluateSansRisk(
-            $se,
-            $baseSe,
-            $frisen,
-            (bool) ($params['has_globe_flattening'] ?? false),
-            (bool) ($params['has_choroidal_folds'] ?? false)
-        );
+        $risk = $this->phpCalculator->evaluateSansRisk([
+            'frisen_grade' => $frisen,
+            'globe_flattening' => (bool) ($params['has_globe_flattening'] ?? false),
+            'choroidal_folds' => (bool) ($params['has_choroidal_folds'] ?? false),
+            'hyperopic_shift' => round($se - $baseSe, 2),
+            'rnfl_thickness' => (int) round($rnfl),
+        ]);
+
+        $tierMap = [
+            'severe' => 'CRITICO',
+            'high' => 'ALTO',
+            'moderate' => 'MODERADO',
+            'low' => 'BAJO',
+        ];
+        $colorMap = [
+            'severe' => '#dc2626',
+            'high' => '#f97316',
+            'moderate' => '#eab308',
+            'low' => '#22c55e',
+        ];
+        $tierKey = $risk['tier'] ?? 'low';
 
         return [
             'spherical_equivalent' => $se,
@@ -136,11 +150,11 @@ class ScientificEngineService
             ],
             'rnfl_delta_microns' => round($rnfl - $baseRnfl, 1),
             'sans_risk' => [
-                'risk_score' => $risk['risk_score'] ?? 0.1,
-                'risk_tier' => $risk['risk_level'] ?? 'BAJO',
-                'badge_color' => $risk['badge_color'] ?? '#22c55e',
+                'risk_score' => $risk['score'] ?? 0,
+                'risk_tier' => $tierMap[$tierKey] ?? 'BAJO',
+                'badge_color' => $colorMap[$tierKey] ?? '#22c55e',
                 'recommendation' => $risk['recommendation'] ?? 'Protocolo estándar',
-                'evidence_rationale' => $risk['findings'] ?? [],
+                'evidence_rationale' => $risk['factors'] ?? [],
             ],
             'engine' => 'php_fallback',
         ];
@@ -815,6 +829,7 @@ class ScientificEngineService
         $isFolds = $preset === 'folds';
 
         return [
+            'python_executed' => false,
             'engine' => 'SPACE VISION CV Fundus Analyzer (Fallback)',
             'case_id' => $payload['case_id'] ?? 'CASE-PROG-02',
             'eye' => strtoupper((string) ($payload['eye'] ?? 'OD')),

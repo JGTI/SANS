@@ -43,16 +43,18 @@ class ScientificEngineCommand extends Command
 
             case 'test':
                 $this->info("Ejecutando suite de pruebas científicas de Python (pytest)...");
-                $process = new Process([
-                    base_path('scientific_engine/.venv/bin/pytest'),
-                    '-v',
-                    '-c',
-                    base_path('scientific_engine/pytest.ini')
-                ], base_path('scientific_engine'));
+                $venvPytest = base_path('scientific_engine/.venv/bin/pytest');
+                $command = file_exists($venvPytest)
+                    ? [$venvPytest, '-v', '-c', base_path('scientific_engine/pytest.ini')]
+                    : ['python3', '-m', 'pytest', '-v', '-c', base_path('scientific_engine/pytest.ini')];
+                $process = new Process($command, base_path('scientific_engine'));
                 $process->setTimeout(60);
                 $process->run(function ($type, $buffer) {
                     $this->output->write($buffer);
                 });
+                if (! $process->isSuccessful() && ! file_exists($venvPytest)) {
+                    $this->warn('Si falta el entorno virtual Python, créalo con: python3 -m venv scientific_engine/.venv && scientific_engine/.venv/bin/pip install -r scientific_engine/requirements.txt');
+                }
                 return $process->isSuccessful() ? Command::SUCCESS : Command::FAILURE;
 
             case 'start':

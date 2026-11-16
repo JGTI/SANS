@@ -14,6 +14,14 @@ class OphthalmologyCalculator
     }
 
     /**
+     * Alias compatible con llamadas desde el fallback de ScientificEngineService.
+     */
+    public function sphericalEquivalent(float $sphere, float $cylinder): float
+    {
+        return $this->calculateSphericalEquivalent($sphere, $cylinder);
+    }
+
+    /**
      * Convierte agudeza visual de Snellen a notación científica LogMAR.
      * Fórmula: LogMAR = log10(Denominador / Numerador)
      * Ejemplos:
