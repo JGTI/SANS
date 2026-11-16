@@ -2331,9 +2331,19 @@ window.runCandidatePredictor = async function (e) {
                         <div style="color:var(--foreground);font-weight:600;line-height:1.35;">{{ $match['protocol']->title }}</div>
                     </div>
                     @if($match['protocol']->source_url)
+                        @php
+                            $srcUrl = strtolower((string) $match['protocol']->source_url);
+                            $srcTitle = strtoupper((string) ($match['protocol']->title ?? ''));
+                            $srcVer = strtoupper((string) ($match['protocol']->version_id ?? ''));
+                            $isNasaOrigin = str_contains($srcUrl, 'nasa.gov')
+                                || str_contains($srcTitle, 'NASA')
+                                || str_starts_with($srcVer, 'OCHMO')
+                                || str_starts_with($srcVer, 'HRP-')
+                                || str_starts_with($srcVer, 'NASA-');
+                        @endphp
                         <a href="{{ $match['protocol']->source_url }}" target="_blank" rel="noopener"
                            style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;background:var(--card);border:1px solid var(--border);color:var(--foreground);font-family:ui-monospace,monospace;font-size:0.7rem;font-weight:700;text-decoration:none;">
-                            <i class="fa fa-external-link"></i> NASA/Source
+                            <i class="fa fa-external-link"></i> {{ $isNasaOrigin ? ($isEn ? 'NASA Source' : 'Fuente NASA') : ($isEn ? 'Source' : 'Fuente') }}
                         </a>
                     @endif
                 </article>
