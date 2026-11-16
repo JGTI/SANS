@@ -760,15 +760,15 @@
 })();
 </script>
 
-{{-- Botones flotantes globales en vertical (círculos con pulso para jueces NASA) --}}
+{{-- Botones flotantes globales en vertical (círculos con pulso y etiqueta llamativa para jueces NASA) --}}
 <style>
     @keyframes svPulseCyan {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.72), 0 8px 22px rgba(0, 0, 0, 0.45); }
-        50% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0), 0 8px 22px rgba(0, 0, 0, 0.45); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.85), 0 0 22px rgba(0, 212, 255, 0.45), 0 8px 22px rgba(0, 0, 0, 0.5); }
+        50% { box-shadow: 0 0 0 12px rgba(0, 212, 255, 0), 0 0 30px rgba(0, 212, 255, 0.75), 0 8px 22px rgba(0, 0, 0, 0.5); }
     }
     @keyframes svPulseYellow {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(234, 254, 7, 0.78), 0 8px 22px rgba(0, 0, 0, 0.45); }
-        50% { box-shadow: 0 0 0 11px rgba(234, 254, 7, 0), 0 8px 22px rgba(0, 0, 0, 0.45); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(234, 254, 7, 0.85), 0 0 20px rgba(234, 254, 7, 0.4), 0 8px 22px rgba(0, 0, 0, 0.5); }
+        50% { box-shadow: 0 0 0 12px rgba(234, 254, 7, 0), 0 0 28px rgba(234, 254, 7, 0.7), 0 8px 22px rgba(0, 0, 0, 0.5); }
     }
     .sv-fab-stack {
         position: fixed;
@@ -777,44 +777,73 @@
         z-index: 9500;
         display: flex;
         flex-direction: column;
+        align-items: flex-end;
+        gap: 14px;
+    }
+    .sv-fab-item {
+        display: inline-flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        text-decoration: none;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+    .sv-fab-label {
+        padding: 0.42rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.42);
+        transition: transform 0.18s ease, filter 0.18s ease;
+    }
+    .sv-fab-label-protocol {
+        background: linear-gradient(135deg, #07173F 0%, #0042A6 100%);
+        color: #ffffff;
+        border: 1.5px solid #00D4FF;
+    }
+    .sv-fab-label-video {
+        background: #09090b;
+        color: #EAFE07;
+        border: 1.5px solid #EAFE07;
     }
     .sv-fab-circle {
-        width: 56px;
-        height: 56px;
+        width: 58px;
+        height: 58px;
         border-radius: 50%;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2px;
-        text-decoration: none;
-        cursor: pointer;
+        flex-shrink: 0;
         transition: transform 0.18s ease;
         position: relative;
     }
-    .sv-fab-circle:hover {
-        transform: scale(1.08);
+    .sv-fab-item:hover .sv-fab-circle {
+        transform: scale(1.1);
     }
-    .sv-fab-circle small {
-        font-size: 0.56rem;
-        font-weight: 900;
-        letter-spacing: 0.04em;
-        line-height: 1;
-        text-transform: uppercase;
+    .sv-fab-item:hover .sv-fab-label {
+        transform: translateX(-3px);
+        filter: brightness(1.12);
     }
     .sv-fab-protocol {
-        border: 2px solid #00D4FF;
-        background: #07173F;
+        border: 2.5px solid #00D4FF;
+        background: radial-gradient(circle at 30% 30%, #0052CC, #07173F);
         color: #ffffff;
-        animation: svPulseCyan 1.8s infinite;
+        animation: svPulseCyan 1.7s infinite;
     }
     .sv-fab-video {
-        border: 2px solid #09090b;
+        border: 2.5px solid #09090b;
         background: #EAFE07;
         color: #09090b;
-        animation: svPulseYellow 1.8s infinite 0.9s;
+        animation: svPulseYellow 1.7s infinite 0.85s;
+    }
+    @media (max-width: 640px) {
+        .sv-fab-label {
+            display: none;
+        }
     }
     @media (prefers-reduced-motion: reduce) {
         .sv-fab-protocol, .sv-fab-video {
@@ -824,22 +853,31 @@
 </style>
 <div class="sv-fab-stack">
     <a id="sv-floating-protocol-btn"
-       class="sv-fab-circle sv-fab-protocol"
+       class="sv-fab-item"
        href="{{ request()->getBasePath() }}/docs/protocolo-investigacion-sans.pdf"
        target="_blank"
        rel="noopener noreferrer"
-       title="{{ $isEn ? 'Open Research Protocol (PDF)' : 'Abrir Protocolo de Investigación (PDF)' }}"
-       aria-label="{{ $isEn ? 'Open Research Protocol PDF' : 'Abrir Protocolo de Investigación PDF' }}">
-        <i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:1.15rem;color:#EAFE07;"></i>
-        <small>PDF</small>
+       title="{{ $isEn ? 'Open SANS Research Protocol' : 'Abrir Protocolo de Investigación SANS' }}"
+       aria-label="{{ $isEn ? 'Open SANS Research Protocol' : 'Abrir Protocolo de Investigación SANS' }}">
+        <span class="sv-fab-label sv-fab-label-protocol">
+            <i class="fa fa-star" aria-hidden="true" style="color:#EAFE07;margin-right:4px;"></i>
+            {{ $isEn ? 'Research Protocol' : 'Protocolo de Investigación' }}
+        </span>
+        <span class="sv-fab-circle sv-fab-protocol">
+            <i class="fa fa-flask" aria-hidden="true" style="font-size:1.35rem;color:#EAFE07;"></i>
+        </span>
     </a>
 
     <button id="sv-floating-video-btn" type="button"
-            class="sv-fab-circle sv-fab-video"
+            class="sv-fab-item"
             title="{{ $isEn ? 'Watch Official Demo Video' : 'Ver Video Demo Oficial' }}"
             aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}">
-        <i class="fa fa-play" aria-hidden="true" style="font-size:1.1rem;margin-left:2px;"></i>
-        <small>VIDEO</small>
+        <span class="sv-fab-label sv-fab-label-video">
+            {{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}
+        </span>
+        <span class="sv-fab-circle sv-fab-video">
+            <i class="fa fa-play" aria-hidden="true" style="font-size:1.25rem;margin-left:3px;"></i>
+        </span>
     </button>
 </div>
 
