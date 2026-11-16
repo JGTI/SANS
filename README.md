@@ -1,4 +1,8 @@
-# 🚀 SPACE VISION — SANS Monitor (`Space Visual Predictor for SANS`)
+<p align="center">
+  <img src="public/images/letra_C_fondo_transparente.png" alt="SpaceVision Predictor for SANS Logo" width="120">
+</p>
+
+# 🚀 SPACE VISION — SANS Monitor (`SpaceVision Predictor for SANS`)
 ### Biomarker-Driven Neuro-Ocular Surveillance & Longitudinal Timeline (+30 / +60 / +90 Days)
 **Team:** NEXUS × Visual Rehab Center · **Event:** NASA International Space Apps Challenge 2026
 
