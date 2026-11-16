@@ -192,5 +192,18 @@ Muchas gracias.
 ```bash
 php artisan scientific:engine status   # ONLINE at http://127.0.0.1:8001 (Python 3.14.4)
 php artisan scientific:engine test     # 22 passed (Pytest)
-php artisan test                       # 82 passed (470 assertions, PHPUnit)
+php artisan test                       # 82 passed (465–470 assertions, PHPUnit)
 ```
+
+---
+
+## PART VI — AI-ASSISTED DEVELOPMENT & TOOLS DISCLOSURE
+
+> **Transparency Notice (NASA Space Apps Challenge 2026):**  
+> This project was built using AI-assisted software engineering workflows. We formally acknowledge the following tools and extensions used during architecture design, coding, testing, and documentation:
+> - **Antigravity** (IDE Extension)
+> - **Codex** (AI Coding Assistant)
+> - **Gemini** (AI Assistant)
+> - **GPT 6.1 SOL** (AI Tool)
+>
+> All clinical logic, NASA reference alignment, computer vision pipelines, and automated tests were reviewed, executed, and validated by the project team.
