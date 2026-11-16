@@ -774,6 +774,10 @@
         0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.85), 0 0 20px rgba(168, 85, 247, 0.45), 0 8px 22px rgba(0, 0, 0, 0.5); }
         50% { box-shadow: 0 0 0 12px rgba(168, 85, 247, 0), 0 0 28px rgba(168, 85, 247, 0.75), 0 8px 22px rgba(0, 0, 0, 0.5); }
     }
+    @keyframes svPulseWhite {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.78), 0 0 18px rgba(255, 255, 255, 0.35), 0 8px 22px rgba(0, 0, 0, 0.5); }
+        50% { box-shadow: 0 0 0 11px rgba(255, 255, 255, 0), 0 0 26px rgba(255, 255, 255, 0.65), 0 8px 22px rgba(0, 0, 0, 0.5); }
+    }
     .sv-fab-stack {
         position: fixed;
         right: 20px;
@@ -819,6 +823,11 @@
         color: #ffffff;
         border: 1.5px solid #c084fc;
     }
+    .sv-fab-label-github {
+        background: #111827;
+        color: #ffffff;
+        border: 1.5px solid #e5e7eb;
+    }
     .sv-fab-circle {
         width: 58px;
         height: 58px;
@@ -855,18 +864,39 @@
         color: #ffffff;
         animation: svPulseViolet 1.7s infinite 0.45s;
     }
+    .sv-fab-github {
+        border: 2.5px solid #ffffff;
+        background: #111827;
+        color: #ffffff;
+        animation: svPulseWhite 1.7s infinite 0.2s;
+    }
     @media (max-width: 640px) {
         .sv-fab-label {
             display: none;
         }
     }
     @media (prefers-reduced-motion: reduce) {
-        .sv-fab-protocol, .sv-fab-video, .sv-fab-deck {
+        .sv-fab-protocol, .sv-fab-video, .sv-fab-deck, .sv-fab-github {
             animation: none;
         }
     }
 </style>
 <div class="sv-fab-stack">
+    <a id="sv-floating-github-btn"
+       class="sv-fab-item"
+       href="https://github.com/JGTI/SpaceVision-Predictor-for-SANS-spaceappschallenge"
+       target="_blank"
+       rel="noopener noreferrer"
+       title="{{ $isEn ? 'Open GitHub Repository' : 'Abrir Repositorio en GitHub' }}"
+       aria-label="{{ $isEn ? 'Open GitHub Repository' : 'Abrir Repositorio en GitHub' }}">
+        <span class="sv-fab-label sv-fab-label-github">
+            {{ $isEn ? 'GitHub Repo' : 'Repositorio GitHub' }}
+        </span>
+        <span class="sv-fab-circle sv-fab-github">
+            <i class="fa fa-github" aria-hidden="true" style="font-size:1.55rem;color:#ffffff;"></i>
+        </span>
+    </a>
+
     <a id="sv-floating-protocol-btn"
        class="sv-fab-item"
        href="{{ request()->getBasePath() }}/docs/sans-research-protocol.pdf"
