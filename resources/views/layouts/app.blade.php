@@ -870,10 +870,10 @@
 
     <button id="sv-floating-video-btn" type="button"
             class="sv-fab-item"
-            title="{{ $isEn ? 'Watch Official Demo Video' : 'Ver Video Demo Oficial' }}"
-            aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}">
+            title="{{ $isEn ? 'Watch 30s Video' : 'Ver Video 30 Seg' }}"
+            aria-label="{{ $isEn ? 'Watch 30s Video' : 'Ver Video 30 Seg' }}">
         <span class="sv-fab-label sv-fab-label-video">
-            {{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}
+            {{ $isEn ? '30s Video' : 'Video 30 Seg' }}
         </span>
         <span class="sv-fab-circle sv-fab-video">
             <i class="fa fa-play" aria-hidden="true" style="font-size:1.25rem;margin-left:3px;"></i>
@@ -887,7 +887,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.12);">
             <strong id="sv-demo-video-title" style="font-size:0.92rem;display:inline-flex;align-items:center;gap:8px;">
                 <i class="fa fa-film" aria-hidden="true" style="color:#EAFE07;"></i>
-                <span>{{ $isEn ? 'SPACE VISION — Official Demo Video' : 'SPACE VISION — Video Demo Oficial' }}</span>
+                <span>{{ $isEn ? 'SPACE VISION — 30s Video' : 'SPACE VISION — Video 30 Seg' }}</span>
             </strong>
             <button id="sv-demo-video-close" type="button" aria-label="{{ $isEn ? 'Close video' : 'Cerrar video' }}"
                     style="background:transparent;border:1px solid rgba(255,255,255,0.22);color:#ffffff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:grid;place-items:center;">
