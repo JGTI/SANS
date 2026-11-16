@@ -8,8 +8,8 @@
 
 - **Live Public Demo (Zero-Login · Primary `EN` with `EN | ES` Toggle · Default Dark Mode):** https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com
 - **Official Repository:** https://github.com/JGTI/SpaceVision-Predictor-for-SANS-spaceappschallenge
-- **Research Protocol (PDF):** [`public/docs/protocolo-investigacion-sans.pdf`](public/docs/protocolo-investigacion-sans.pdf) · [Open PDF](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/docs/protocolo-investigacion-sans.pdf)
-- **Presentation Deck (PDF):** [`public/docs/presentacion-sans-en.pdf`](public/docs/presentacion-sans-en.pdf) · [Open Presentation](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/docs/presentacion-sans-en.pdf)
+- **Research Protocol (PDF):** [`public/docs/sans-research-protocol.pdf`](public/docs/sans-research-protocol.pdf) · [Open PDF](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/docs/sans-research-protocol.pdf)
+- **Presentation Deck (PDF):** [`public/docs/sans-presentation-deck.pdf`](public/docs/sans-presentation-deck.pdf) · [Open Presentation](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/docs/sans-presentation-deck.pdf)
 - **Official Demo Video (with Audio & Subtitles):** [`public/video/space vision video con subtitulos.mp4`](public/video/space%20vision%20video%20con%20subtitulos.mp4) · [Watch Online](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
 
 ---

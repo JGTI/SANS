@@ -869,7 +869,7 @@
 <div class="sv-fab-stack">
     <a id="sv-floating-protocol-btn"
        class="sv-fab-item"
-       href="{{ request()->getBasePath() }}/docs/protocolo-investigacion-sans.pdf"
+       href="{{ request()->getBasePath() }}/docs/sans-research-protocol.pdf"
        target="_blank"
        rel="noopener noreferrer"
        title="{{ $isEn ? 'Open SANS Research Protocol' : 'Abrir Protocolo de Investigación SANS' }}"
@@ -885,7 +885,7 @@
 
     <a id="sv-floating-deck-btn"
        class="sv-fab-item"
-       href="{{ request()->getBasePath() }}/docs/presentacion-sans-en.pdf"
+       href="{{ request()->getBasePath() }}/docs/sans-presentation-deck.pdf"
        target="_blank"
        rel="noopener noreferrer"
        title="{{ $isEn ? 'Open Presentation Deck' : 'Abrir Presentación' }}"
