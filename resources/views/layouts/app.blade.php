@@ -759,6 +759,63 @@
     }
 })();
 </script>
+
+{{-- Botón flotante global para ver el video demo en todas las páginas --}}
+<button id="sv-floating-video-btn" type="button"
+        aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}"
+        style="position:fixed;right:20px;bottom:20px;z-index:9500;display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid #09090b;background:#EAFE07;color:#09090b;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
+    <i class="fa fa-play-circle" aria-hidden="true" style="font-size:1.05rem;"></i>
+    <span>{{ $isEn ? 'Demo Video' : 'Video Demo' }}</span>
+</button>
+
+<div id="sv-demo-video-modal" role="dialog" aria-modal="true" aria-labelledby="sv-demo-video-title"
+     style="display:none;position:fixed;inset:0;z-index:10050;background:rgba(5,5,7,0.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
+    <div style="width:min(920px,100%);background:#0b0b0f;color:#ffffff;border:1px solid rgba(255,255,255,0.16);border-radius:14px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.65);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.75rem 1rem;border-bottom:1px solid rgba(255,255,255,0.12);">
+            <strong id="sv-demo-video-title" style="font-size:0.92rem;display:inline-flex;align-items:center;gap:8px;">
+                <i class="fa fa-film" aria-hidden="true" style="color:#EAFE07;"></i>
+                <span>{{ $isEn ? 'SPACE VISION — Official Demo Video' : 'SPACE VISION — Video Demo Oficial' }}</span>
+            </strong>
+            <button id="sv-demo-video-close" type="button" aria-label="{{ $isEn ? 'Close video' : 'Cerrar video' }}"
+                    style="background:transparent;border:1px solid rgba(255,255,255,0.22);color:#ffffff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:grid;place-items:center;">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div style="background:#000000;">
+            <video id="sv-demo-video-player" controls playsinline preload="metadata" style="width:100%;max-height:76vh;display:block;">
+                <source src="{{ request()->getBasePath() }}/video/space%20vision%20video%20con%20subtitulos.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+</div>
+
+<script>
+(() => {
+    const btn = document.getElementById('sv-floating-video-btn');
+    const modal = document.getElementById('sv-demo-video-modal');
+    const closeBtn = document.getElementById('sv-demo-video-close');
+    const player = document.getElementById('sv-demo-video-player');
+    if (!btn || !modal || !player) return;
+
+    function openVideoModal() {
+        modal.style.display = 'flex';
+        player.play().catch(() => {});
+    }
+    function closeVideoModal() {
+        modal.style.display = 'none';
+        player.pause();
+    }
+
+    btn.addEventListener('click', openVideoModal);
+    closeBtn?.addEventListener('click', closeVideoModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeVideoModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeVideoModal();
+    });
+})();
+</script>
 @stack('scripts')
 </body>
 </html>
