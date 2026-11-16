@@ -9,8 +9,6 @@
 - **Live Public Demo (Zero-Login · Primary `EN` with `EN | ES` Toggle · Default Dark Mode):** https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com
 - **Official Repository:** https://github.com/JGTI/SANS
 - **Official Demo Video (with Audio & Subtitles):** [`public/video/space vision video con subtitulos.mp4`](public/video/space%20vision%20video%20con%20subtitulos.mp4) · [Watch Online](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
-- **Canonical Specification:** [`docs/SANS_MONITOR_SPEC.md`](docs/SANS_MONITOR_SPEC.md)
-- **Pitch & Submission Reference:** [`docs/PITCH_AND_SUBMISSION_FINAL.md`](docs/PITCH_AND_SUBMISSION_FINAL.md)
 
 ---
 
