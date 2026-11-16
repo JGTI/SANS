@@ -14,9 +14,17 @@
 
 ## 🎬 OFFICIAL DEMO VIDEO
 
-[![Watch Official Demo Video — SpaceVision Predictor for SANS](public/video/space-vision-demo.gif)](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
+<p align="center">
+  <a href="https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4">
+    <img src="public/video/space-vision-demo.gif" alt="Watch Official Demo Video — SpaceVision Predictor for SANS" width="100%">
+  </a>
+</p>
 
-> Click the preview above to watch in **Full HD with Audio & Subtitles**, or open directly: [`public/video/space vision video con subtitulos.mp4`](public/video/space%20vision%20video%20con%20subtitulos.mp4) | [Live Server Video](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
+<p align="center">
+  Click the preview above to watch in <strong>Full HD with Audio &amp; Subtitles</strong>, or open directly:
+  <a href="public/video/space%20vision%20video%20con%20subtitulos.mp4"><code>public/video/space vision video con subtitulos.mp4</code></a> ·
+  <a href="https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4">Live Server Video</a>
+</p>
 
 ---
 
