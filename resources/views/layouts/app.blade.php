@@ -760,13 +760,25 @@
 })();
 </script>
 
-{{-- Botón flotante global para ver el video demo en todas las páginas --}}
-<button id="sv-floating-video-btn" type="button"
-        aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}"
-        style="position:fixed;right:20px;bottom:20px;z-index:9500;display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid #09090b;background:#EAFE07;color:#09090b;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
-    <i class="fa fa-play-circle" aria-hidden="true" style="font-size:1.05rem;"></i>
-    <span>{{ $isEn ? 'Demo Video' : 'Video Demo' }}</span>
-</button>
+{{-- Botones flotantes globales (Protocolo PDF + Video Demo) en todas las páginas --}}
+<div style="position:fixed;right:20px;bottom:20px;z-index:9500;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+    <a id="sv-floating-protocol-btn"
+       href="{{ request()->getBasePath() }}/docs/protocolo-investigacion-sans.pdf"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="{{ $isEn ? 'Open Research Protocol PDF' : 'Abrir Protocolo de Investigación PDF' }}"
+       style="display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid rgba(255,255,255,0.28);background:#07173F;color:#ffffff;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;text-decoration:none;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
+        <i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:1rem;color:#EAFE07;"></i>
+        <span>{{ $isEn ? 'Research Protocol' : 'Protocolo PDF' }}</span>
+    </a>
+
+    <button id="sv-floating-video-btn" type="button"
+            aria-label="{{ $isEn ? 'Watch Demo Video' : 'Ver Video Demo' }}"
+            style="display:inline-flex;align-items:center;gap:8px;padding:0.65rem 1rem;border-radius:999px;border:1.5px solid #09090b;background:#EAFE07;color:#09090b;font-weight:800;font-size:0.82rem;letter-spacing:0.01em;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,0.42);transition:transform 0.16s ease,box-shadow 0.16s ease;">
+        <i class="fa fa-play-circle" aria-hidden="true" style="font-size:1.05rem;"></i>
+        <span>{{ $isEn ? 'Demo Video' : 'Video Demo' }}</span>
+    </button>
+</div>
 
 <div id="sv-demo-video-modal" role="dialog" aria-modal="true" aria-labelledby="sv-demo-video-title"
      style="display:none;position:fixed;inset:0;z-index:10050;background:rgba(5,5,7,0.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
