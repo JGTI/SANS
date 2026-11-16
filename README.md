@@ -14,9 +14,9 @@
 
 ## 🎬 OFFICIAL DEMO VIDEO
 
-<video src="https://github.com/JGTI/SANS/raw/main/public/video/space%20vision%20video%20con%20subtitulos.mp4" controls width="100%"></video>
+[![Watch Official Demo Video — SpaceVision Predictor for SANS](public/video/space-vision-demo.gif)](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
 
-> Direct link: [`public/video/space vision video con subtitulos.mp4`](public/video/space%20vision%20video%20con%20subtitulos.mp4) | [Live Server Video](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
+> Click the preview above to watch in **Full HD with Audio & Subtitles**, or open directly: [`public/video/space vision video con subtitulos.mp4`](public/video/space%20vision%20video%20con%20subtitulos.mp4) | [Live Server Video](https://sans-visualrehabcenter-spaceappschallenge.nexusdigitaldb.com/video/space%20vision%20video%20con%20subtitulos.mp4)
 
 ---
 
